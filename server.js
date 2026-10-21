@@ -24,7 +24,7 @@ const TYPES = {
 const COMPRESSIBLE = new Set([".html", ".css", ".js", ".json", ".webmanifest", ".svg", ".txt"]);
 
 // Everything is same-origin; no inline scripts or styles, so a strict CSP is possible.
-const SECURITY_HEADERS = {
+export const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "no-referrer",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",

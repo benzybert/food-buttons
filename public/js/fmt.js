@@ -72,3 +72,8 @@ export function plainMoney(n) {
   const v = Math.abs(n) >= 100 ? String(Math.round(n)) : n.toFixed(2).replace(/\.00$/, "");
   return `${v} ₪`;
 }
+
+/** 21.10 -> "21.10.2026" style short date for lists */
+export function hebrewShort(d) {
+  return new Intl.DateTimeFormat("he-IL", { day: "numeric", month: "numeric" }).format(d);
+}

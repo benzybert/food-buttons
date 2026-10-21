@@ -43,6 +43,7 @@ function findAxe() {
   return candidates.find((p) => fs.existsSync(p));
 }
 
+const RECIPES = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../../public/data/recipes.json"), "utf8"));
 const { chromium } = loadPlaywright();
 const server = createServer();
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
@@ -88,7 +89,7 @@ await step("home: two big buttons link to Sharon and Thermomix", async (page) =>
   assert.equal(await page.locator("#site-header").isVisible(), false);
   await page.locator("#thermomix").click();
   await page.waitForSelector(".dcard");
-  assert.equal(await page.locator(".dcard").count(), 38);
+  assert.equal(await page.locator(".dcard").count(), RECIPES.length);
 });
 
 await step("recipes: search, category and kosher filters", async (page) => {
@@ -99,14 +100,16 @@ await step("recipes: search, category and kosher filters", async (page) => {
   assert.ok(names.some((n) => n.includes("עדשים")) && names.some((n) => n.includes("מג'דרה")), names.join());
   await page.locator('input[type="search"]').fill("");
   await page.locator('[data-fk="cat-soup"]').click();
-  await page.waitForFunction(() => document.querySelectorAll(".dcard").length === 6);
+  const soups = RECIPES.filter((r) => r.category === "soup");
+  await page.waitForFunction((n) => document.querySelectorAll(".dcard").length === n, soups.length);
   assert.match(page.url(), /cat=soup/);
   await page.locator("details summary").click();
   await page.locator('[data-fk="k-meat"]').click();
-  await page.waitForFunction(() => document.querySelectorAll(".dcard").length === 1);
+  const meatSoups = soups.filter((r) => r.kosher === "meat");
+  await page.waitForFunction((n) => document.querySelectorAll(".dcard").length === n, meatSoups.length);
   await page.reload();
   await page.waitForSelector(".dcard");
-  assert.equal(await page.locator(".dcard").count(), 1, "filters survive reload via the URL");
+  assert.equal(await page.locator(".dcard").count(), meatSoups.length, "filters survive reload via the URL");
 });
 
 await step("dish page: servings scale the ingredients and cost", async (page) => {

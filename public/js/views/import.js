@@ -38,7 +38,7 @@ export function importView({ match }) {
     return h(
       "div.stack",
       notice("info", "ייבוא הוא לשימוש אישי: המתכון נשמר רק בדפדפן הזה. האפליקציה לא מתחברת ל-Cookidoo ולא מעתיקה ממנו. אתם מעתיקים מתכון שיש לכם גישה אליו, ואנחנו עוזרים לארגן אותו ולחשב עלות.", "info"),
-      h("ol", { style: { margin: 0, "padding-inline-start": "1.4rem" } }, h("li", "פתחו את המתכון (ב-Cookidoo או בכל אתר)."), h("li", "סמנו את כל הטקסט והעתיקו (Ctrl+A ואז Ctrl+C)."), h("li", "הדביקו כאן ולחצו ״ניתוח המתכון״. נזהה מצרכים, כמויות והגדרות מכשיר כמו ״5 דק׳/100°C/מהירות 2״.")),
+      h("ol", { style: { margin: 0, "padding-inline-start": "1.4rem" } }, h("li", "פתחו את המתכון (ב-", h("a", { href: "https://cookidoo.co.il", target: "_blank", rel: "noopener noreferrer" }, "Cookidoo"), " או בכל אתר)."), h("li", "סמנו את כל הטקסט והעתיקו (Ctrl+A ואז Ctrl+C)."), h("li", "הדביקו כאן ולחצו ״ניתוח המתכון״. נזהה מצרכים, כמויות והגדרות מכשיר כמו ״5 דק׳/100°C/מהירות 2״.")),
       area,
       h("div.row", h("button.btn", { type: "button", onclick: () => analyze(area.value) }, icon("sparkle", { size: 20 }), "ניתוח המתכון"), h("label.btn.btn-ghost", { style: { cursor: "pointer" } }, icon("upload", { size: 20 }), "העלאת קובץ", file), h("button.btn.btn-ghost", { type: "button", onclick: () => ((draft = blankDraft()), paint()) }, icon("plus", { size: 20 }), "מתכון ריק")),
     );

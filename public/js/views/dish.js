@@ -3,7 +3,7 @@ import { icon } from "../icons.js";
 import { store } from "../store.js";
 import { catalog, settings, stores as storeList, pantrySet, actions, sourcesFor } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { moneyEl, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText } from "../ui.js";
+import { moneyEl, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
 import { duration, percent } from "../fmt.js";
 import { compareDish, dishLines } from "../lib/calc.js";
 import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS } from "../lib/derive.js";
@@ -149,6 +149,12 @@ export function dishView({ match, query }) {
       h("a.btn", { href: `#/cook/${rec.id}?s=${servings}` }, icon("chef", { size: 20 }), "מצב בישול"),
       h("button.btn.btn-ghost.btn-icon", { type: "button", "aria-pressed": String(isFav), "aria-label": isFav ? "הסר ממועדפים" : "הוסף למועדפים", onclick: () => actions.toggleFavorite(rec.id) }, icon("heart", { size: 22, cls: isFav ? "filled" : "" })),
     ),
+    h(
+      "div.row.no-print",
+      cmp.options.some((o) => o.source.id === "sharon" && o.unit != null) ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => orderFromSharon(rec, servings) }, icon("store", { size: 16 }), "הוספה להזמנה משרון") : null,
+      h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => shareRecipe(rec, factor, c) }, icon("share", { size: 16 }), "שיתוף המתכון"),
+      h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => window.print() }, icon("printer", { size: 16 }), "הדפסה"),
+    ),
     sampleBanner(),
     h(
       "div.dish-cols",
@@ -170,4 +176,25 @@ function confirmDelete(rec) {
     actions.deleteCustomRecipe(rec.id);
     location.hash = "#/cook";
   }
+}
+
+function orderFromSharon(rec, servings) {
+  store.update((s) => void (s.orderCart[rec.id] = Math.min(30, (s.orderCart[rec.id] || 0) + servings)));
+  toast(`${rec.name} נוסף להזמנה משרון`, { label: "להזמנה", href: "#/order" });
+}
+
+function recipeText(rec, factor, c) {
+  const lines = rec.ingredients.map((l) => {
+    const ing = l.id ? c.ingById.get(l.id) : null;
+    const { q, n } = ingredientText(l, ing ? ing.name : l.custom, factor);
+    return `• ${q} ${n}${l.note ? ` (${l.note})` : ""}`;
+  });
+  return [`${rec.emoji} ${rec.name} (${Math.round(rec.servings * factor)} מנות)`, "", "מצרכים:", ...lines, "", "הכנה:", ...rec.steps.map((st, i) => `${i + 1}. ${st.text}`)].join("\n");
+}
+
+function shareRecipe(rec, factor, c) {
+  const text = recipeText(rec, factor, c);
+  if (navigator.share) navigator.share({ title: rec.name, text }).catch(() => {});
+  else if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast("המתכון הועתק"), () => toast("ההעתקה נכשלה"));
+  else toast("השיתוף לא נתמך בדפדפן הזה");
 }

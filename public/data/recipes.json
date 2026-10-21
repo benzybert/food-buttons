@@ -4383,5 +4383,725 @@
    "cook": 0,
    "total": 5
   }
+ },
+ {
+  "id": "challah",
+  "tags": [
+   "פרווה",
+   "שישי",
+   "אפייה"
+  ],
+  "ingredients": [
+   {
+    "qty": 800,
+    "unit": "g",
+    "id": "flour"
+   },
+   {
+    "qty": 400,
+    "unit": "ml",
+    "id": "water"
+   },
+   {
+    "qty": 14,
+    "unit": "g",
+    "id": "yeast"
+   },
+   {
+    "qty": 100,
+    "unit": "g",
+    "id": "sugar"
+   },
+   {
+    "qty": 2,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 80,
+    "unit": "ml",
+    "id": "oil"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 1,
+    "unit": "tbsp",
+    "id": "sesame"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה מים, שמרים וחצי מהסוכר וערבבו 10 שנ'/מהירות 2.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "2",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו שמן, מלח, ביצה אחת, את שאר הסוכר והקמח וערבבו 15 שנ'/מהירות 6.",
+    "settings": [
+     {
+      "time": 15,
+      "temp": null,
+      "speed": "6",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "לשו 3 דק'/תפקיד לישה. כסו והניחו להתפחה כשעה, עד הכפלה בנפח.",
+    "settings": [
+     {
+      "time": 180,
+      "temp": null,
+      "speed": null,
+      "reverse": false,
+      "kneading": true
+     }
+    ]
+   },
+   {
+    "text": "חלקו לשלושה גדילים, קלעו והניחו בתבנית. כסו והניחו להתפחה נוספת של 30 דקות."
+   },
+   {
+    "text": "מרחו בביצה טרופה, פזרו שומשום ואפו בתנור ב-180 מעלות כ-35 דקות."
+   }
+  ],
+  "src": "builtin",
+  "name": "חלה לשבת",
+  "emoji": "🥖",
+  "category": "bread",
+  "servings": 10,
+  "prep": 30,
+  "cook": 120,
+  "level": 2,
+  "order": 3,
+  "description": "חלה קלועה ורכה, הבצק נלוש במכשיר.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten",
+   "sesame"
+  ],
+  "equipment": [
+   "oven"
+  ],
+  "time": {
+   "prep": 30,
+   "cook": 120,
+   "total": 150
+  }
+ },
+ {
+  "id": "falafel",
+  "tags": [
+   "טבעוני",
+   "צריך להשרות מראש",
+   "מטוגן"
+  ],
+  "ingredients": [
+   {
+    "qty": 300,
+    "unit": "g",
+    "id": "chickpeas-dry"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 3,
+    "unit": "u",
+    "id": "garlic",
+    "unitWord": "שיני"
+   },
+   {
+    "qty": 30,
+    "unit": "g",
+    "id": "parsley"
+   },
+   {
+    "qty": 30,
+    "unit": "g",
+    "id": "cilantro"
+   },
+   {
+    "qty": 2,
+    "unit": "tsp",
+    "id": "cumin"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "baking-soda"
+   },
+   {
+    "qty": 2,
+    "unit": "tbsp",
+    "id": "flour"
+   },
+   {
+    "qty": 300,
+    "unit": "ml",
+    "id": "oil"
+   }
+  ],
+  "steps": [
+   {
+    "text": "השרו את גרגירי החומוס במים בלילה (ללא בישול). סננו היטב וייבשו."
+   },
+   {
+    "text": "הכניסו לקערה את הבצל, השום והעשבים וקצצו 5 שנ'/מהירות 7. גרפו.",
+    "settings": [
+     {
+      "time": 5,
+      "temp": null,
+      "speed": "7",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו את החומוס בשתי מנות וטחנו כל מנה 15 שנ'/מהירות 7, עד מרקם גס.",
+    "settings": [
+     {
+      "time": 15,
+      "temp": null,
+      "speed": "7",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו כמון, מלח, סודה וקמח וערבבו 10 שנ'/↺/מהירות 3. הניחו במקרר חצי שעה.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "3",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "צרו כדורים וטגנו בשמן חם כ-4 דקות עד להזהבה, והניחו על נייר סופג."
+   }
+  ],
+  "src": "builtin",
+  "name": "פלאפל ביתי",
+  "emoji": "🧆",
+  "category": "main",
+  "servings": 5,
+  "prep": 30,
+  "cook": 25,
+  "level": 2,
+  "order": 32,
+  "description": "כדורי פלאפל פריכים ממש מגרגירי חומוס לא מבושלים.",
+  "kosher": "parve",
+  "diet": [
+   "vegan",
+   "vegetarian"
+  ],
+  "allergens": [
+   "gluten"
+  ],
+  "equipment": [
+   "soak"
+  ],
+  "time": {
+   "prep": 30,
+   "cook": 25,
+   "total": 55
+  }
+ },
+ {
+  "id": "potato-latkes",
+  "tags": [
+   "פרווה",
+   "חנוכה",
+   "מטוגן"
+  ],
+  "ingredients": [
+   {
+    "qty": 700,
+    "unit": "g",
+    "id": "potato"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 4,
+    "unit": "tbsp",
+    "id": "flour"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 0.25,
+    "unit": "tsp",
+    "id": "pepper"
+   },
+   {
+    "qty": 150,
+    "unit": "ml",
+    "id": "oil"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את הבצל וקצצו 3 שנ'/מהירות 5. הוסיפו את תפוחי האדמה (חתוכים לרבעים) וקצצו 4 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 3,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "סננו וסחטו היטב את הנוזלים והחזירו לקערה."
+   },
+   {
+    "text": "הוסיפו ביצים, קמח, מלח ופלפל וערבבו 10 שנ'/↺/מהירות 2.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "2",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "טגנו כפות מהתערובת בשמן חם כ-3 דקות מכל צד."
+   }
+  ],
+  "src": "builtin",
+  "name": "לביבות תפוחי אדמה",
+  "emoji": "🥔",
+  "category": "side",
+  "servings": 4,
+  "prep": 15,
+  "cook": 20,
+  "level": 1,
+  "order": 30,
+  "description": "לביבות פריכות מבחוץ ורכות מבפנים, ובלי לקצוץ ידנית.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten"
+  ],
+  "equipment": [],
+  "time": {
+   "prep": 15,
+   "cook": 20,
+   "total": 35
+  }
+ },
+ {
+  "id": "broccoli-quiche",
+  "tags": [
+   "חלבי",
+   "צמחוני",
+   "תנור"
+  ],
+  "ingredients": [
+   {
+    "qty": 400,
+    "unit": "g",
+    "id": "broccoli"
+   },
+   {
+    "qty": 4,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 250,
+    "unit": "ml",
+    "id": "cooking-cream"
+   },
+   {
+    "qty": 150,
+    "unit": "g",
+    "id": "yellow-cheese"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 3,
+    "unit": "tbsp",
+    "id": "flour"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "pepper"
+   },
+   {
+    "qty": 1,
+    "unit": "tbsp",
+    "id": "oil"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את הבצל וקצצו 4 שנ'/מהירות 5. הוסיפו שמן וטגנו 3 דק'/120°C/מהירות 1.",
+    "settings": [
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 180,
+      "temp": 120,
+      "speed": "1",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו את הברוקולי (פרחים קטנים) ובשלו 5 דק'/100°C/↺/מהירות 1. העבירו לתבנית משומנת.",
+    "settings": [
+     {
+      "time": 300,
+      "temp": 100,
+      "speed": "1",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "בקערה נקייה הכניסו ביצים, שמנת, קמח, מלח ופלפל וערבבו 10 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "יצקו על הברוקולי, פזרו גבינה צהובה ואפו ב-180 מעלות כ-40 דקות, עד להזהבה."
+   }
+  ],
+  "src": "builtin",
+  "name": "פשטידת ברוקולי וגבינה",
+  "emoji": "🥧",
+  "category": "main",
+  "servings": 6,
+  "prep": 15,
+  "cook": 45,
+  "level": 1,
+  "order": 36,
+  "description": "פשטידה גבוהה ורכה, בלי בצק, מוכנה לפני שהתנור מתחמם.",
+  "kosher": "dairy",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten",
+   "milk"
+  ],
+  "equipment": [
+   "oven"
+  ],
+  "time": {
+   "prep": 15,
+   "cook": 45,
+   "total": 60
+  }
+ },
+ {
+  "id": "zucchini-soup",
+  "tags": [
+   "טבעוני",
+   "קל",
+   "קיץ"
+  ],
+  "ingredients": [
+   {
+    "qty": 700,
+    "unit": "g",
+    "id": "zucchini"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 200,
+    "unit": "g",
+    "id": "potato"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "garlic",
+    "unitWord": "שיני"
+   },
+   {
+    "qty": 1,
+    "unit": "tbsp",
+    "id": "olive-oil"
+   },
+   {
+    "qty": 1,
+    "unit": "tbsp",
+    "id": "veg-stock"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 800,
+    "unit": "ml",
+    "id": "water"
+   },
+   {
+    "qty": 20,
+    "unit": "g",
+    "id": "dill"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את הבצל והשום וקצצו 4 שנ'/מהירות 5. הוסיפו שמן זית וטגנו 3 דק'/120°C/מהירות 1.",
+    "settings": [
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 180,
+      "temp": 120,
+      "speed": "1",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו את הקישואים ותפוחי האדמה (חתוכים), מים, אבקת מרק ומלח. בשלו 20 דק'/100°C/↺/מהירות 1.",
+    "settings": [
+     {
+      "time": 1200,
+      "temp": 100,
+      "speed": "1",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו שמיר וטחנו 40 שנ'/מהירות 8.",
+    "settings": [
+     {
+      "time": 40,
+      "temp": null,
+      "speed": "8",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   }
+  ],
+  "src": "builtin",
+  "name": "מרק קישואים",
+  "emoji": "🥒",
+  "category": "soup",
+  "servings": 5,
+  "prep": 10,
+  "cook": 25,
+  "level": 1,
+  "order": 26,
+  "description": "מרק קישואים ירוק וקליל עם שמיר.",
+  "kosher": "parve",
+  "diet": [
+   "vegan",
+   "vegetarian",
+   "gluten-free"
+  ],
+  "allergens": [],
+  "equipment": [],
+  "time": {
+   "prep": 10,
+   "cook": 25,
+   "total": 35
+  }
+ },
+ {
+  "id": "yellow-rice",
+  "tags": [
+   "טבעוני",
+   "תוספת",
+   "ילדים"
+  ],
+  "ingredients": [
+   {
+    "qty": 300,
+    "unit": "g",
+    "id": "rice-white"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 2,
+    "unit": "tbsp",
+    "id": "oil"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "turmeric"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 0.25,
+    "unit": "tsp",
+    "id": "pepper"
+   },
+   {
+    "qty": 600,
+    "unit": "ml",
+    "id": "water"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את הבצל וקצצו 3 שנ'/מהירות 5. הוסיפו שמן וכורכום וטגנו 3 דק'/120°C/מהירות 1.",
+    "settings": [
+     {
+      "time": 3,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 180,
+      "temp": 120,
+      "speed": "1",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו מים, מלח ופלפל. שטפו את האורז, הכניסו לסל הבישול והניחו אותו בקערה."
+   },
+   {
+    "text": "בשלו 18 דק'/100°C/מהירות 4. הוציאו את הסל וערבבו את האורז עם הנוזלים שנשארו.",
+    "settings": [
+     {
+      "time": 1080,
+      "temp": 100,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   }
+  ],
+  "src": "builtin",
+  "name": "אורז צהוב",
+  "emoji": "🍚",
+  "category": "side",
+  "servings": 6,
+  "prep": 5,
+  "cook": 25,
+  "level": 1,
+  "order": 20,
+  "description": "אורז צהוב ורך עם כורכום ובצל מטוגן.",
+  "kosher": "parve",
+  "diet": [
+   "vegan",
+   "vegetarian",
+   "gluten-free"
+  ],
+  "allergens": [],
+  "equipment": [
+   "basket"
+  ],
+  "time": {
+   "prep": 5,
+   "cook": 25,
+   "total": 30
+  }
  }
 ]

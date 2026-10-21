@@ -1,7 +1,15 @@
 import { h } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { pageHead } from "../ui.js";
+import { pageHead, moneyEl } from "../ui.js";
+import { catalog } from "../app.js";
+import { hebrewShort } from "../fmt.js";
+
+let installEvent = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  installEvent = e;
+});
 
 export function moreView() {
   const s = store.get();
@@ -15,7 +23,20 @@ export function moreView() {
     ["#/settings", "sliders", "הגדרות", "משק בית, חנויות, כשרות, תצוגה וגיבוי"],
     ["#/about", "info", "אודות ונגישות", "מקורות נתונים, פרטיות והצהרת נגישות"],
   ];
-  const el = h("div.page", pageHead("עוד"), h("nav.link-list", { "aria-label": "עוד" }, links.map(([href, ico, title, sub]) => h("a", { href }, icon(ico, { size: 24 }), h("span", title, h("small", sub))))));
+  const c = catalog();
+  const cooked = [...s.cooked].reverse();
+  const totalSaved = s.cooked.reduce((a, x) => a + Math.max(0, x.saved), 0);
+  const journal = cooked.length
+    ? h(
+        "section.card",
+        { style: { "margin-top": "1rem" }, "aria-labelledby": "journal-h" },
+        h("div.spread", h("h2", { id: "journal-h" }, "יומן בישולים"), h("span.chip.good", "חסכתם ", moneyEl(totalSaved))),
+        h("p.small.muted", `${cooked.length} בישולים. החיסכון הוא ההפרש מול ההזמנה הזולה ביותר, על המצרכים בלבד.`),
+        h("ul.list-plain", cooked.slice(0, 8).map((x) => { const rec = c.recById.get(x.dishId); return h("li.shop-item", h("span", { "aria-hidden": "true", style: { "font-size": "1.4rem" } }, rec?.emoji || "🍽"), h("div.info", h("span.what", rec?.name || "מתכון שנמחק"), h("span.qty", `${hebrewShort(new Date(x.at))} · ${x.servings} מנות`)), x.saved > 0 ? h("span.price", { style: { color: "var(--good)" } }, "+", moneyEl(x.saved)) : null); })),
+      )
+    : null;
+  const install = installEvent ? h("button.btn.btn-ghost", { type: "button", style: { "margin-top": "1rem" }, onclick: async () => { installEvent.prompt(); await installEvent.userChoice; installEvent = null; } }, icon("download", { size: 20 }), "התקנה כאפליקציה במכשיר") : null;
+  const el = h("div.page", pageHead("עוד"), h("nav.link-list", { "aria-label": "עוד" }, links.map(([href, ico, title, sub]) => h("a", { href }, icon(ico, { size: 24 }), h("span", title, h("small", sub))))), journal, install);
   return { el, title: "עוד" };
 }
 
