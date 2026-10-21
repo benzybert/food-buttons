@@ -41,6 +41,7 @@
   --btn-2: #1d6b4a;
   --btn-3: #3b4a9e;
   --btn-text: #ffffff;
+  --accent-text: #b3341b; /* red as text on the page background */
   --focus: #ffb300;
   --good: #17603f;
   --good-bg: #dff3e8;
@@ -72,9 +73,10 @@
     --ink: #fff2e0;
     --ink-2: #d6c0a6;
     --line: #4d3926;
-    --btn-1: #d2492d;
-    --btn-2: #258760;
+    --btn-1: #c4401f;
+    --btn-2: #1f7a55;
     --btn-3: #5266c9;
+    --accent-text: #ff9d87;
     --focus: #ffc933;
     --good: #7fdcae;
     --good-bg: #17382a;
@@ -93,9 +95,10 @@
   --ink: #fff2e0;
   --ink-2: #d6c0a6;
   --line: #4d3926;
-  --btn-1: #d2492d;
-  --btn-2: #258760;
+  --btn-1: #c4401f;
+  --btn-2: #1f7a55;
   --btn-3: #5266c9;
+  --accent-text: #ff9d87;
   --focus: #ffc933;
   --good: #7fdcae;
   --good-bg: #17382a;

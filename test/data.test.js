@@ -102,3 +102,10 @@ test("every file the app loads exists", () => {
     assert.ok(fs.existsSync(path.join(PUBLIC, f)), f);
   }
 });
+
+test("service worker precaches only files that exist", async () => {
+  const sw = fs.readFileSync(path.join(PUBLIC, "sw.js"), "utf8");
+  const list = JSON.parse(sw.match(/const PRECACHE = (\[[\s\S]*?\]);/)[1]);
+  assert.ok(list.includes("index.html") && list.includes("js/main.js") && list.includes("manifest.webmanifest"));
+  for (const f of list) if (f !== "./") assert.ok(fs.existsSync(path.join(PUBLIC, f)), `precached but missing: ${f}`);
+});

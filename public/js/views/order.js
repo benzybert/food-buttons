@@ -7,7 +7,7 @@ import { store } from "../store.js";
 import { catalog, settings, actions, stores as storeList } from "../app.js";
 import { render } from "../router.js";
 import { pageHead, moneyEl, stepper, emptyState, notice, toast, dishInfo } from "../ui.js";
-import { money, percent } from "../fmt.js";
+import { money, percent, plainMoney } from "../fmt.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
 import { dishCostByStore, round2 } from "../lib/calc.js";
 import { norm } from "../lib/text.js";
@@ -129,7 +129,7 @@ function orderSummary(entries, total, count, c, sharon, delivery) {
 
 export function orderText(entries, total, c, sharon) {
   const lines = entries.map(([id, n]) => `${n} × ${c.recById.get(id).name}`);
-  return [`שלום${sharon ? " " + sharon.name : ""}, אשמח להזמין:`, ...lines, `סה״כ לפי המחירון: ${money(total)}`, "תודה!"].join("\n");
+  return [`שלום${sharon ? " " + sharon.name : ""}, אשמח להזמין:`, ...lines, `סה״כ לפי המחירון: ${plainMoney(total)}`, "תודה!"].join("\n");
 }
 
 /** Israeli mobile numbers to wa.me format: 050-1234567 -> 972501234567 */

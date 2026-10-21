@@ -26,7 +26,7 @@ export function cookView({ match, query }) {
   const progress = h("span");
   const prevBtn = h("button.btn.btn-ghost", { type: "button", onclick: () => go(session.idx - 1) }, icon("arrow", { size: 22 }), "הקודם");
   const nextBtn = h("button.btn.btn-green", { type: "button", onclick: () => go(session.idx + 1) });
-  const timerBar = h("div.row", { "aria-label": "טיימרים פעילים" });
+  const timerBar = h("div.row", { role: "group", "aria-label": "טיימרים פעילים" });
 
   let tick = null;
   let wake = null;

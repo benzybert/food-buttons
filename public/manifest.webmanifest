@@ -1,0 +1,23 @@
+{
+  "name": "הזמנת אוכל: לבשל או להזמין",
+  "short_name": "הזמנת אוכל",
+  "description": "משווים מחירים בין בישול עם Thermomix להזמנה, ובין חנויות",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff6ea",
+  "theme_color": "#b3341b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "השוואת מחירים", "url": "./#/compare" },
+    { "name": "רשימת קניות", "url": "./#/list" },
+    { "name": "מה לאכול הערב?", "url": "./#/surprise" }
+  ]
+}

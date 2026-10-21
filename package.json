@@ -6,10 +6,14 @@
   "description": "Hebrew RTL food app: order from Sharon or cook with Thermomix, compare prices. Static site served by a tiny Node server.",
   "scripts": {
     "start": "node server.js",
+    "prestart": "node tools/build-sw.js || true",
     "test": "node --test --test-reporter=spec \"test/**/*.test.js\"",
     "build": "node tools/build-data.js && node tools/build-sw.js",
     "build:data": "node tools/build-data.js",
-    "build:sw": "node tools/build-sw.js"
+    "build:sw": "node tools/build-sw.js",
+    "prices:sample": "node tools/gen-sample-prices.js",
+    "e2e": "node test/e2e/run.mjs",
+    "check": "node tools/build-data.js --check && node tools/build-sw.js --check && npm test"
   },
   "engines": {
     "node": ">=22"

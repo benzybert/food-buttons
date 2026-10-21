@@ -65,3 +65,10 @@ export function signedMoney(n) {
 export function countOf(n, one, many) {
   return n === 1 ? `${one} אחד` : `${n} ${many}`;
 }
+
+/** Money for plain-text messages (WhatsApp, clipboard): no bidi marks, "64 ₪" / "12.40 ₪". */
+export function plainMoney(n) {
+  if (!Number.isFinite(n)) return "-";
+  const v = Math.abs(n) >= 100 ? String(Math.round(n)) : n.toFixed(2).replace(/\.00$/, "");
+  return `${v} ₪`;
+}

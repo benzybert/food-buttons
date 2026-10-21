@@ -6,7 +6,7 @@ import { replaceQuery, render } from "../router.js";
 import { pageHead, moneyEl, emptyState, sampleBanner, toast } from "../ui.js";
 import { priceAtStore } from "../lib/calc.js";
 import { AISLE_LABELS, AISLE_ORDER } from "../lib/catalog.js";
-import { money } from "../fmt.js";
+import { money, plainMoney } from "../fmt.js";
 import { buyText } from "./compare.js";
 import { formatQty } from "../lib/units.js";
 
@@ -157,7 +157,7 @@ function listText(groups, c, checked, split) {
         out.push(`${checked[l.ingId] ? "✅" : "▫️"} ${ing.name} - ${buyText(ing, l)}`);
       }
     }
-    out.push("", `סה״כ משוער: ${money(g.total)}`, "");
+    out.push("", `סה״כ משוער: ${plainMoney(g.total)}`, "");
   }
   return out.join("\n").trim();
 }

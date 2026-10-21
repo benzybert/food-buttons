@@ -38,7 +38,6 @@ export function defaults() {
 let state = defaults();
 let persistOk = true;
 const subs = new Set();
-let timer = null;
 
 function load() {
   try {
@@ -64,15 +63,12 @@ function merge(base, saved) {
   return out;
 }
 
-function persistSoon() {
-  clearTimeout(timer);
-  timer = setTimeout(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      persistOk = false;
-    }
-  }, 150);
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch {
+    persistOk = false;
+  }
 }
 
 export const store = {
@@ -87,7 +83,7 @@ export const store = {
   /** update(s => { s.basket.push(...) }) */
   update(fn) {
     fn(state);
-    persistSoon();
+    persist();
     for (const f of subs) f(state);
   },
   subscribe(fn) {
@@ -117,7 +113,7 @@ export const store = {
     const data = parsed?.app === "food-buttons" ? parsed.data : null;
     if (!data || typeof data !== "object" || !data.settings) return { ok: false, error: "הקובץ אינו גיבוי של האפליקציה" };
     state = merge(defaults(), data);
-    persistSoon();
+    persist();
     for (const f of subs) f(state);
     return { ok: true };
   },
