@@ -1,7 +1,7 @@
 // Service worker (generated into public/sw.js by tools/build-sw.js - edit this template, not the output).
 // Strategy: precache the app shell + data on install; serve everything same-origin from cache first
 // and refresh it in the background (stale-while-revalidate). Navigations fall back to the cached shell offline.
-const VERSION = "bd767af336";
+const VERSION = "31bfde7a9b";
 const CACHE = `food-buttons-${VERSION}`;
 const PRECACHE = [
   "./",

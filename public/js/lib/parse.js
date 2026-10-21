@@ -168,21 +168,21 @@ export function parseIngredientLine(line, index) {
 
 // ---------------------------------------------------------------- Thermomix settings
 
-const TIME = String.raw`\d+(?:[.,]\d+)?\s*(?:דק['׳’]|דקות|דקה|שנ['׳’]|שניות|שנייה|min|sec)(?:\s*(?:ו-?)?\s*\d+\s*(?:שנ['׳’]|שניות|שנייה|sec))?`;
-const TEMP = String.raw`(?:\d{2,3}\s*°\s*C|Varoma|וארומה|ורומה)`;
+const TIME = String.raw`(?:\d+\s*(?:שעות|שעה|שע['׳’])\s*(?:ו-?)?\s*)?\d+(?:[.,]\d+)?\s*(?:דק['׳’]|דקות|דקה|שנ['׳’]|שניות|שנייה|min|sec)(?:\s*(?:ו-?)?\s*\d+\s*(?:שנ['׳’]|שניות|שנייה|sec))?|\d+\s*(?:שעות|שעה|שע['׳’])`;
+const TEMP = String.raw`(?:\d{2,3}\s*°\s*C?|Varoma|וארומה|ורומה)`;
 const SPEED = String.raw`(?:מהירות\s*(?:\d+(?:[.,]5)?(?:\s*(?:עד|-|–)\s*\d+)?|כף|טורבו)|speed\s*\d+)`;
-const MISC = String.raw`(?:↺|⟲|הפוך|תפקיד לישה)`;
+const MISC = String.raw`(?:↺|⟲|סיבוב הפוך|הפוך|תפקיד לישה)`;
 const TOKEN = `(?:${TIME}|${TEMP}|${SPEED}|${MISC})`;
 const GROUP_RE = new RegExp(`${TOKEN}(?:\\s*\\/\\s*${TOKEN})+`, "gu");
 const TOKEN_RE = new RegExp(TOKEN, "gu");
 
 function parseTimeToken(t) {
   let sec = 0;
-  const re = /(\d+(?:[.,]\d+)?)\s*(דק['׳’]|דקות|דקה|min|שנ['׳’]|שניות|שנייה|sec)/g;
+  const re = /(\d+(?:[.,]\d+)?)\s*(שעות|שעה|שע['׳’]|דק['׳’]|דקות|דקה|min|שנ['׳’]|שניות|שנייה|sec)/g;
   let m;
   while ((m = re.exec(t))) {
     const v = Number(m[1].replace(",", "."));
-    sec += /^(?:דק|min)/.test(m[2]) ? v * 60 : v;
+    sec += /^שע/.test(m[2]) ? v * 3600 : /^(?:דק|min)/.test(m[2]) ? v * 60 : v;
   }
   return Math.round(sec);
 }
@@ -232,6 +232,12 @@ export function parseStep(text) {
 
 const ING_HEADER = /^(?:מצרכים|מרכיבים|רכיבים|רשימת מצרכים|ingredients)\s*:?\s*$/i;
 const STEP_HEADER = /^(?:אופן (?:ה)?הכנה|הכנה|הוראות הכנה|שיטת הכנה|אופן הכנה|אופן הכנת|הוראות|preparation|directions|instructions|method)\s*:?\s*$/i;
+
+// Button labels that get copied along with a recipe page.
+const NOISE = /^(?:שתף|שתפו|הדפס|הדפסה|שמור|שמירה|הוסף לרשימה|הוסף למועדפים|print|share|save)$/i;
+
+// Sections that appear after the method on recipe pages; everything under them is ignored.
+const END_HEADER = /^(?:ערכים תזונתיים|ערך תזונתי|תזונה|טיפים?(?: והערות)?|הערות|הערה|תגיות|ציוד(?: נדרש)?|אביזרים|מתכונים דומים|ביקורות|דירוג|משוב|nutrition|tips|notes|tags|equipment)\s*:?\s*$/i;
 
 /** "1 שעה 10 דקות", "45 דק'", "PT1H10M" -> minutes */
 export function parseDuration(str) {
@@ -347,20 +353,55 @@ export function parseRecipeText(text, index) {
   const ingredientLines = [];
   const stepLines = [];
   let section = null; // "ing" | "step" | null
-  let sawHeader = false;
+  const hasHeaders = lines.some((l) => ING_HEADER.test(l.trim()) || STEP_HEADER.test(l.trim()));
+  let pending = null; // a meta label seen on its own line ("זמן הכנה"), waiting for its value on the next line
+  const setTime = (kind, mins) => {
+    if (kind === "cook") cook = mins;
+    else if (kind === "total") cook = Math.max(cook, mins - prep);
+    else prep = mins;
+  };
+  const LABELS = [
+    [/^(?:זמן הכנה|זמן עבודה|prep time)$/i, "prep"],
+    [/^(?:זמן בישול|זמן אפייה|זמן אפיה|cook time)$/i, "cook"],
+    [/^(?:זמן כולל|total time)$/i, "total"],
+    [/^(?:מספר מנות|כמות מנות|כמות|מנות|סועדים|servings?|yield)$/i, "servings"],
+  ];
 
   for (const rawLine of lines) {
     const line = rawLine.trim();
+    if (pending) {
+      const kind = pending;
+      pending = null;
+      if (kind === "servings") {
+        const n = line.match(/^(\d+)/);
+        if (n) {
+          servings = Number(n[1]);
+          continue;
+        }
+      } else if (parseDuration(line) > 0 && line.length < 40) {
+        setTime(kind, parseDuration(line));
+        continue;
+      }
+    }
+    const label = !section && LABELS.find(([re]) => re.test(line));
+    if (label) {
+      pending = label[1];
+      continue;
+    }
+    if (NOISE.test(line)) continue;
+    if (END_HEADER.test(line)) {
+      section = "end";
+      continue;
+    }
     if (ING_HEADER.test(line)) {
       section = "ing";
-      sawHeader = true;
       continue;
     }
     if (STEP_HEADER.test(line)) {
       section = "step";
-      sawHeader = true;
       continue;
     }
+    if (section === "end") continue;
     const sv = line.match(/^(?:כמות|מנות|מספר מנות|יוצא|תשואה|servings?|yield)\s*[:\-]?\s*(\d+)/i) || line.match(/^(\d+)\s*(?:מנות|סועדים|יחידות)\s*$/);
     if (sv && !section) {
       servings = Number(sv[1]);
@@ -369,9 +410,9 @@ export function parseRecipeText(text, index) {
     const tm = line.match(/^(זמן הכנה|זמן עבודה|זמן בישול|זמן אפייה|זמן כולל|prep time|cook time|total time)\s*[:\-]?\s*(.+)$/i);
     if (tm) {
       const mins = parseDuration(tm[2]);
-      if (/בישול|אפייה|cook/i.test(tm[1])) cook = mins;
-      else if (/כולל|total/i.test(tm[1])) cook = Math.max(cook, mins - prep);
-      else prep = mins;
+      if (/בישול|אפייה|cook/i.test(tm[1])) setTime("cook", mins);
+      else if (/כולל|total/i.test(tm[1])) setTime("total", mins);
+      else setTime("prep", mins);
       continue;
     }
     if (!name && !section && !/^\d/.test(line)) {
@@ -386,14 +427,14 @@ export function parseRecipeText(text, index) {
       const clean = stripStepNumber(line);
       if (!isNew && stepLines.length && !/[.!?]$/.test(stepLines[stepLines.length - 1])) stepLines[stepLines.length - 1] += " " + clean;
       else stepLines.push(clean);
-    } else if (!sawHeader) {
-      // no headers at all: guess by shape
+    } else if (!hasHeaders) {
+      // no headers anywhere: guess by shape (with headers, stray lines before them are page chrome and are ignored)
       if (/^[-•*·▪◦]?\s*(?:\d|חצי|רבע|שליש|קורט|[½¼¾⅓⅔])/.test(line) && line.length < 70 && !/[.!?]$/.test(line)) ingredientLines.push(line);
       else stepLines.push(stripStepNumber(line));
     }
   }
   const draft = buildDraft({ name, servings, prep, cook, ingredientLines, stepLines }, index);
-  if (!sawHeader && ingredientLines.length) draft.warnings.push("לא נמצאו כותרות (מצרכים / אופן ההכנה) - הפרדה לפי צורת השורה, כדאי לבדוק");
+  if (!hasHeaders && ingredientLines.length) draft.warnings.push("לא נמצאו כותרות (מצרכים / אופן ההכנה) - הפרדה לפי צורת השורה, כדאי לבדוק");
   return draft;
 }
 

@@ -183,3 +183,56 @@ test("parseJsonLd: schema.org Recipe", () => {
 function pick(p) {
   return { qty: p.qty, unit: p.unit, id: p.id };
 }
+
+const PAGE = `מרק עדשים כתומות
+שמור
+שתף
+זמן כולל
+35 דק'
+זמן הכנה
+10 דק'
+זמן בישול
+25 דק'
+רמת קושי
+קל
+מספר מנות
+5 מנות
+ציוד נדרש
+Thermomix
+מצרכים
+250 גרם עדשים כתומות
+1 בצל
+2 גזרים
+1 כף שמן זית
+1 כפית כמון
+1100 מ"ל מים
+הכנה
+1. הכניסו לקערה בצל וגזר וקצצו 5 שנ'/מהירות 5.
+2. הוסיפו שמן זית ובשלו 4 דק'/120 °C/סיבוב הפוך/מהירות 1.
+3. בשלו 1 שע' 5 דק'/100°C/מהירות 1.
+ערכים תזונתיים
+קלוריות 250
+טיפים
+אפשר להוסיף לימון.
+מתכונים דומים
+מרק ירקות`;
+
+test("parseRecipeText: a page copied from a recipe site (labels on their own lines, trailing sections)", () => {
+  const d = parseRecipeText(PAGE, index);
+  assert.equal(d.name, "מרק עדשים כתומות");
+  assert.equal(d.servings, 5);
+  assert.equal(d.prep, 10);
+  assert.equal(d.cook, 25);
+  assert.equal(d.ingredients.length, 6);
+  assert.deepEqual(d.ingredients.map((i) => i.id), ["lentils-red", "onion", "carrot", "olive-oil", "cumin", "water"]);
+  assert.equal(d.steps.length, 3, "nutrition, tips and similar recipes are not steps");
+  const s2 = d.steps[1].settings[0];
+  assert.deepEqual({ time: s2.time, temp: s2.temp, reverse: s2.reverse, speed: s2.speed }, { time: 240, temp: 120, reverse: true, speed: "1" });
+  assert.equal(d.steps[2].settings[0].time, 3900); // 1 h 5 min
+  assert.deepEqual(d.warnings, []);
+});
+
+test("settings: hours, temperature without C, reverse words", () => {
+  const [a] = extractSettings("בשלו 1 שעה/90°/סיבוב הפוך/מהירות 1");
+  assert.deepEqual({ time: a.time, temp: a.temp, reverse: a.reverse }, { time: 3600, temp: 90, reverse: true });
+});

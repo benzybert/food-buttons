@@ -86,6 +86,7 @@ test("delivery fee: free above threshold, below-min flag", () => {
   assert.deepEqual(deliveryFor(A, 100), { fee: 0, free: true, belowMin: false, available: true });
   assert.equal(deliveryFor(A, 10).belowMin, true);
   assert.equal(deliveryFor({ id: "x" }, 10).available, false);
+  assert.equal(deliveryFor(A, 0).fee, 0); // an all-pantry basket has nothing to deliver
   const { needs } = basketNeeds([{ dishId: "cake", servings: 4 }], ctx);
   const rows = compareStores(needs, ctx, { delivery: true });
   assert.equal(rows[0].total, rows[0].subtotal + 30);

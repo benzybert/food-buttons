@@ -118,6 +118,7 @@ export function priceAtStore(needsMap, store, ctx, pantry = new Set()) {
 export function deliveryFor(store, subtotal) {
   const d = store.delivery;
   if (!d) return { fee: 0, free: true, belowMin: false, available: false };
+  if (!(subtotal > 0)) return { fee: 0, free: true, belowMin: false, available: true }; // nothing to deliver
   const free = d.freeOver != null && subtotal >= d.freeOver;
   return { fee: free ? 0 : d.fee, free, belowMin: d.min != null && subtotal < d.min, available: true };
 }

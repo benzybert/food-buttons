@@ -4,7 +4,7 @@ import { store } from "./store.js";
 import { loadData, catalog, report } from "./app.js";
 import { route, start, render, onRouteRender, parseHash } from "./router.js";
 import { money, recipesWord } from "./fmt.js";
-import { moneyEl } from "./ui.js";
+import { moneyEl, toast } from "./ui.js";
 import { homeView } from "./views/home.js";
 import { browseView } from "./views/browse.js";
 import { dishView } from "./views/dish.js";
@@ -143,7 +143,12 @@ async function boot() {
 
   await start();
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    const hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register("sw.js").catch(() => {});
+    // A new version took over while the app is open: offer a reload (not on the very first install).
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (hadController) toast("יצאה גרסה חדשה של האפליקציה", { label: "רענון", onClick: () => location.reload() });
+    });
   }
 }
 
