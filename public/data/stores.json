@@ -1,0 +1,13 @@
+{
+ "note": "נתוני דוגמה: מדד המחירים ודמי המשלוח הם הערכות להמחשה בלבד ולא מחירון רשמי של הרשתות.",
+ "stores": [
+  { "id": "shufersal", "name": "שופרסל", "index": 1.0, "delivery": { "fee": 29, "freeOver": 400, "min": 150 } },
+  { "id": "ramilevy", "name": "רמי לוי", "index": 0.92, "delivery": { "fee": 35, "freeOver": 500, "min": 200 } },
+  { "id": "victory", "name": "ויקטורי", "index": 0.97, "delivery": { "fee": 30, "freeOver": 450, "min": 150 } },
+  { "id": "osherad", "name": "אושר עד", "index": 0.91, "delivery": { "fee": 35, "freeOver": 500, "min": 200 } },
+  { "id": "yochananof", "name": "יוחננוף", "index": 0.99, "delivery": { "fee": 29, "freeOver": 400, "min": 150 } },
+  { "id": "yeinotbitan", "name": "יינות ביתן", "index": 1.01, "delivery": { "fee": 30, "freeOver": 400, "min": 150 } },
+  { "id": "carrefour", "name": "קרפור", "index": 0.98, "delivery": { "fee": 25, "freeOver": 350, "min": 120 } },
+  { "id": "tivtaam", "name": "טיב טעם", "index": 1.08, "delivery": { "fee": 30, "freeOver": 450, "min": 150 } }
+ ]
+}

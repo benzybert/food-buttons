@@ -1,0 +1,1784 @@
+[
+ {
+  "id": "onion",
+  "name": "בצל",
+  "aliases": [
+   "בצלים",
+   "בצל יבש",
+   "בצל קצוץ"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 6,
+  "flags": [],
+  "unitWeight": 150,
+  "density": 1
+ },
+ {
+  "id": "red-onion",
+  "name": "בצל סגול",
+  "aliases": [
+   "בצלים סגולים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 9,
+  "flags": [],
+  "unitWeight": 120,
+  "density": 1
+ },
+ {
+  "id": "scallion",
+  "name": "בצל ירוק",
+  "aliases": [
+   "בצלצלים",
+   "בצל ירוק קצוץ"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 18,
+  "flags": [],
+  "unitWeight": 30,
+  "density": 1
+ },
+ {
+  "id": "garlic",
+  "name": "שום",
+  "aliases": [
+   "שיני שום",
+   "שן שום",
+   "שום טרי",
+   "שום כתוש"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 38,
+  "flags": [],
+  "unitWeight": 5,
+  "density": 1
+ },
+ {
+  "id": "ginger",
+  "name": "ג'ינג'ר",
+  "aliases": [
+   "גינגר",
+   "ג׳ינג׳ר",
+   "זנגביל",
+   "ג'ינג'ר טרי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 40,
+  "flags": [],
+  "unitWeight": 20,
+  "density": 1
+ },
+ {
+  "id": "carrot",
+  "name": "גזר",
+  "aliases": [
+   "גזרים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 6,
+  "flags": [],
+  "unitWeight": 100,
+  "density": 1
+ },
+ {
+  "id": "potato",
+  "name": "תפוח אדמה",
+  "aliases": [
+   "תפוחי אדמה",
+   "תפו\"א",
+   "תפוד"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 7,
+  "flags": [],
+  "unitWeight": 170,
+  "density": 1
+ },
+ {
+  "id": "sweet-potato",
+  "name": "בטטה",
+  "aliases": [
+   "בטטות"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 9,
+  "flags": [],
+  "unitWeight": 300,
+  "density": 1
+ },
+ {
+  "id": "tomato",
+  "name": "עגבנייה",
+  "aliases": [
+   "עגבניות",
+   "עגבנית",
+   "עגבניות בשלות"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 8,
+  "flags": [],
+  "unitWeight": 130,
+  "density": 1
+ },
+ {
+  "id": "cherry-tomato",
+  "name": "עגבניות שרי",
+  "aliases": [
+   "שרי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 16,
+  "flags": [],
+  "unitWeight": 15,
+  "density": 1
+ },
+ {
+  "id": "cucumber",
+  "name": "מלפפון",
+  "aliases": [
+   "מלפפונים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 8,
+  "flags": [],
+  "unitWeight": 110,
+  "density": 1
+ },
+ {
+  "id": "red-pepper",
+  "name": "פלפל אדום",
+  "aliases": [
+   "פלפלים אדומים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 14,
+  "flags": [],
+  "unitWeight": 180,
+  "density": 1
+ },
+ {
+  "id": "green-pepper",
+  "name": "פלפל ירוק",
+  "aliases": [
+   "פלפלים ירוקים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 12,
+  "flags": [],
+  "unitWeight": 150,
+  "density": 1
+ },
+ {
+  "id": "chili",
+  "name": "פלפל חריף",
+  "aliases": [
+   "צ'ילי",
+   "פלפל חריף ירוק",
+   "צילי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 28,
+  "flags": [],
+  "unitWeight": 15,
+  "density": 1
+ },
+ {
+  "id": "eggplant",
+  "name": "חציל",
+  "aliases": [
+   "חצילים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 10,
+  "flags": [],
+  "unitWeight": 350,
+  "density": 1
+ },
+ {
+  "id": "zucchini",
+  "name": "קישוא",
+  "aliases": [
+   "קישואים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 9,
+  "flags": [],
+  "unitWeight": 200,
+  "density": 1
+ },
+ {
+  "id": "broccoli",
+  "name": "ברוקולי",
+  "aliases": [
+   "ברוקולי טרי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 16,
+  "flags": [],
+  "unitWeight": 350,
+  "density": 1
+ },
+ {
+  "id": "cauliflower",
+  "name": "כרובית",
+  "aliases": [],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 12,
+  "flags": [],
+  "unitWeight": 700,
+  "density": 1
+ },
+ {
+  "id": "cabbage",
+  "name": "כרוב לבן",
+  "aliases": [
+   "כרוב"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 6,
+  "flags": [],
+  "unitWeight": 1000,
+  "density": 1
+ },
+ {
+  "id": "celery",
+  "name": "סלרי",
+  "aliases": [
+   "גבעולי סלרי",
+   "גבעול סלרי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 12,
+  "flags": [],
+  "unitWeight": 40,
+  "density": 1
+ },
+ {
+  "id": "celeriac",
+  "name": "שורש סלרי",
+  "aliases": [],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 14,
+  "flags": [],
+  "unitWeight": 400,
+  "density": 1
+ },
+ {
+  "id": "leek",
+  "name": "כרישה",
+  "aliases": [
+   "כרישות"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 14,
+  "flags": [],
+  "unitWeight": 200,
+  "density": 1
+ },
+ {
+  "id": "mushroom",
+  "name": "פטריות שמפיניון",
+  "aliases": [
+   "פטריות",
+   "שמפיניון",
+   "פטריות שמפניון"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 28,
+  "flags": [],
+  "unitWeight": 20,
+  "density": 1
+ },
+ {
+  "id": "spinach",
+  "name": "תרד",
+  "aliases": [
+   "עלי תרד",
+   "תרד טרי"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 18,
+  "flags": [],
+  "unitWeight": 30,
+  "density": 1
+ },
+ {
+  "id": "lemon",
+  "name": "לימון",
+  "aliases": [
+   "לימונים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 10,
+  "flags": [],
+  "unitWeight": 100,
+  "density": 1
+ },
+ {
+  "id": "parsley",
+  "name": "פטרוזיליה",
+  "aliases": [
+   "פטרוזיליה קצוצה",
+   "צרור פטרוזיליה"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 40,
+  "flags": [],
+  "unitWeight": 50,
+  "density": 1
+ },
+ {
+  "id": "cilantro",
+  "name": "כוסברה",
+  "aliases": [
+   "כוסברה קצוצה"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 40,
+  "flags": [],
+  "unitWeight": 50,
+  "density": 1
+ },
+ {
+  "id": "dill",
+  "name": "שמיר",
+  "aliases": [],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 40,
+  "flags": [],
+  "unitWeight": 50,
+  "density": 1
+ },
+ {
+  "id": "mint",
+  "name": "נענע",
+  "aliases": [
+   "עלי נענע"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 40,
+  "flags": [],
+  "unitWeight": 30,
+  "density": 1
+ },
+ {
+  "id": "basil",
+  "name": "בזיליקום",
+  "aliases": [
+   "עלי בזיליקום"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 90,
+  "flags": [],
+  "unitWeight": 30,
+  "density": 1
+ },
+ {
+  "id": "banana",
+  "name": "בננה",
+  "aliases": [
+   "בננות"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 8,
+  "flags": [],
+  "unitWeight": 130,
+  "density": 1
+ },
+ {
+  "id": "apple",
+  "name": "תפוח עץ",
+  "aliases": [
+   "תפוחים",
+   "תפוח"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 11,
+  "flags": [],
+  "unitWeight": 180,
+  "density": 1
+ },
+ {
+  "id": "strawberry",
+  "name": "תות שדה",
+  "aliases": [
+   "תותים",
+   "תות"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 32,
+  "flags": [],
+  "unitWeight": 20,
+  "density": 1
+ },
+ {
+  "id": "orange",
+  "name": "תפוז",
+  "aliases": [
+   "תפוזים"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 7,
+  "flags": [],
+  "unitWeight": 200,
+  "density": 1
+ },
+ {
+  "id": "avocado",
+  "name": "אבוקדו",
+  "aliases": [],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 18,
+  "flags": [],
+  "unitWeight": 220,
+  "density": 1
+ },
+ {
+  "id": "pumpkin",
+  "name": "דלעת",
+  "aliases": [
+   "דלעת קלופה"
+  ],
+  "aisle": "produce",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 6,
+  "flags": [],
+  "unitWeight": 1000,
+  "density": 1
+ },
+ {
+  "id": "chicken-breast",
+  "name": "חזה עוף",
+  "aliases": [
+   "פילה חזה עוף",
+   "חזה עוף טרי",
+   "שניצל גולמי"
+  ],
+  "aisle": "meat",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 44,
+  "flags": [
+   "m"
+  ],
+  "unitWeight": 250,
+  "density": 1
+ },
+ {
+  "id": "chicken-thighs",
+  "name": "שוקי עוף",
+  "aliases": [
+   "שוקיים",
+   "ירכיים",
+   "ירכי עוף",
+   "שוקי עוף טריים"
+  ],
+  "aisle": "meat",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 29,
+  "flags": [
+   "m"
+  ],
+  "unitWeight": 160,
+  "density": 1
+ },
+ {
+  "id": "ground-beef",
+  "name": "בשר בקר טחון",
+  "aliases": [
+   "בשר טחון",
+   "בקר טחון",
+   "בשר בקר"
+  ],
+  "aisle": "meat",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 62,
+  "flags": [
+   "m"
+  ],
+  "unitWeight": 100,
+  "density": 1
+ },
+ {
+  "id": "tilapia",
+  "name": "פילה אמנון",
+  "aliases": [
+   "אמנון",
+   "פילה דג",
+   "פילה דג לבן"
+  ],
+  "aisle": "meat",
+  "base": "g",
+  "pack": {
+   "type": "loose",
+   "size": 1000,
+   "step": 100
+  },
+  "ref": 62,
+  "flags": [
+   "f"
+  ],
+  "unitWeight": 150,
+  "density": 1
+ },
+ {
+  "id": "eggs",
+  "name": "ביצים",
+  "aliases": [
+   "ביצה",
+   "ביצים L",
+   "ביצה L"
+  ],
+  "aisle": "dairy",
+  "base": "u",
+  "pack": {
+   "type": "pack",
+   "size": 12
+  },
+  "ref": 17,
+  "flags": [
+   "e"
+  ],
+  "unitWeight": 55,
+  "density": 1
+ },
+ {
+  "id": "milk",
+  "name": "חלב",
+  "aliases": [
+   "חלב 3%",
+   "חלב טרי"
+  ],
+  "aisle": "dairy",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 7.2,
+  "flags": [
+   "d"
+  ],
+  "density": 1.03
+ },
+ {
+  "id": "butter",
+  "name": "חמאה",
+  "aliases": [
+   "חמאה רכה",
+   "חמאה קרה"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 11.5,
+  "flags": [
+   "d"
+  ],
+  "density": 0.95
+ },
+ {
+  "id": "cream",
+  "name": "שמנת מתוקה",
+  "aliases": [
+   "שמנת להקצפה",
+   "שמנת לקצפת"
+  ],
+  "aisle": "dairy",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 9.5,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "cooking-cream",
+  "name": "שמנת לבישול",
+  "aliases": [
+   "שמנת לבישול 15%"
+  ],
+  "aisle": "dairy",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 7,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "white-cheese",
+  "name": "גבינה לבנה",
+  "aliases": [
+   "גבינה לבנה 5%"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 6.8,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "mozzarella",
+  "name": "גבינת מוצרלה",
+  "aliases": [
+   "מוצרלה",
+   "מוצרלה מגורדת"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 24,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "yellow-cheese",
+  "name": "גבינה צהובה",
+  "aliases": [
+   "גבינה צהובה מגורדת",
+   "גבינה צהובה בפרוסות"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 14,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "parmesan",
+  "name": "פרמזן",
+  "aliases": [
+   "פרמזן מגורד",
+   "גבינת פרמזן"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 100
+  },
+  "ref": 17,
+  "flags": [
+   "d"
+  ],
+  "density": 1
+ },
+ {
+  "id": "yogurt",
+  "name": "יוגורט טבעי",
+  "aliases": [
+   "יוגורט"
+  ],
+  "aisle": "dairy",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 8,
+  "flags": [
+   "d"
+  ],
+  "density": 1.03
+ },
+ {
+  "id": "flour",
+  "name": "קמח לבן",
+  "aliases": [
+   "קמח",
+   "קמח רגיל",
+   "קמח חיטה",
+   "קמח לכל מטרה"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 5.5,
+  "flags": [
+   "g"
+  ],
+  "density": 0.55
+ },
+ {
+  "id": "whole-flour",
+  "name": "קמח מלא",
+  "aliases": [
+   "קמח מלא חיטה"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 8.5,
+  "flags": [
+   "g"
+  ],
+  "density": 0.55
+ },
+ {
+  "id": "sugar",
+  "name": "סוכר",
+  "aliases": [
+   "סוכר לבן"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 6.5,
+  "flags": [],
+  "density": 0.85,
+  "home": true
+ },
+ {
+  "id": "brown-sugar",
+  "name": "סוכר חום",
+  "aliases": [],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "powdered-sugar",
+  "name": "אבקת סוכר",
+  "aliases": [
+   "סוכר אבקה"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 8,
+  "flags": [],
+  "density": 0.55
+ },
+ {
+  "id": "salt",
+  "name": "מלח",
+  "aliases": [
+   "מלח שולחן",
+   "מלח ים",
+   "מלח גס"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 3.5,
+  "flags": [],
+  "density": 1.2,
+  "home": true
+ },
+ {
+  "id": "rice-basmati",
+  "name": "אורז בסמטי",
+  "aliases": [],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 14,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "rice-white",
+  "name": "אורז לבן",
+  "aliases": [
+   "אורז",
+   "אורז עגול",
+   "אורז פרסי"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 10,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "pasta",
+  "name": "פסטה",
+  "aliases": [
+   "ספגטי",
+   "פנה",
+   "פסטה יבשה",
+   "מקרוני",
+   "פוסילי"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 7,
+  "flags": [
+   "g"
+  ],
+  "density": 0.45
+ },
+ {
+  "id": "couscous",
+  "name": "קוסקוס",
+  "aliases": [],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 8.5,
+  "flags": [
+   "g"
+  ],
+  "density": 0.7
+ },
+ {
+  "id": "lentils-red",
+  "name": "עדשים כתומות",
+  "aliases": [
+   "עדשים אדומות"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 9.5,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "lentils-green",
+  "name": "עדשים ירוקות",
+  "aliases": [
+   "עדשים חומות",
+   "עדשים"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 9.5,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "chickpeas-dry",
+  "name": "גרגירי חומוס",
+  "aliases": [
+   "חומוס גרגירים",
+   "גרגירי חומוס יבשים",
+   "חומוס יבש"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 8.5,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "oats",
+  "name": "שיבולת שועל",
+  "aliases": [
+   "קוואקר",
+   "שיבולת שועל מלאה",
+   "פתיתי שיבולת שועל"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 9,
+  "flags": [
+   "g"
+  ],
+  "density": 0.35
+ },
+ {
+  "id": "breadcrumbs",
+  "name": "פירורי לחם",
+  "aliases": [
+   "פירורי לחם"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 8.5,
+  "flags": [
+   "g"
+  ],
+  "density": 0.45
+ },
+ {
+  "id": "cornstarch",
+  "name": "עמילן תירס",
+  "aliases": [
+   "קורנפלור"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 7.5,
+  "flags": [],
+  "density": 0.6
+ },
+ {
+  "id": "honey",
+  "name": "דבש",
+  "aliases": [],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 21,
+  "flags": [
+   "h"
+  ],
+  "density": 1.4
+ },
+ {
+  "id": "cocoa",
+  "name": "אבקת קקאו",
+  "aliases": [
+   "קקאו"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 16,
+  "flags": [],
+  "density": 0.5
+ },
+ {
+  "id": "dark-chocolate",
+  "name": "שוקולד מריר פרווה",
+  "aliases": [
+   "שוקולד מריר",
+   "שוקולד פרווה",
+   "שוקולד"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 14,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "baking-powder",
+  "name": "אבקת אפייה",
+  "aliases": [
+   "אבקת אפיה"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 6.5,
+  "flags": [],
+  "density": 0.8
+ },
+ {
+  "id": "baking-soda",
+  "name": "סודה לשתייה",
+  "aliases": [
+   "סודה לשתיה",
+   "סודה לשתייה"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 5,
+  "flags": [],
+  "density": 1.1
+ },
+ {
+  "id": "yeast",
+  "name": "שמרים יבשים",
+  "aliases": [
+   "שמרים",
+   "שמרים יבשים מיידיים"
+  ],
+  "aisle": "baking",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 33
+  },
+  "ref": 8,
+  "flags": [],
+  "density": 0.6
+ },
+ {
+  "id": "vanilla",
+  "name": "תמצית וניל",
+  "aliases": [
+   "וניל",
+   "תמצית וניל טבעית"
+  ],
+  "aisle": "baking",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 15,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "oil",
+  "name": "שמן",
+  "aliases": [
+   "שמן קנולה",
+   "שמן צמחי",
+   "שמן לטיגון"
+  ],
+  "aisle": "oils",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 12,
+  "flags": [],
+  "density": 0.92,
+  "home": true
+ },
+ {
+  "id": "olive-oil",
+  "name": "שמן זית",
+  "aliases": [
+   "שמן זית כתית",
+   "שמן זית כתית מעולה"
+  ],
+  "aisle": "oils",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 750
+  },
+  "ref": 38,
+  "flags": [],
+  "density": 0.91,
+  "home": true
+ },
+ {
+  "id": "vinegar",
+  "name": "חומץ",
+  "aliases": [
+   "חומץ יין",
+   "חומץ תפוחים",
+   "חומץ לבן"
+  ],
+  "aisle": "oils",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 6,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "soy-sauce",
+  "name": "רוטב סויה",
+  "aliases": [
+   "סויה"
+  ],
+  "aisle": "canned",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 10,
+  "flags": [
+   "g",
+   "o"
+  ],
+  "density": 1.1
+ },
+ {
+  "id": "mayo",
+  "name": "מיונז",
+  "aliases": [],
+  "aisle": "canned",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 12.5,
+  "flags": [
+   "e"
+  ],
+  "density": 0.95
+ },
+ {
+  "id": "mustard",
+  "name": "חרדל",
+  "aliases": [
+   "חרדל דיז'ון",
+   "חרדל צהוב"
+  ],
+  "aisle": "canned",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 7,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "crushed-tomatoes",
+  "name": "עגבניות מרוסקות",
+  "aliases": [
+   "עגבניות משומרות",
+   "רוטב עגבניות",
+   "עגבניות מרוסקות משומרות"
+  ],
+  "aisle": "canned",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 5,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "tomato-paste",
+  "name": "רסק עגבניות",
+  "aliases": [],
+  "aisle": "canned",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 5.5,
+  "flags": [],
+  "density": 1.1
+ },
+ {
+  "id": "chickpeas-canned",
+  "name": "חומוס מבושל",
+  "aliases": [
+   "חומוס משומר",
+   "גרגירי חומוס מבושלים"
+  ],
+  "aisle": "canned",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 5.5,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "coconut-milk",
+  "name": "חלב קוקוס",
+  "aliases": [],
+  "aisle": "canned",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 1
+ },
+ {
+  "id": "peas-frozen",
+  "name": "אפונה קפואה",
+  "aliases": [
+   "אפונה"
+  ],
+  "aisle": "frozen",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.7
+ },
+ {
+  "id": "veg-stock",
+  "name": "אבקת מרק ירקות",
+  "aliases": [
+   "תבלין מרק ירקות",
+   "אבקת מרק"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 11,
+  "flags": [],
+  "density": 0.7
+ },
+ {
+  "id": "chicken-stock",
+  "name": "אבקת מרק עוף",
+  "aliases": [
+   "תבלין מרק עוף",
+   "אבקת מרק עוף"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 11,
+  "flags": [
+   "a"
+  ],
+  "density": 0.7
+ },
+ {
+  "id": "pepper",
+  "name": "פלפל שחור",
+  "aliases": [
+   "פלפל שחור גרוס",
+   "פלפל",
+   "פלפל שחור טחון"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 11,
+  "flags": [],
+  "density": 0.5,
+  "home": true
+ },
+ {
+  "id": "cumin",
+  "name": "כמון",
+  "aliases": [
+   "כמון טחון"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.45
+ },
+ {
+  "id": "paprika",
+  "name": "פפריקה",
+  "aliases": [
+   "פפריקה מתוקה",
+   "פפריקה חריפה"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.5
+ },
+ {
+  "id": "turmeric",
+  "name": "כורכום",
+  "aliases": [],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.6
+ },
+ {
+  "id": "cinnamon",
+  "name": "קינמון",
+  "aliases": [
+   "קינמון טחון"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 50
+  },
+  "ref": 9,
+  "flags": [],
+  "density": 0.5
+ },
+ {
+  "id": "oregano",
+  "name": "אורגנו",
+  "aliases": [
+   "אורגנו יבש"
+  ],
+  "aisle": "spices",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 20
+  },
+  "ref": 8,
+  "flags": [],
+  "density": 0.2
+ },
+ {
+  "id": "peanuts",
+  "name": "בוטנים קלויים",
+  "aliases": [
+   "בוטנים"
+  ],
+  "aisle": "nuts",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 400
+  },
+  "ref": 14,
+  "flags": [
+   "p"
+  ],
+  "density": 0.6
+ },
+ {
+  "id": "almonds",
+  "name": "שקדים",
+  "aliases": [
+   "שקדים קלופים",
+   "שקדים טחונים"
+  ],
+  "aisle": "nuts",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 22,
+  "flags": [
+   "n"
+  ],
+  "density": 0.6
+ },
+ {
+  "id": "walnuts",
+  "name": "אגוזי מלך",
+  "aliases": [],
+  "aisle": "nuts",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 200
+  },
+  "ref": 24,
+  "flags": [
+   "n"
+  ],
+  "density": 0.4
+ },
+ {
+  "id": "sesame",
+  "name": "שומשום",
+  "aliases": [
+   "שומשום קלוי",
+   "שומשום לבן"
+  ],
+  "aisle": "nuts",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 11,
+  "flags": [
+   "s"
+  ],
+  "density": 0.6
+ },
+ {
+  "id": "tahini",
+  "name": "טחינה גולמית",
+  "aliases": [
+   "טחינה",
+   "טחינה גולמית משומשום מלא"
+  ],
+  "aisle": "dry",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 500
+  },
+  "ref": 24,
+  "flags": [
+   "s"
+  ],
+  "density": 0.95
+ },
+ {
+  "id": "raisins",
+  "name": "צימוקים",
+  "aliases": [],
+  "aisle": "nuts",
+  "base": "g",
+  "pack": {
+   "type": "pack",
+   "size": 250
+  },
+  "ref": 10,
+  "flags": [],
+  "density": 0.6
+ },
+ {
+  "id": "water",
+  "name": "מים",
+  "aliases": [
+   "מים קרים",
+   "מים חמים",
+   "קוביות קרח",
+   "קרח"
+  ],
+  "aisle": "free",
+  "base": "ml",
+  "pack": {
+   "type": "pack",
+   "size": 1000
+  },
+  "ref": 0,
+  "flags": [],
+  "density": 1,
+  "free": true
+ }
+]
