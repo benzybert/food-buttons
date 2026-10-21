@@ -5149,5 +5149,619 @@
    "cook": 25,
    "total": 30
   }
+ },
+ {
+  "id": "banana-bread",
+  "tags": [
+   "פרווה",
+   "אפייה",
+   "ילדים"
+  ],
+  "ingredients": [
+   {
+    "qty": 3,
+    "unit": "u",
+    "id": "banana"
+   },
+   {
+    "qty": 200,
+    "unit": "g",
+    "id": "flour"
+   },
+   {
+    "qty": 150,
+    "unit": "g",
+    "id": "sugar"
+   },
+   {
+    "qty": 100,
+    "unit": "ml",
+    "id": "oil"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "baking-soda"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "cinnamon"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 50,
+    "unit": "g",
+    "id": "walnuts"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את האגוזים וקצצו 3 שנ'/מהירות 5. העבירו לצלחת.",
+    "settings": [
+     {
+      "time": 3,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הכניסו לקערה את הבננות הקלופות וערבבו 10 שנ'/מהירות 4. הוסיפו שמן, ביצים וסוכר וערבבו 20 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 20,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו קמח, סודה, קינמון ומלח וערבבו 15 שנ'/מהירות 4. הוסיפו את האגוזים וערבבו 5 שנ'/↺/מהירות 2.",
+    "settings": [
+     {
+      "time": 15,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 5,
+      "temp": null,
+      "speed": "2",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "יצקו לתבנית אורכית משומנת ואפו ב-170 מעלות כ-55 דקות, עד שקיסם יוצא יבש."
+   }
+  ],
+  "src": "builtin",
+  "name": "לחם בננה",
+  "emoji": "🍌",
+  "category": "dessert",
+  "servings": 10,
+  "prep": 15,
+  "cook": 55,
+  "level": 1,
+  "order": 12,
+  "description": "לחם בננה לח עם אגוזי מלך, שימוש מצוין לבננות שהכהו.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten",
+   "tree-nuts"
+  ],
+  "equipment": [
+   "oven"
+  ],
+  "kcal": 303,
+  "time": {
+   "prep": 15,
+   "cook": 55,
+   "total": 70
+  }
+ },
+ {
+  "id": "brownies",
+  "tags": [
+   "פרווה",
+   "אפייה",
+   "שוקולד"
+  ],
+  "ingredients": [
+   {
+    "qty": 200,
+    "unit": "g",
+    "id": "dark-chocolate"
+   },
+   {
+    "qty": 150,
+    "unit": "ml",
+    "id": "oil"
+   },
+   {
+    "qty": 200,
+    "unit": "g",
+    "id": "sugar"
+   },
+   {
+    "qty": 3,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 100,
+    "unit": "g",
+    "id": "flour"
+   },
+   {
+    "qty": 30,
+    "unit": "g",
+    "id": "cocoa"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "vanilla"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את השוקולד וקצצו 8 שנ'/מהירות 7. הוסיפו שמן וחממו 3 דק'/50°C/מהירות 2 עד להתמוססות.",
+    "settings": [
+     {
+      "time": 8,
+      "temp": null,
+      "speed": "7",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 180,
+      "temp": 50,
+      "speed": "2",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו סוכר, ביצים ווניל וערבבו 20 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 20,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו קמח, קקאו ומלח וערבבו 15 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 15,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "יצקו לתבנית 20x20 עם נייר אפייה ואפו ב-180 מעלות כ-25 דקות. עדיף שיישאר טיפה לח באמצע."
+   }
+  ],
+  "src": "builtin",
+  "name": "בראוניז שוקולד",
+  "emoji": "🍫",
+  "category": "dessert",
+  "servings": 12,
+  "prep": 15,
+  "cook": 25,
+  "level": 1,
+  "order": 18,
+  "description": "בראוניז פרווה עם פנים רך ושוקולד אמיתי.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten"
+  ],
+  "equipment": [
+   "oven"
+  ],
+  "kcal": 322,
+  "time": {
+   "prep": 15,
+   "cook": 25,
+   "total": 40
+  }
+ },
+ {
+  "id": "apple-cake",
+  "tags": [
+   "פרווה",
+   "אפייה",
+   "ראש השנה"
+  ],
+  "ingredients": [
+   {
+    "qty": 3,
+    "unit": "u",
+    "id": "apple"
+   },
+   {
+    "qty": 250,
+    "unit": "g",
+    "id": "flour"
+   },
+   {
+    "qty": 200,
+    "unit": "g",
+    "id": "sugar"
+   },
+   {
+    "qty": 120,
+    "unit": "ml",
+    "id": "oil"
+   },
+   {
+    "qty": 3,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 2,
+    "unit": "tsp",
+    "id": "baking-powder"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "cinnamon"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "vanilla"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את התפוחים (קלופים וחתוכים לרבעים) וקצצו 4 שנ'/מהירות 4. העבירו לקערה בצד.",
+    "settings": [
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הכניסו לקערה ביצים, סוכר, שמן ווניל וערבבו 30 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 30,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו קמח, אבקת אפייה, קינמון ומלח וערבבו 20 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 20,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו את התפוחים וערבבו 10 שנ'/↺/מהירות 2. יצקו לתבנית ואפו ב-175 מעלות כ-50 דקות.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "2",
+      "reverse": true,
+      "kneading": false
+     }
+    ]
+   }
+  ],
+  "src": "builtin",
+  "name": "עוגת תפוחים",
+  "emoji": "🍎",
+  "category": "dessert",
+  "servings": 12,
+  "prep": 20,
+  "cook": 50,
+  "level": 1,
+  "order": 22,
+  "description": "עוגת תפוחים רכה עם קינמון, מערבבים הכול בקערה.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten"
+  ],
+  "equipment": [
+   "oven"
+  ],
+  "kcal": 274,
+  "time": {
+   "prep": 20,
+   "cook": 50,
+   "total": 70
+  }
+ },
+ {
+  "id": "pesto-pasta",
+  "tags": [
+   "חלבי",
+   "מהיר",
+   "ילדים"
+  ],
+  "ingredients": [
+   {
+    "qty": 400,
+    "unit": "g",
+    "id": "pasta"
+   },
+   {
+    "qty": 60,
+    "unit": "g",
+    "id": "basil"
+   },
+   {
+    "qty": 40,
+    "unit": "g",
+    "id": "parmesan"
+   },
+   {
+    "qty": 40,
+    "unit": "g",
+    "id": "walnuts"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "garlic",
+    "unitWord": "שיני"
+   },
+   {
+    "qty": 120,
+    "unit": "ml",
+    "id": "olive-oil"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "salt"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה פרמזן, אגוזים ושום וטחנו 10 שנ'/מהירות 8.",
+    "settings": [
+     {
+      "time": 10,
+      "temp": null,
+      "speed": "8",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "הוסיפו בזיליקום ומלח וטחנו 15 שנ'/מהירות 7. הוסיפו שמן זית בהדרגה תוך כדי 20 שנ'/מהירות 4.",
+    "settings": [
+     {
+      "time": 15,
+      "temp": null,
+      "speed": "7",
+      "reverse": false,
+      "kneading": false
+     },
+     {
+      "time": 20,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "בשלו את הפסטה בסיר לפי ההוראות, שמרו חצי כוס ממי הבישול."
+   },
+   {
+    "text": "ערבבו את הפסטה עם הפסטו ומעט ממי הבישול עד לרוטב חלק."
+   }
+  ],
+  "src": "builtin",
+  "name": "פסטה ברוטב פסטו",
+  "emoji": "🍝",
+  "category": "main",
+  "servings": 4,
+  "prep": 10,
+  "cook": 15,
+  "level": 1,
+  "order": 48,
+  "description": "פסטו טרי שמוכן בדקה, בזמן שהפסטה מתבשלת.",
+  "kosher": "dairy",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "gluten",
+   "milk",
+   "tree-nuts"
+  ],
+  "equipment": [],
+  "kcal": 741,
+  "time": {
+   "prep": 10,
+   "cook": 15,
+   "total": 25
+  }
+ },
+ {
+  "id": "zucchini-fritters",
+  "tags": [
+   "פרווה",
+   "צמחוני",
+   "מטוגן"
+  ],
+  "ingredients": [
+   {
+    "qty": 600,
+    "unit": "g",
+    "id": "zucchini"
+   },
+   {
+    "qty": 1,
+    "unit": "u",
+    "id": "onion"
+   },
+   {
+    "qty": 2,
+    "unit": "u",
+    "id": "eggs"
+   },
+   {
+    "qty": 5,
+    "unit": "tbsp",
+    "id": "flour"
+   },
+   {
+    "qty": 20,
+    "unit": "g",
+    "id": "parsley"
+   },
+   {
+    "qty": 1,
+    "unit": "tsp",
+    "id": "salt"
+   },
+   {
+    "qty": 0.5,
+    "unit": "tsp",
+    "id": "pepper"
+   },
+   {
+    "qty": 100,
+    "unit": "ml",
+    "id": "oil",
+    "note": "לטיגון"
+   }
+  ],
+  "steps": [
+   {
+    "text": "הכניסו לקערה את הבצל והפטרוזיליה וקצצו 4 שנ'/מהירות 5. העבירו לקערה בצד.",
+    "settings": [
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "5",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "קצצו את הקישואים (חתוכים לרבעים) 4 שנ'/מהירות 4, וסחטו היטב את הנוזלים.",
+    "settings": [
+     {
+      "time": 4,
+      "temp": null,
+      "speed": "4",
+      "reverse": false,
+      "kneading": false
+     }
+    ]
+   },
+   {
+    "text": "ערבבו את הקישואים עם הבצל, ביצים, קמח, מלח ופלפל."
+   },
+   {
+    "text": "טגנו כפות מהתערובת בשמן חם כ-3 דקות מכל צד."
+   }
+  ],
+  "src": "builtin",
+  "name": "לביבות קישואים",
+  "emoji": "🥒",
+  "category": "side",
+  "servings": 4,
+  "prep": 15,
+  "cook": 20,
+  "level": 1,
+  "order": 32,
+  "description": "לביבות ירוקות ופריכות עם פטרוזיליה.",
+  "kosher": "parve",
+  "diet": [
+   "vegetarian"
+  ],
+  "allergens": [
+   "eggs",
+   "gluten"
+  ],
+  "equipment": [],
+  "kcal": 164,
+  "time": {
+   "prep": 15,
+   "cook": 20,
+   "total": 35
+  }
  }
 ]

@@ -39,7 +39,7 @@ dill | שמיר | | produce | g | kg | 40 | 50 | 1 |
 mint | נענע | עלי נענע | produce | g | kg | 40 | 30 | 1 |
 basil | בזיליקום | עלי בזיליקום | produce | g | kg | 90 | 30 | 1 |
 banana | בננה | בננות | produce | g | kg | 8 | 130 | 1 |
-apple | תפוח עץ | תפוחים,תפוח | produce | g | kg | 11 | 180 | 1 |
+apple | תפוח עץ | תפוחי עץ,תפוחים,תפוח | produce | g | kg | 11 | 180 | 1 |
 strawberry | תות שדה | תותים,תות | produce | g | kg | 32 | 20 | 1 |
 orange | תפוז | תפוזים | produce | g | kg | 7 | 200 | 1 |
 avocado | אבוקדו | | produce | g | kg | 18 | 220 | 1 |

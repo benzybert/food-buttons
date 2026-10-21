@@ -32,6 +32,7 @@ export function importView({ match }) {
     const file = h("input", { type: "file", hidden: true, accept: ".txt,.json,.html,.htm,text/plain,application/json", "aria-label": "העלאת קובץ מתכון", onchange: (e) => e.target.files[0]?.text().then((t) => ((area.value = t), analyze(t))) });
     const analyze = (text) => {
       if (!text.trim()) return toast("הדביקו קודם טקסט של מתכון");
+      if (/^\s*https?:\/\/\S+\s*$/.test(text)) return toast("זה קישור: פתחו אותו, העתיקו את טקסט המתכון והדביקו כאן. האפליקציה לא פותחת אתרים בשבילכם.");
       draft = fromParsed(parseRecipeText(text, c.index), c);
       paint();
     };

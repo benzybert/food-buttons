@@ -3,7 +3,7 @@
 Hebrew RTL web app that answers one question: **order food (from Sharon or a delivery app) or cook it at home with a Thermomix, and what does each cost?**
 
 - Two giant buttons on the home screen: **שרון** (order) and **Thermomix** (cook). Alef font, light/dark.
-- 44 original Thermomix-style recipes, with cost per serving, calories, and the price of ordering the same dish.
+- 49 original Thermomix-style recipes, with cost per serving, calories, and the price of ordering the same dish.
 - **Price comparison**: put dishes in a basket and see the total at 8 supermarkets (whole packs, pantry-aware), the best two-store split, the cheapest store per item, and cook vs. order (optionally including the value of your time and delivery fees).
 - Shopping list (grouped by aisle, tick-off, WhatsApp / copy / print, split by store), weekly planner with auto-plan, pantry with "what can I cook now?", step-by-step cook mode with timers and screen wake lock, "what should I eat tonight?", a Sharon menu with a WhatsApp order message (plus any extra order sources you add: apps, restaurants), recipe import (paste text or JSON-LD, e.g. copied from Cookidoo), price editing/import, backup/restore.
 - Installable PWA that works offline. No accounts, no tracking: everything is stored in the browser (`localStorage`).

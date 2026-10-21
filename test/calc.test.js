@@ -7,7 +7,7 @@ import { fixture } from "./helpers.js";
 const raw = fixture();
 const cat = buildCatalog(raw);
 const ctx = cat; // catalog doubles as the calc context
-const [A, B] = raw.stores;
+const [A] = raw.stores;
 const cake = cat.recById.get("cake");
 
 test("purchaseFor: packages round up to whole packs, loose goods to the step", () => {
