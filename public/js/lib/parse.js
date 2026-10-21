@@ -111,6 +111,7 @@ export function parseIngredientLine(line, index) {
 
   let qty = null;
   let unit = null;
+  let unitWord = null;
   let toTaste = false;
 
   const q = parseQuantity(s);
@@ -124,6 +125,7 @@ export function parseIngredientLine(line, index) {
   const first = norm(parts[0] || "");
   if (UNIT_LOOKUP.has(first)) {
     unit = UNIT_LOOKUP.get(first);
+    if (unit === "u" && !["יחידה", "יחידות", "יח"].includes(first)) unitWord = first;
     parts.shift();
     if (parts[0] && UNIT_ADJECTIVES.has(norm(parts[0]))) parts.shift();
     if (parts[0] === "של") parts.shift();
@@ -159,6 +161,7 @@ export function parseIngredientLine(line, index) {
   const hit = matchIngredient(name, index);
   const out = { raw, qty, unit, name, id: hit ? hit.id : null };
   if (note) out.note = note;
+  if (unitWord) out.unitWord = unitWord;
   if (toTaste) out.toTaste = true;
   return out;
 }
@@ -201,6 +204,19 @@ export function extractSettings(text) {
     }
     out.push({ ...s, text: g[0] });
   }
+  return out;
+}
+
+/** Split a step into plain and setting-group parts: [{ text, setting: boolean }]. */
+export function splitBySettings(text) {
+  const out = [];
+  let last = 0;
+  for (const m of text.matchAll(GROUP_RE)) {
+    if (m.index > last) out.push({ text: text.slice(last, m.index), setting: false });
+    out.push({ text: m[0], setting: true });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push({ text: text.slice(last), setting: false });
   return out;
 }
 

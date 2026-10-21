@@ -30,7 +30,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "celery"
+    "id": "celery",
+    "unitWord": "גבעולי"
    },
    {
     "qty": 20,
@@ -286,7 +287,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -431,7 +433,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -562,7 +565,8 @@
    {
     "qty": 1,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שן"
    },
    {
     "qty": 1,
@@ -683,7 +687,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -806,7 +811,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 20,
@@ -954,7 +960,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -1108,7 +1115,8 @@
    {
     "qty": 1,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שן"
    },
    {
     "qty": 1,
@@ -1322,7 +1330,8 @@
    {
     "qty": 3,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 2,
@@ -1430,7 +1439,8 @@
    {
     "qty": 3,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 2,
@@ -1804,7 +1814,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 2,
@@ -1935,7 +1946,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -2076,7 +2088,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 30,
@@ -2242,7 +2255,8 @@
    {
     "qty": 1,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שן"
    },
    {
     "qty": 1,
@@ -2364,7 +2378,8 @@
    {
     "qty": 3,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 2,
@@ -2476,7 +2491,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -2589,7 +2605,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 2,
@@ -2692,7 +2709,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 1,
@@ -2798,7 +2816,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 20,
@@ -2891,7 +2910,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 120,
@@ -2994,7 +3014,8 @@
    {
     "qty": 5,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 3,
@@ -3105,7 +3126,8 @@
    {
     "qty": 2,
     "unit": "u",
-    "id": "garlic"
+    "id": "garlic",
+    "unitWord": "שיני"
    },
    {
     "qty": 20,

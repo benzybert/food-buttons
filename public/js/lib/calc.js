@@ -184,25 +184,38 @@ export function bestPair(needsMap, ctx, { pantry = new Set(), stores = ctx.store
 
 // ------------------------------------------------------------------ single dish
 
+/** Per-line proportional costs of a dish at one store: [{ line, ing, need, cost, kind }]. */
+export function dishLines(rec, servings, store, ctx) {
+  const factor = servings / rec.servings;
+  const out = [];
+  for (const line of rec.ingredients) {
+    if (!line.id) {
+      out.push({ line, ing: null, need: null, cost: null, kind: "custom" });
+      continue;
+    }
+    const ing = ctx.ingById.get(line.id);
+    if (!ing) continue;
+    const need = toBase(ing, line.qty * factor, line.unit);
+    if (!Number.isFinite(need)) continue;
+    const info = ctx.priceFor(ing.id, store.id);
+    out.push({ line, ing, need, cost: ing.free ? 0 : consumedCost(ing, need, info.price), kind: info.kind });
+  }
+  return out;
+}
+
 /**
  * Proportional cost of one dish at one store (only the part that is eaten).
  * Returns { total, perServing, estimated, missing }.
  */
 export function dishCostAtStore(rec, servings, store, ctx) {
-  const factor = servings / rec.servings;
   let total = 0;
   let estimated = 0;
   let missing = 0;
-  for (const line of rec.ingredients) {
-    if (!line.id) continue;
-    const ing = ctx.ingById.get(line.id);
-    if (!ing || ing.free) continue;
-    const q = toBase(ing, line.qty * factor, line.unit);
-    if (!Number.isFinite(q)) continue;
-    const info = ctx.priceFor(ing.id, store.id);
-    total += consumedCost(ing, q, info.price);
-    if (info.kind === "estimate") estimated++;
-    if (info.kind === "missing") missing++;
+  for (const l of dishLines(rec, servings, store, ctx)) {
+    if (l.cost == null) continue;
+    total += l.cost;
+    if (l.kind === "estimate") estimated++;
+    if (l.kind === "missing") missing++;
   }
   return { storeId: store.id, total: round2(total), perServing: round2(total / servings), estimated, missing };
 }

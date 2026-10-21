@@ -2,23 +2,47 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>הזמנת אוכל</title>
-    <meta name="description" content="שתי דרכים להזמין אוכל" />
+    <meta name="description" content="להזמין מרשת או לבשל עם Thermomix? משווים מחירים, בוחרים מתכונים ויוצאים לקניות." />
+    <meta name="theme-color" content="#b3341b" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
     <link rel="preload" href="fonts/alef-he-700.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="app.css" />
+    <script type="module" src="js/main.js"></script>
   </head>
   <body>
-    <main>
-      <!-- Link targets are placeholders: set each href when the destination is known. -->
-      <a class="big" id="sharon" href="#">
-        <span class="kicker">הזמנת אוכל דרך</span>
-        <span class="name">שרון</span>
-      </a>
-      <a class="big" id="thermomix" href="#">
-        <span class="kicker">הזמנת אוכל דרך</span>
-        <span class="name" dir="ltr">Thermomix</span>
-      </a>
+    <a class="skip" href="#main">דלג לתוכן הראשי</a>
+    <header class="site-header" id="site-header" hidden>
+      <div class="inner">
+        <a class="brand" href="#/"><span class="logo" aria-hidden="true">🍽</span><span>הזמנת אוכל</span></a>
+        <nav class="nav-top" id="nav-top" aria-label="ניווט ראשי"></nav>
+        <span class="header-spacer"></span>
+        <a class="basket-pill" id="basket-pill" href="#/compare" hidden></a>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- Shown until the app boots (and without JavaScript): the original two big buttons. -->
+      <div class="home">
+        <div class="home-buttons">
+          <a class="big" id="sharon" href="#/order">
+            <span class="kicker">הזמנת אוכל דרך</span>
+            <span class="name">שרון</span>
+          </a>
+          <a class="big" id="thermomix" href="#/cook">
+            <span class="kicker">הזמנת אוכל דרך</span>
+            <span class="name" dir="ltr">Thermomix</span>
+          </a>
+        </div>
+        <noscript><p style="text-align: center">האתר דורש JavaScript כדי להשוות מחירים ולבחור מתכונים.</p></noscript>
+      </div>
     </main>
+
+    <nav class="tabbar" id="tabbar" aria-label="ניווט תחתון" hidden></nav>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>
 </html>

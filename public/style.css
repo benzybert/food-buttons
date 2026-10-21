@@ -1,52 +1,128 @@
+/* Base: fonts, design tokens, reset, and the two giant home buttons. Components live in app.css. */
+
 @font-face {
   font-family: "Alef";
   font-weight: 400;
   font-display: swap;
   src: url("fonts/alef-he-400.woff2") format("woff2");
-  unicode-range: U+0590-05FF, U+200E-200F, U+20AA;
+  unicode-range: U+0590-05FF, U+200C-200F, U+2010-2015, U+2018-201F, U+2022, U+2026, U+20AA, U+25CC;
 }
 @font-face {
   font-family: "Alef";
   font-weight: 700;
   font-display: swap;
   src: url("fonts/alef-he-700.woff2") format("woff2");
-  unicode-range: U+0590-05FF, U+200E-200F, U+20AA;
+  unicode-range: U+0590-05FF, U+200C-200F, U+2010-2015, U+2018-201F, U+2022, U+2026, U+20AA, U+25CC;
+}
+@font-face {
+  font-family: "Alef";
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/alef-latin-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201D, U+2022, U+2026, U+2212, U+2190-2193, U+2713;
 }
 @font-face {
   font-family: "Alef";
   font-weight: 700;
   font-display: swap;
   src: url("fonts/alef-latin-700.woff2") format("woff2");
-  unicode-range: U+0020-007E, U+00A0;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-201D, U+2022, U+2026, U+2212, U+2190-2193, U+2713;
 }
 
 :root {
+  color-scheme: light dark;
   --bg: #fff6ea;
+  --surface: #ffffff;
+  --surface-2: #fdebd3;
   --ink: #2b1a0e;
+  --ink-2: #6a5240;
+  --line: #ead7bb;
   --btn-1: #b3341b;
   --btn-2: #1d6b4a;
+  --btn-3: #3b4a9e;
   --btn-text: #ffffff;
   --focus: #ffb300;
+  --good: #17603f;
+  --good-bg: #dff3e8;
+  --bad: #a52d17;
+  --bad-bg: #fde4de;
+  --warn: #7a4e00;
+  --warn-bg: #fff0c7;
+  --info-bg: #e5e9fb;
+  --info: #2f3b85;
+  --shadow: 0 0.35rem 0 rgb(0 0 0 / 0.28);
   --gap: clamp(12px, 2.5vmin, 28px);
+  --radius: 18px;
+  --page: 960px;
+  --text: 1.125rem;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #1b120b;
+    --surface: #2a1c11;
+    --surface-2: #38271a;
     --ink: #fff2e0;
+    --ink-2: #d6c0a6;
+    --line: #4d3926;
     --btn-1: #d2492d;
     --btn-2: #258760;
+    --btn-3: #5266c9;
     --focus: #ffc933;
+    --good: #7fdcae;
+    --good-bg: #17382a;
+    --bad: #ff9d87;
+    --bad-bg: #4a2018;
+    --warn: #ffd37a;
+    --warn-bg: #413012;
+    --info-bg: #262c52;
+    --info: #b8c3ff;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #1b120b;
+  --surface: #2a1c11;
+  --surface-2: #38271a;
+  --ink: #fff2e0;
+  --ink-2: #d6c0a6;
+  --line: #4d3926;
+  --btn-1: #d2492d;
+  --btn-2: #258760;
+  --btn-3: #5266c9;
+  --focus: #ffc933;
+  --good: #7fdcae;
+  --good-bg: #17382a;
+  --bad: #ff9d87;
+  --bad-bg: #4a2018;
+  --warn: #ffd37a;
+  --warn-bg: #413012;
+  --info-bg: #262c52;
+  --info: #b8c3ff;
 }
 
 * {
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+html {
+  font-size: calc(100% * var(--scale, 1));
+  scroll-padding-block: 5rem;
+}
+
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
 
@@ -54,21 +130,60 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: "Alef", system-ui, sans-serif;
-  font-weight: 700;
+  font-weight: 400;
+  font-size: var(--text);
+  line-height: 1.55;
   -webkit-text-size-adjust: 100%;
+  overflow-wrap: anywhere;
 }
 
-main {
-  min-height: 100%;
+:focus-visible {
+  outline: 0.25rem solid var(--focus);
+  outline-offset: 0.15rem;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  text-wrap: balance;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------- home: two giant buttons (the original design) ---------- */
+
+.home {
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
   padding: var(--gap);
 }
 
+.home-buttons {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
 .big {
   flex: 1 1 0;
-  min-height: 38vh;
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,7 +196,7 @@ main {
   text-decoration: none;
   text-align: center;
   line-height: 1.05;
-  box-shadow: 0 0.35rem 0 rgb(0 0 0 / 0.28);
+  box-shadow: var(--shadow);
   transition: transform 0.08s ease, box-shadow 0.08s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -103,12 +218,19 @@ main {
 .big .kicker {
   font-weight: 400;
   font-size: clamp(1.4rem, 5vmin, 3rem);
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 .big .name {
+  font-weight: 700;
   font-size: clamp(3rem, 14vmin, 9rem);
   overflow-wrap: break-word;
+}
+
+.big .hint {
+  font-weight: 400;
+  font-size: clamp(1rem, 2.6vmin, 1.5rem);
+  opacity: 0.92;
 }
 
 #sharon {
@@ -119,7 +241,7 @@ main {
 }
 
 @media (min-width: 900px) and (orientation: landscape) {
-  main {
+  .home-buttons {
     flex-direction: row;
   }
   .big .name {
@@ -130,5 +252,8 @@ main {
 @media (prefers-reduced-motion: reduce) {
   .big {
     transition: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
