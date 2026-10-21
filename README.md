@@ -3,9 +3,9 @@
 Hebrew RTL web app that answers one question: **order food (from Sharon or a delivery app) or cook it at home with a Thermomix, and what does each cost?**
 
 - Two giant buttons on the home screen: **שרון** (order) and **Thermomix** (cook). Alef font, light/dark.
-- 44 original Thermomix-style recipes, with cost per serving vs. the price of ordering the same dish.
+- 44 original Thermomix-style recipes, with cost per serving, calories, and the price of ordering the same dish.
 - **Price comparison**: put dishes in a basket and see the total at 8 supermarkets (whole packs, pantry-aware), the best two-store split, the cheapest store per item, and cook vs. order (optionally including the value of your time and delivery fees).
-- Shopping list (grouped by aisle, tick-off, WhatsApp / copy / print, split by store), weekly planner with auto-plan, pantry with "what can I cook now?", step-by-step cook mode with timers and screen wake lock, "what should I eat tonight?", a Sharon menu with a WhatsApp order message, recipe import (paste text or JSON-LD, e.g. copied from Cookidoo), price editing/import, backup/restore.
+- Shopping list (grouped by aisle, tick-off, WhatsApp / copy / print, split by store), weekly planner with auto-plan, pantry with "what can I cook now?", step-by-step cook mode with timers and screen wake lock, "what should I eat tonight?", a Sharon menu with a WhatsApp order message (plus any extra order sources you add: apps, restaurants), recipe import (paste text or JSON-LD, e.g. copied from Cookidoo), price editing/import, backup/restore.
 - Installable PWA that works offline. No accounts, no tracking: everything is stored in the browser (`localStorage`).
 
 > **Prices are sample data** until you replace them (see `docs/DATA.md`). The UI says so on every price screen.
@@ -14,7 +14,7 @@ Hebrew RTL web app that answers one question: **order food (from Sharon or a del
 
 ```sh
 npm start            # http://localhost:3000  (PORT is respected)
-npm test             # unit tests: parser, units, price maths, data integrity, server
+npm test             # unit + property tests: parser, units, price maths, data integrity, server, price ingestion
 npm run e2e          # browser tests (needs playwright + Chromium; optional axe-core for the a11y sweep)
 npm run check        # generated files are current + unit tests
 ```
