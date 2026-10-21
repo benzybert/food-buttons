@@ -25,7 +25,6 @@
   --ink: #2b1a0e;
   --btn-1: #b3341b;
   --btn-2: #1d6b4a;
-  --btn-3: #3b4a9e;
   --btn-text: #ffffff;
   --focus: #ffb300;
   --gap: clamp(12px, 2.5vmin, 28px);
@@ -37,7 +36,6 @@
     --ink: #fff2e0;
     --btn-1: #d2492d;
     --btn-2: #258760;
-    --btn-3: #5266c9;
     --focus: #ffc933;
   }
 }
@@ -70,7 +68,7 @@ main {
 
 .big {
   flex: 1 1 0;
-  min-height: 26vh;
+  min-height: 38vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,16 +117,13 @@ main {
 #thermomix {
   --c: var(--btn-2);
 }
-#other {
-  --c: var(--btn-3);
-}
 
 @media (min-width: 900px) and (orientation: landscape) {
   main {
     flex-direction: row;
   }
   .big .name {
-    font-size: clamp(2.5rem, 4.6vw, 7rem);
+    font-size: clamp(2.5rem, 6.8vw, 9rem);
   }
 }
 

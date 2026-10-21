@@ -1,6 +1,6 @@
 # food-buttons
 
-Three giant food-order buttons, Alef font, Hebrew RTL. Static files in `public/`, served by `server.js` (no dependencies, reads `PORT`).
+Two giant food-order buttons (Sharon, Thermomix), Alef font, Hebrew RTL. Static files in `public/`, served by `server.js` (no dependencies, reads `PORT`).
 
 - Run: `npm start`
 - Labels and link targets: `public/index.html` (each button is an `<a>`; `href="#"` is a placeholder)
