@@ -1,0 +1,12 @@
+{
+  "name": "food-buttons",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Three giant food-order buttons, Alef font, RTL. Static site served by a tiny Node server (Railway).",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

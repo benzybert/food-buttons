@@ -1,0 +1,139 @@
+@font-face {
+  font-family: "Alef";
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/alef-he-400.woff2") format("woff2");
+  unicode-range: U+0590-05FF, U+200E-200F, U+20AA;
+}
+@font-face {
+  font-family: "Alef";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/alef-he-700.woff2") format("woff2");
+  unicode-range: U+0590-05FF, U+200E-200F, U+20AA;
+}
+@font-face {
+  font-family: "Alef";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/alef-latin-700.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0;
+}
+
+:root {
+  --bg: #fff6ea;
+  --ink: #2b1a0e;
+  --btn-1: #b3341b;
+  --btn-2: #1d6b4a;
+  --btn-3: #3b4a9e;
+  --btn-text: #ffffff;
+  --focus: #ffb300;
+  --gap: clamp(12px, 2.5vmin, 28px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b120b;
+    --ink: #fff2e0;
+    --btn-1: #d2492d;
+    --btn-2: #258760;
+    --btn-3: #5266c9;
+    --focus: #ffc933;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Alef", system-ui, sans-serif;
+  font-weight: 700;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: var(--gap);
+}
+
+.big {
+  flex: 1 1 0;
+  min-height: 26vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15em;
+  padding: 0.5em 1em;
+  border-radius: clamp(20px, 4vmin, 44px);
+  background: var(--c);
+  color: var(--btn-text);
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.05;
+  box-shadow: 0 0.35rem 0 rgb(0 0 0 / 0.28);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.big:hover {
+  filter: brightness(1.08);
+}
+
+.big:active {
+  transform: translateY(0.3rem);
+  box-shadow: 0 0.05rem 0 rgb(0 0 0 / 0.28);
+}
+
+.big:focus-visible {
+  outline: 0.35rem solid var(--focus);
+  outline-offset: 0.2rem;
+}
+
+.big .kicker {
+  font-weight: 400;
+  font-size: clamp(1.4rem, 5vmin, 3rem);
+  opacity: 0.92;
+}
+
+.big .name {
+  font-size: clamp(3rem, 14vmin, 9rem);
+  overflow-wrap: break-word;
+}
+
+#sharon {
+  --c: var(--btn-1);
+}
+#thermomix {
+  --c: var(--btn-2);
+}
+#other {
+  --c: var(--btn-3);
+}
+
+@media (min-width: 900px) and (orientation: landscape) {
+  main {
+    flex-direction: row;
+  }
+  .big .name {
+    font-size: clamp(2.5rem, 4.6vw, 7rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .big {
+    transition: none;
+  }
+}
