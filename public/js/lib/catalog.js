@@ -21,7 +21,11 @@ export function buildCatalog({ ingredients, recipes, stores, prices, sources }, 
     .map((r) => ({ ...deriveRecipe({ emoji: "🍲", category: "main", prep: 0, cook: 0, level: 2, tags: [], ...r }, ingById), src: "custom" }));
   const allRecipes = [...recipes, ...custom];
   const recById = new Map(allRecipes.map((r) => [r.id, r]));
-  const sourceById = new Map(sources.map((s) => [s.id, s]));
+  const customSources = (user.customSources || [])
+    .filter((x) => x && typeof x.id === "string" && typeof x.name === "string")
+    .map((x) => ({ ...x, kind: "custom", min: 0, markup: Number(x.markup) || 0, fee: Number(x.fee) || 0 }));
+  const allSources = [...sources, ...customSources];
+  const sourceById = new Map(allSources.map((s) => [s.id, s]));
   const priceFor = makePricer({ table: prices.table, overrides: user.priceOverrides, ingById, storeById });
 
   /** Per-serving order price for a dish at a source: user override, else base order price x markup. */
@@ -41,7 +45,7 @@ export function buildCatalog({ ingredients, recipes, stores, prices, sources }, 
     recById,
     stores,
     storeById,
-    sources,
+    sources: allSources,
     sourceById,
     prices,
     priceFor,

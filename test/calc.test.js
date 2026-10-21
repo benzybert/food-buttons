@@ -196,3 +196,15 @@ test("suggestAdditions: favours dishes that reuse packs already in the basket", 
   assert.ok(got[0].standalone > 15);
   assert.deepEqual(suggestAdditions([], c), []);
 });
+
+test("custom order sources join the comparison with markup, fee and per-dish overrides", () => {
+  const c = buildCatalog(raw, { customSources: [{ id: "src-x", name: "מסעדה", markup: 0.25, fee: 15 }, { nope: true }] });
+  assert.equal(c.sources.length, raw.sources.length + 1);
+  assert.equal(c.sourceById.get("src-x").kind, "custom");
+  assert.equal(c.orderPrice("cake", "src-x"), 25); // 20 x 1.25
+  const cmp = compareDish(c.recById.get("cake"), 2, c, { sources: c.sources, orderPrice: c.orderPrice });
+  assert.equal(cmp.options.length, 3);
+  assert.equal(cmp.options.find((o) => o.source.id === "src-x").total, 25 * 2 + 15);
+  const c2 = buildCatalog(raw, { customSources: [{ id: "src-x", name: "מסעדה", markup: 0.25, fee: 15 }], orderPrices: { cake: { "src-x": 12 } } });
+  assert.equal(c2.orderPrice("cake", "src-x"), 12);
+});

@@ -193,8 +193,8 @@ await step("Sharon order: cart total, WhatsApp link with number and text", async
   await page.getByRole("button", { name: /הוסף מנות של מרק עוף/ }).click();
   await page.waitForSelector("#cart-h");
   assert.match(await text(page, "#cart-h"), /2 מנות/);
-  await page.locator("#sharon-phone").fill("050-123-4567");
-  await page.locator("#sharon-phone").press("Tab");
+  await page.locator("#order-phone").fill("050-123-4567");
+  await page.locator("#order-phone").press("Tab");
   const link = page.getByRole("link", { name: /שליחה לשרון/ });
   await link.waitFor();
   const href = await link.getAttribute("href");
@@ -209,6 +209,24 @@ await step("Sharon order: cart total, WhatsApp link with number and text", async
   await page.getByRole("button", { name: "סיום עריכה" }).click();
   await page.waitForSelector("#cart-h");
   assert.match(await text(page, ".price"), /40/);
+});
+
+await step("custom order source: added, priced, and compared on the dish page", async (page) => {
+  await go(page, "#/order");
+  await page.getByRole("button", { name: "הוספת מקור" }).click();
+  await page.locator("#src-name").fill("וולט");
+  await page.locator("#src-markup").fill("30");
+  await page.locator("#src-fee").fill("20");
+  await page.getByRole("button", { name: "הוספה", exact: true }).click();
+  await page.waitForSelector('h1:has-text("הזמנה דרך וולט")');
+  assert.match(page.url(), /src=src-/);
+  await page.getByRole("button", { name: /הוסף מנות של מרק עוף/ }).click();
+  await page.waitForSelector("#cart-h");
+  // 32 x 1.3 = 41.60 + 20 delivery
+  assert.match(await text(page, "section[aria-labelledby=cart-h]"), /61\.60/);
+  await go(page, "#/dish/chicken-soup");
+  await page.locator("summary", { hasText: "פירוט לפי חנות" }).click();
+  assert.match(await text(page, "details"), /וולט/);
 });
 
 await step("import: paste a recipe, fix it, save, price it, cook it", async (page) => {
@@ -361,3 +379,4 @@ await browser.close();
 server.close();
 console.log(`\n${passed} passed, ${failures.length} failed`);
 process.exit(failures.length ? 1 : 0);
+

@@ -35,9 +35,9 @@ export const rawData = () => raw;
 /** Catalog rebuilt only when recipes, price overrides or order prices change. */
 export function catalog() {
   const s = store.get();
-  const key = JSON.stringify([s.customRecipes, s.priceOverrides, s.orderPrices]);
+  const key = JSON.stringify([s.customRecipes, s.priceOverrides, s.orderPrices, s.customSources]);
   if (!cat || key !== catKey) {
-    cat = buildCatalog(raw, { customRecipes: s.customRecipes, priceOverrides: s.priceOverrides, orderPrices: s.orderPrices });
+    cat = buildCatalog(raw, { customRecipes: s.customRecipes, priceOverrides: s.priceOverrides, orderPrices: s.orderPrices, customSources: s.customSources });
     catKey = key;
     memo = { key: "", report: null };
   }
@@ -145,6 +145,20 @@ export const actions = {
       const i = s.customRecipes.findIndex((r) => r.id === recipe.id);
       if (i >= 0) s.customRecipes[i] = recipe;
       else s.customRecipes.push(recipe);
+    });
+  },
+  saveSource(src) {
+    store.update((s) => {
+      const i = s.customSources.findIndex((x) => x.id === src.id);
+      if (i >= 0) s.customSources[i] = src;
+      else s.customSources.push(src);
+    });
+  },
+  deleteSource(id) {
+    store.update((s) => {
+      s.customSources = s.customSources.filter((x) => x.id !== id);
+      for (const d of Object.values(s.orderPrices)) delete d[id];
+      delete s.orderOff[id];
     });
   },
   deleteCustomRecipe(id) {
