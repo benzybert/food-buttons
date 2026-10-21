@@ -24,6 +24,9 @@ export function dishView({ match, query }) {
   const hourly = settings().hourly;
   const have = pantrySet();
   const isFav = store.get().favorites.includes(rec.id);
+  const lastCooked = [...store.get().cooked].reverse().find((x) => x.dishId === rec.id);
+  const daysAgo = lastCooked ? Math.floor((Date.now() - new Date(lastCooked.at).getTime()) / 86400000) : null;
+  const cookedChip = lastCooked ? h("span.chip.good", daysAgo <= 0 ? "בושל היום" : daysAgo === 1 ? "בושל אתמול" : `בושל לפני ${daysAgo} ימים`) : null;
 
   const cmp = compareDish(rec, servings, c, {
     sources: sourcesFor(rec.id),
@@ -135,9 +138,6 @@ export function dishView({ match, query }) {
 
   const stepsList = rec.steps.map((s) => h("li", h("div", h("p", stepText(s.text)), s.settings?.length ? h("div.chips", settingChips(s.settings)) : null)));
 
-  const lastCooked = [...store.get().cooked].reverse().find((x) => x.dishId === rec.id);
-  const daysAgo = lastCooked ? Math.floor((Date.now() - new Date(lastCooked.at).getTime()) / 86400000) : null;
-  const cookedChip = lastCooked ? h("span.chip.good", daysAgo <= 0 ? "בושל היום" : daysAgo === 1 ? "בושל אתמול" : `בושל לפני ${daysAgo} ימים`) : null;
   const noteCard = h(
     "section.card",
     { "aria-labelledby": "note-h" },
