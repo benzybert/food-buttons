@@ -303,6 +303,10 @@ await step("planner: auto plan fills the week and a basket pill appears", async 
   await page.waitForSelector(".plan-item");
   assert.equal(await page.locator(".plan-item").count(), 5);
   assert.match(await text(page, "#basket-pill"), /5 מתכונים/);
+  const [dl] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "ייצוא ליומן" }).click()]);
+  const ics = fs.readFileSync(await dl.path(), "utf8");
+  assert.equal((ics.match(/BEGIN:VEVENT/g) || []).length, 5);
+  assert.match(ics, /^BEGIN:VCALENDAR\r\n/);
 });
 
 await step("settings: dark theme, big text, export and kosher default", async (page) => {

@@ -3,7 +3,7 @@ import { icon } from "../icons.js";
 import { store } from "../store.js";
 import { catalog, settings, stores as storeList, pantrySet, actions, sourcesFor } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { moneyEl, notice, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
+import { moneyEl, notice, openDialog, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
 import { duration, percent } from "../fmt.js";
 import { compareDish, dishLines, hourlyGain } from "../lib/calc.js";
 import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS, fillWarning, BOWL_SAFE_ML, kcalPerServing } from "../lib/derive.js";
@@ -130,6 +130,7 @@ export function dishView({ match, query }) {
       h("span.q", q),
       h("span.n", n, line.note ? h("span.muted", ` · ${line.note}`) : null),
       cost != null && !ing.free ? h("span.c", { title: kind === "user" ? "מחיר שהוזן ידנית" : kind === "data" ? "" : "אומדן" }, moneyEl(cost)) : null,
+      ing?.sub ? h("button.btn-link.small", { type: "button", "aria-label": `תחליף ל${ing.name}`, onclick: () => openDialog(`תחליף ל${ing.name}`, h("div.stack", h("p", ing.sub), h("p.small.muted", "הצעות כלליות, ייתכן שהתוצאה תשתנה מעט."))) }, "תחליף") : null,
       ing && !ing.free
         ? h("label.check", { title: "מסמן שהמצרך כבר קיים בבית (לא ייכנס לרשימת הקניות)" }, h("input", { type: "checkbox", checked: home, "data-fk": `have-${ing.id}`, "aria-label": `${ing.name} יש בבית`, onchange: (e) => actions.togglePantry(ing.id, e.target.checked) }), h("span.small", "בבית"))
         : null,

@@ -84,6 +84,20 @@ export function applyNutrition(ingredients, text) {
   for (const id of kcal.keys()) if (!ingredients.some((i) => i.id === id)) fail(`nutrition.txt: unknown ingredient ${id}`);
 }
 
+/** Adds `sub` (a short substitution hint) to the ingredients that have one. */
+export function applySubstitutions(ingredients, text) {
+  const byId = new Map(ingredients.map((i) => [i.id, i]));
+  text.split(/\r?\n/).forEach((line, i) => {
+    if (!line.trim() || line.trim().startsWith("#")) return;
+    const cut = line.indexOf("|");
+    const id = line.slice(0, cut).trim();
+    const hint = line.slice(cut + 1).trim();
+    if (cut < 0 || !hint) return fail(`substitutions.txt:${i + 1}: bad line ${line}`);
+    if (!byId.has(id)) return fail(`substitutions.txt:${i + 1}: unknown ingredient ${id}`);
+    byId.get(id).sub = hint;
+  });
+}
+
 // ------------------------------------------------------------------ recipes
 
 export function parseRecipeSource(text, file, index) {
@@ -157,6 +171,7 @@ export function buildAll() {
   errors.length = 0;
   const ingredients = parseIngredientsFile(fs.readFileSync(path.join(SRC, "ingredients.txt"), "utf8"));
   applyNutrition(ingredients, fs.readFileSync(path.join(SRC, "nutrition.txt"), "utf8"));
+  applySubstitutions(ingredients, fs.readFileSync(path.join(SRC, "substitutions.txt"), "utf8"));
   const index = buildIndex(ingredients);
   const ingById = new Map(ingredients.map((i) => [i.id, i]));
 

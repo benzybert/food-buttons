@@ -6,6 +6,7 @@ import { pageHead, moneyEl, openDialog, toast, dishInfo, sampleBanner, notice } 
 import { WEEKDAYS, MEAL_SLOTS, recipesWord } from "../fmt.js";
 import { norm } from "../lib/text.js";
 import { suggestWeek } from "../lib/plan.js";
+import { buildIcs, nextWeekday } from "../lib/ics.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
 
 export function planView() {
@@ -71,13 +72,32 @@ export function planView() {
           { style: { margin: "1rem 0" } },
           h("div.spread", h("span", `${recipesWord(s.basket.length)} בתכנון`), h("span", "קנייה ב", rep.bestStore.store.name, ": ", h("strong", moneyEl(rep.cookTotal))), rep.saving != null && rep.saving > 0 ? h("span.chip.good", "חיסכון ", moneyEl(rep.saving), " מול הזמנה") : null),
           budget ? h("p.small", { style: { margin: "0.4rem 0 0", color: rep.cookTotal > budget ? "var(--bad)" : "var(--good)" } }, rep.cookTotal > budget ? ["חריגה של ", moneyEl(rep.cookTotal - budget), " מהתקציב"] : ["נשארו ", moneyEl(budget - rep.cookTotal), " מהתקציב"]) : null,
-          h("div.row", { style: { "margin-top": "0.6rem" } }, h("a.btn.btn-sm", { href: "#/list" }, icon("list", { size: 16 }), "רשימת קניות"), h("a.btn.btn-ghost.btn-sm", { href: "#/compare" }, icon("scale", { size: 16 }), "השוואה")),
+          h("div.row", { style: { "margin-top": "0.6rem" } }, h("a.btn.btn-sm", { href: "#/list" }, icon("list", { size: 16 }), "רשימת קניות"), h("a.btn.btn-ghost.btn-sm", { href: "#/compare" }, icon("scale", { size: 16 }), "השוואה"), scheduled.length ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: exportIcs }, icon("calendar", { size: 16 }), "ייצוא ליומן") : null),
         )
       : h("div", { style: { margin: "1rem 0" } }, notice("info", "הוסיפו מנות לימים בשבוע, או תנו לנו להציע שבוע שלם לפי התקציב וההעדפות שלכם.")),
     h("div.week", [0, 1, 2, 3, 4, 5, 6].map(dayCard)),
     looseCard,
   );
   return { el, title: "תכנון שבועי" };
+
+  function exportIcs() {
+    const now = new Date();
+    const hours = { lunch: 13, dinner: 19 };
+    const events = scheduled
+      .map((b) => {
+        const rec = c.recById.get(b.dishId);
+        if (!rec) return null;
+        const names = rec.ingredients.map((l) => (l.id ? c.ingById.get(l.id)?.name : l.custom)).filter(Boolean);
+        return { uid: b.id, start: nextWeekday(b.day, now, hours[b.slot || "dinner"] ?? 19), minutes: Math.max(30, rec.time.total), summary: `${rec.emoji} ${rec.name}`, description: `${b.servings} מנות · ${names.slice(0, 12).join(", ")}` };
+      })
+      .filter(Boolean);
+    const blob = new Blob([buildIcs(events, { now })], { type: "text/calendar;charset=utf-8" });
+    const a = h("a", { href: URL.createObjectURL(blob), download: "weekly-plan.ics" });
+    document.body.append(a);
+    a.click();
+    setTimeout(() => (URL.revokeObjectURL(a.href), a.remove()), 1000);
+    toast("קובץ היומן נוצר");
+  }
 
   function autoPlan() {
     const days = h("input.input.num-in", { type: "number", min: "1", max: "7", value: "5", id: "ap-days" });

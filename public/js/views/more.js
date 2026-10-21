@@ -41,7 +41,8 @@ export function moreView() {
       )
     : null;
   const install = installEvent ? h("button.btn.btn-ghost", { type: "button", style: { "margin-top": "1rem" }, onclick: async () => { installEvent.prompt(); await installEvent.userChoice; installEvent = null; } }, icon("download", { size: 20 }), "התקנה כאפליקציה במכשיר") : null;
-  const el = h("div.page", pageHead("עוד"), h("nav.link-list", { "aria-label": "עוד" }, links.map(([href, ico, title, sub]) => h("a", { href }, icon(ico, { size: 24 }), h("span", title, h("small", sub))))), journal, install);
+  const iosHint = /iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone ? h("p.small.muted", { style: { "margin-top": "1rem" } }, "להתקנה באייפון: לחצו על ״שיתוף״ בדפדפן ואז על ״הוספה למסך הבית״.") : null;
+  const el = h("div.page", pageHead("עוד"), h("nav.link-list", { "aria-label": "עוד" }, links.map(([href, ico, title, sub]) => h("a", { href }, icon(ico, { size: 24 }), h("span", title, h("small", sub))))), journal, install, iosHint);
   return { el, title: "עוד" };
 }
 
