@@ -154,14 +154,17 @@ export function dishView({ match, query }) {
     hero,
     h(
       "div.row",
-      { style: { margin: "1rem 0" } },
+      { style: { margin: "1rem 0 0.5rem" } },
       stepper({ value: servings, label: "מנות", onChange: setServings }),
       h("span.muted", "מנות"),
       servings !== settings().household ? h("button.btn-link", { type: "button", onclick: () => setServings(settings().household) }, `התאמה ל-${settings().household}`) : null,
-      h("span.grow"),
-      h("button.btn.btn-green", { type: "button", onclick: () => addWithToast(rec, servings) }, icon("plus", { size: 20 }), "הוספה לסל"),
-      h("a.btn", { href: `#/cook/${rec.id}?s=${servings}` }, icon("chef", { size: 20 }), "מצב בישול"),
-      h("button.btn.btn-ghost.btn-icon", { type: "button", "aria-pressed": String(isFav), "aria-label": isFav ? "הסר ממועדפים" : "הוסף למועדפים", onclick: () => actions.toggleFavorite(rec.id) }, icon("heart", { size: 22, cls: isFav ? "filled" : "" })),
+    ),
+    h(
+      "div.row",
+      { style: { "margin-bottom": "0.5rem", "flex-wrap": "nowrap" } },
+      h("button.btn.btn-green", { type: "button", style: { flex: "1 1 0" }, onclick: () => addWithToast(rec, servings) }, icon("plus", { size: 20 }), "הוספה לסל"),
+      h("a.btn", { href: `#/cook/${rec.id}?s=${servings}`, style: { flex: "1 1 0" } }, icon("chef", { size: 20 }), "מצב בישול"),
+      h("button.btn.btn-ghost.btn-icon", { type: "button", "aria-pressed": String(isFav), "aria-label": isFav ? "הסר ממועדפים" : "הוסף למועדפים", onclick: () => actions.toggleFavorite(rec.id) }, icon("heart", { size: 22 })),
     ),
     h(
       "div.row.no-print",

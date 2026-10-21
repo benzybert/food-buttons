@@ -3,7 +3,7 @@ import { icon } from "./icons.js";
 import { store } from "./store.js";
 import { loadData, catalog, report } from "./app.js";
 import { route, start, render, onRouteRender, parseHash } from "./router.js";
-import { money } from "./fmt.js";
+import { money, recipesWord } from "./fmt.js";
 import { moneyEl } from "./ui.js";
 import { homeView } from "./views/home.js";
 import { browseView } from "./views/browse.js";
@@ -62,7 +62,7 @@ function updateChrome(path) {
   if (badge) {
     badge.hidden = !count;
     badge.textContent = String(count);
-    badge.setAttribute("aria-label", `${count} מנות בסל`);
+    badge.setAttribute("aria-label", `${recipesWord(count)} בסל`);
   }
   const pill = $("#basket-pill");
   if (count) {
@@ -73,8 +73,8 @@ function updateChrome(path) {
       /* data not ready */
     }
     pill.hidden = false;
-    append(clear(pill), [icon("cart", { size: 18 }), `${count} מנות`, total != null ? [" · ", moneyEl(total)] : null]);
-    pill.setAttribute("aria-label", `סל: ${count} מנות${total != null ? `, ${money(total)}` : ""}`);
+    append(clear(pill), [icon("cart", { size: 18 }), recipesWord(count), total != null ? [" · ", moneyEl(total)] : null]);
+    pill.setAttribute("aria-label", `סל: ${recipesWord(count)}${total != null ? `, ${money(total)}` : ""}`);
   } else pill.hidden = true;
 }
 

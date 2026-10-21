@@ -5,7 +5,7 @@ import { catalog, settings, report, actions, stores as storeList, pantrySet } fr
 import { replaceQuery, render } from "../router.js";
 import { pageHead, moneyEl, stepper, emptyState, sampleBanner, toast, dishInfo, addWithToast } from "../ui.js";
 import { suggestAdditions } from "../lib/calc.js";
-import { percent, money, signedMoney, countOf } from "../fmt.js";
+import { percent, money, signedMoney, countOf, recipesWord, servingsWord } from "../fmt.js";
 import { formatQty } from "../lib/units.js";
 
 
@@ -24,7 +24,7 @@ export function compareView({ query }) {
         icon("share", { size: 22 }),
         h(
           "div",
-          h("p", `שיתפו איתכם סל של ${shared.length} מנות: ${shared.map((x) => c.recById.get(x.dishId).name).join(", ")}`),
+          h("p", `שיתפו איתכם סל של ${recipesWord(shared.length)}: ${shared.map((x) => c.recById.get(x.dishId).name).join(", ")}`),
           h("div.row", { style: { "margin-top": "0.5rem" } }, h("button.btn.btn-sm.btn-green", { type: "button", onclick: () => (shared.forEach((x) => actions.addToBasket(x.dishId, x.servings)), replaceQuery({})) }, "הוספה לסל"), h("button.btn.btn-sm.btn-ghost", { type: "button", onclick: () => (replaceQuery({}), render(true)) }, "התעלמות")),
         ),
       )
@@ -42,7 +42,7 @@ export function compareView({ query }) {
           "הסל ריק",
           "הוסיפו מתכונים לסל כדי לראות כמה עולה לבשל אותם, כמה עולה להזמין אותם, ובאיזו חנות כדאי לקנות.",
           h("a.btn", { href: "#/cook" }, icon("book", { size: 20 }), "לבחירת מתכונים"),
-          h("button.btn.btn-ghost", { type: "button", onclick: () => DEMO.forEach(([id, n]) => c.recById.has(id) && actions.addToBasket(id, n)) }, "נסו עם 3 מנות לדוגמה"),
+          h("button.btn.btn-ghost", { type: "button", onclick: () => DEMO.forEach(([id, n]) => c.recById.has(id) && actions.addToBasket(id, n)) }, "נסו עם 3 מתכונים לדוגמה"),
         ),
         sampleBanner(),
       ),
@@ -185,7 +185,7 @@ export function compareView({ query }) {
 
   const el = h(
     "div.page.wide",
-    pageHead("השוואת מחירים", `${items.reduce((a, b) => a + b.servings, 0)} מנות בסל · ${st.length} חנויות בהשוואה`),
+    pageHead("השוואת מחירים", `${servingsWord(items.reduce((a, b) => a + b.servings, 0))} בסל · ${st.length} חנויות בהשוואה`),
     sharedCard,
     sampleBanner(),
     h(

@@ -50,7 +50,8 @@ bdi.money,
   unicode-bidi: isolate;
   display: inline-block;
 }
-.flip:dir(rtl) {
+.flip:dir(rtl),
+[dir="rtl"] .flip {
   transform: scaleX(-1);
 }
 .icon {
@@ -64,6 +65,7 @@ bdi.money,
   position: sticky;
   inset-block-start: 0;
   z-index: 20;
+  background: var(--bg);
   background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(8px);
   border-block-end: 2px solid var(--line);
@@ -727,6 +729,7 @@ a.chip[aria-current="true"] {
   place-items: center;
   border-radius: 50%;
   border: 0;
+  background: var(--surface);
   background: color-mix(in srgb, var(--surface) 85%, transparent);
   color: var(--ink-2);
   cursor: pointer;
@@ -1231,6 +1234,7 @@ a.chip[aria-current="true"] {
 
 dialog.dialog {
   inline-size: min(94vw, 560px);
+  max-block-size: 88vh;
   max-block-size: 88dvh;
   padding: 0;
   border: 0;
@@ -1425,6 +1429,7 @@ body.cooking .tabbar {
   white-space: nowrap;
 }
 .cook-ings {
+  max-block-size: 40vh;
   max-block-size: 40dvh;
   overflow-y: auto;
 }

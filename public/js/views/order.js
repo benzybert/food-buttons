@@ -8,7 +8,7 @@ import { store, uid } from "../store.js";
 import { catalog, settings, actions, stores as storeList } from "../app.js";
 import { render, replaceQuery } from "../router.js";
 import { pageHead, moneyEl, stepper, emptyState, notice, toast, dishInfo, openDialog } from "../ui.js";
-import { money, percent, plainMoney } from "../fmt.js";
+import { money, percent, plainMoney, servingsWord } from "../fmt.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
 import { dishCostByStore, round2 } from "../lib/calc.js";
 import { norm } from "../lib/text.js";
@@ -126,7 +126,7 @@ function orderSummary(entries, total, count, c, src) {
   return h(
     "section.card",
     { style: { "margin-top": "1.25rem", position: "sticky", "inset-block-end": "4.5rem", "box-shadow": "0 0.5rem 2rem rgb(0 0 0 / 0.25)" }, "aria-labelledby": "cart-h" },
-    h("div.spread", h("h2", { id: "cart-h" }, `ההזמנה שלכם: ${count} מנות`), h("span.strong", { style: { "font-size": "1.5rem" } }, moneyEl(grand))),
+    h("div.spread", h("h2", { id: "cart-h" }, `ההזמנה שלכם: ${servingsWord(count)}`), h("span.strong", { style: { "font-size": "1.5rem" } }, moneyEl(grand))),
     fee ? h("p.small.muted", { style: { margin: 0 } }, "כולל ", moneyEl(fee), " משלוח") : null,
     h(
       "p.small.muted",

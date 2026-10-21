@@ -3,7 +3,7 @@ import { icon } from "../icons.js";
 import { store } from "../store.js";
 import { catalog, settings, actions, report } from "../app.js";
 import { pageHead, moneyEl, openDialog, toast, dishInfo, sampleBanner, notice } from "../ui.js";
-import { WEEKDAYS, MEAL_SLOTS } from "../fmt.js";
+import { WEEKDAYS, MEAL_SLOTS, recipesWord } from "../fmt.js";
 import { norm } from "../lib/text.js";
 import { suggestWeek } from "../lib/plan.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
@@ -69,7 +69,7 @@ export function planView() {
       ? h(
           "div.card",
           { style: { margin: "1rem 0" } },
-          h("div.spread", h("span", `${s.basket.length} מנות בתכנון`), h("span", "קנייה ב", rep.bestStore.store.name, ": ", h("strong", moneyEl(rep.cookTotal))), rep.saving != null && rep.saving > 0 ? h("span.chip.good", "חיסכון ", moneyEl(rep.saving), " מול הזמנה") : null),
+          h("div.spread", h("span", `${recipesWord(s.basket.length)} בתכנון`), h("span", "קנייה ב", rep.bestStore.store.name, ": ", h("strong", moneyEl(rep.cookTotal))), rep.saving != null && rep.saving > 0 ? h("span.chip.good", "חיסכון ", moneyEl(rep.saving), " מול הזמנה") : null),
           budget ? h("p.small", { style: { margin: "0.4rem 0 0", color: rep.cookTotal > budget ? "var(--bad)" : "var(--good)" } }, rep.cookTotal > budget ? ["חריגה של ", moneyEl(rep.cookTotal - budget), " מהתקציב"] : ["נשארו ", moneyEl(budget - rep.cookTotal), " מהתקציב"]) : null,
           h("div.row", { style: { "margin-top": "0.6rem" } }, h("a.btn.btn-sm", { href: "#/list" }, icon("list", { size: 16 }), "רשימת קניות"), h("a.btn.btn-ghost.btn-sm", { href: "#/compare" }, icon("scale", { size: 16 }), "השוואה")),
         )
@@ -113,7 +113,7 @@ export function planView() {
       if (budgetVal) x.settings.budget = budgetVal;
     });
     dlg.close();
-    toast(`נוספו ${pick.length} מנות לשבוע`, { label: "להשוואה", href: "#/compare" });
+    toast(`נוספו ${recipesWord(pick.length)} לשבוע`, { label: "להשוואה", href: "#/compare" });
   }
 }
 

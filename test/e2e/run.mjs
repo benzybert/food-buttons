@@ -134,7 +134,7 @@ await step("dish page: servings scale the ingredients and cost", async (page) =>
 await step("basket and compare: totals, stores, delivery toggle", async (page) => {
   await go(page, "#/cook");
   for (const id of ["chicken-soup", "pasta-pomodoro", "shakshuka"]) await addDish(page, id);
-  assert.match(await text(page, "#basket-pill"), /3 מנות/);
+  assert.match(await text(page, "#basket-pill"), /3 מתכונים/);
   await go(page, "#/compare");
   assert.equal(await page.locator(".basket-row").count(), 3);
   assert.ok((await page.locator('ul.rows[aria-label="עלות הסל לפי חנות"] > li').count()) >= 4);
@@ -302,7 +302,7 @@ await step("planner: auto plan fills the week and a basket pill appears", async 
   await page.getByRole("button", { name: /הציעו לי/ }).click();
   await page.waitForSelector(".plan-item");
   assert.equal(await page.locator(".plan-item").count(), 5);
-  assert.match(await text(page, "#basket-pill"), /5 מנות/);
+  assert.match(await text(page, "#basket-pill"), /5 מתכונים/);
 });
 
 await step("settings: dark theme, big text, export and kosher default", async (page) => {

@@ -107,3 +107,8 @@ export function plainMoney(n) {
 export function hebrewShort(d) {
   return new Intl.DateTimeFormat("he-IL", { day: "numeric", month: "numeric" }).format(d);
 }
+
+/** "מתכון אחד" / "3 מתכונים" */
+export const recipesWord = (n) => (n === 1 ? "מתכון אחד" : `${n} מתכונים`);
+/** "מנה אחת" / "4 מנות" */
+export const servingsWord = (n) => (n === 1 ? "מנה אחת" : `${n} מנות`);

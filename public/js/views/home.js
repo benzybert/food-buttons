@@ -3,7 +3,7 @@ import { icon } from "../icons.js";
 import { store } from "../store.js";
 import { report, catalog } from "../app.js";
 import { moneyEl } from "../ui.js";
-import { hebrewDate } from "../fmt.js";
+import { hebrewDate, recipesWord } from "../fmt.js";
 
 export function homeView() {
   const s = store.get();
@@ -11,7 +11,7 @@ export function homeView() {
   let basketLine = null;
   if (count) {
     const rep = report();
-    basketLine = h("span", `בסל ${count} מנות · קנייה `, moneyEl(rep.cookTotal), rep.saving > 0 ? [" · חיסכון ", moneyEl(rep.saving), " מול הזמנה"] : null);
+    basketLine = h("span", `בסל ${recipesWord(count)} · קנייה `, moneyEl(rep.cookTotal), rep.saving > 0 ? [" · חיסכון ", moneyEl(rep.saving), " מול הזמנה"] : null);
   }
   const month = new Date().toISOString().slice(0, 7);
   const savedMonth = s.cooked.filter((c) => c.at.startsWith(month)).reduce((a, c) => a + Math.max(0, c.saved), 0);
