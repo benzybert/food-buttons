@@ -9,12 +9,14 @@ import { cookableWith } from "../lib/plan.js";
 let seen = [];
 let mode = "any"; // any | pantry | cheap
 let currentId = null; // the shown suggestion survives state-change re-renders
+let maxTime = 0; // minutes, 0 = any
 
 export function surpriseView() {
   const c = catalog();
   const prefs = settings();
   const have = pantrySet();
   let pool = c.recipes.filter((r) => ["main", "soup"].includes(r.category) && (prefs.kosher === "all" || r.kosher === prefs.kosher) && prefs.diet.every((d) => r.diet.includes(d)) && !prefs.avoid.some((a) => r.allergens.includes(a)));
+  if (maxTime) pool = pool.filter((r) => r.time.total <= maxTime);
   if (mode === "pantry") pool = cookableWith(pool, have, c.ingById).filter((x) => x.missing.length <= 3).map((x) => x.rec);
   if (mode === "cheap") pool = [...pool].sort((a, b) => dishInfo(a.id).perServing - dishInfo(b.id).perServing).slice(0, Math.max(3, Math.ceil(pool.length / 3)));
 
@@ -31,6 +33,8 @@ export function surpriseView() {
   const modes = [["any", "הפתעה"], ["pantry", "ממה שיש בבית"], ["cheap", "הכי זול"]];
   const chips = h("div.chips", { role: "group", "aria-label": "סוג הצעה" }, modes.map(([v, l]) => h("button.chip", { type: "button", "aria-pressed": String(mode === v), onclick: () => ((mode = v), (seen = []), (currentId = null), render(true)) }, l)));
 
+  const timeChips = h("div.chips", { role: "group", "aria-label": "זמן הכנה מקסימלי" }, [[0, "בלי הגבלת זמן"], [20, "עד 20 דק׳"], [40, "עד 40 דק׳"], [60, "עד שעה"]].map(([v, l]) => h("button.chip", { type: "button", "aria-pressed": String(maxTime === v), onclick: () => ((maxTime = v), (seen = []), (currentId = null), render(true)) }, l)));
+
   let body;
   if (!pick) body = emptyState("🤷", "אין הצעה שמתאימה", mode === "pantry" ? "סמנו במזווה עוד מצרכים שיש בבית." : "ההעדפות בהגדרות מסננות את כל המנות.", h("a.btn", { href: mode === "pantry" ? "#/pantry" : "#/settings" }, mode === "pantry" ? "למזווה" : "להגדרות"));
   else {
@@ -46,6 +50,6 @@ export function surpriseView() {
       h("button.btn.btn-ghost", { type: "button", onclick: () => ((currentId = null), render(true)) }, icon("shuffle", { size: 20 }), "עוד הצעה"),
     );
   }
-  const el = h("div.page", pageHead("מה לאכול הערב?", "תנו לנו להחליט, לפי ההעדפות שלכם"), h("div.stack", chips, body));
+  const el = h("div.page", pageHead("מה לאכול הערב?", "תנו לנו להחליט, לפי ההעדפות שלכם"), h("div.stack", chips, timeChips, body));
   return { el, title: "מה לאכול הערב?" };
 }

@@ -309,6 +309,27 @@ await step("planner: auto plan fills the week and a basket pill appears", async 
   assert.match(ics, /^BEGIN:VCALENDAR\r\n/);
 });
 
+await step("tonight: suggestion respects the time limit, shuffle gives another", async (page) => {
+  await go(page, "#/surprise");
+  await page.getByRole("button", { name: "עד 40 דק׳" }).click();
+  await page.waitForSelector(".card h2");
+  const mins = async () => {
+    const t = await page.locator(".card .chips .chip", { hasText: "דק׳" }).first().innerText();
+    const h = /שעה/.test(t) ? 60 : 0;
+    return h || Number(t.match(/\d+/)[0]);
+  };
+  assert.ok((await mins()) <= 40);
+  const first = await text(page, ".card h2");
+  let different = false;
+  for (let i = 0; i < 6 && !different; i++) {
+    await page.getByRole("button", { name: "עוד הצעה" }).click();
+    await page.waitForTimeout(80);
+    different = (await text(page, ".card h2")) !== first;
+    assert.ok((await mins()) <= 40);
+  }
+  assert.ok(different, "a new suggestion appears");
+});
+
 await step("settings: dark theme, big text, export and kosher default", async (page) => {
   await go(page, "#/settings");
   await page.getByLabel("כהה").check();
