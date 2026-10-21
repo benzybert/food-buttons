@@ -175,7 +175,7 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-  padding: var(--gap);
+  padding: max(var(--gap), env(safe-area-inset-top)) max(var(--gap), env(safe-area-inset-right)) max(var(--gap), env(safe-area-inset-bottom)) max(var(--gap), env(safe-area-inset-left));
 }
 
 .home-buttons {

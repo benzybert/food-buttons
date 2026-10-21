@@ -96,7 +96,7 @@ await step("recipes: search, category and kosher filters", async (page) => {
   await go(page, "#/cook");
   await page.locator('input[type="search"]').fill("עדשים");
   await page.waitForFunction(() => document.querySelectorAll(".dcard").length === 2);
-  const names = await page.locator(".dcard h3").allInnerTexts();
+  const names = await page.locator(".dcard h2").allInnerTexts();
   assert.ok(names.some((n) => n.includes("עדשים")) && names.some((n) => n.includes("מג'דרה")), names.join());
   await page.locator('input[type="search"]').fill("");
   await page.locator('[data-fk="cat-soup"]').click();
@@ -262,7 +262,7 @@ await step("import: paste a recipe, fix it, save, price it, cook it", async (pag
   assert.match(await text(page, ".verdict"), /בישול עצמי/);
   assert.equal(await page.locator(".chip-tm").count(), 2);
   await go(page, "#/cook");
-  assert.match((await page.locator(".dcard h3").allInnerTexts()).join("|"), /פסטה בשמנת/);
+  assert.match((await page.locator(".dcard h2").allInnerTexts()).join("|"), /פסטה בשמנת/);
   await go(page, "#/cook");
   await page.locator('.dcard a.dcard-link[href^="#/dish/my-"]').click();
   await page.getByRole("link", { name: "עריכה" }).click();

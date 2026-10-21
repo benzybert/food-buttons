@@ -151,11 +151,11 @@ export function dishCard(rec) {
     { class: `cat-${rec.category}` },
     h(
       "a.dcard-link",
-      { href: `#/dish/${rec.id}`, "aria-label": `${rec.name}, ${money(info.perServing)} למנה` },
+      { href: `#/dish/${rec.id}` },
       h("div.dcard-art", { "aria-hidden": "true" }, rec.emoji),
       h(
         "div.dcard-body",
-        h("h3", rec.name),
+        h("h2", rec.name),
         h(
           "div.meta",
           h("span", icon("clock", { size: 16 }), duration(total)),

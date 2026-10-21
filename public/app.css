@@ -69,6 +69,7 @@ bdi.money,
   background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(8px);
   border-block-end: 2px solid var(--line);
+  padding-block-start: env(safe-area-inset-top);
 }
 .site-header .inner {
   max-inline-size: 1200px;
@@ -680,7 +681,7 @@ a.chip[aria-current="true"] {
   gap: 0.35rem;
   flex: 1;
 }
-.dcard h3 {
+.dcard h2 {
   font-size: 1.2rem;
 }
 .dcard .meta {
