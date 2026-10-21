@@ -5,10 +5,20 @@ import { makePricer } from "./calc.js";
 import { buildIndex } from "./parse.js";
 import { deriveRecipe } from "./derive.js";
 
+/** Minimal shape check so one corrupted/imported recipe cannot break the whole app. */
+export function isValidRecipe(r) {
+  if (!r || typeof r !== "object" || typeof r.id !== "string" || typeof r.name !== "string") return false;
+  if (!(Number(r.servings) > 0) || !Array.isArray(r.ingredients) || !Array.isArray(r.steps)) return false;
+  const okLine = (l) => l && typeof l === "object" && Number.isFinite(l.qty) && l.qty > 0 && typeof l.unit === "string" && (typeof l.id === "string" || typeof l.custom === "string");
+  return r.ingredients.every(okLine) && r.steps.every((st) => st && typeof st.text === "string");
+}
+
 export function buildCatalog({ ingredients, recipes, stores, prices, sources }, user = {}) {
   const ingById = new Map(ingredients.map((i) => [i.id, i]));
   const storeById = new Map(stores.map((s) => [s.id, s]));
-  const custom = (user.customRecipes || []).map((r) => ({ ...deriveRecipe(r, ingById), src: "custom" }));
+  const custom = (user.customRecipes || [])
+    .filter(isValidRecipe)
+    .map((r) => ({ ...deriveRecipe({ emoji: "🍲", category: "main", prep: 0, cook: 0, level: 2, tags: [], ...r }, ingById), src: "custom" }));
   const allRecipes = [...recipes, ...custom];
   const recById = new Map(allRecipes.map((r) => [r.id, r]));
   const sourceById = new Map(sources.map((s) => [s.id, s]));

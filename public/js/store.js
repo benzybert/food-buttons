@@ -13,6 +13,7 @@ export function defaults() {
       delivery: false, // price baskets with delivery fees
       hourly: 0, // value of own time, shekel per hour
       budget: 0, // weekly food budget, 0 = none
+      deviceCost: 0, // what the Thermomix cost; used for the break-even tracker
       kosher: "all", // all | parve | dairy | meat  (filters recipe browsing)
       diet: [], // vegan | vegetarian | gluten-free
       avoid: [], // allergens to avoid

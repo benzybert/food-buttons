@@ -115,12 +115,12 @@ await step("recipes: search, category and kosher filters", async (page) => {
 await step("dish page: servings scale the ingredients and cost", async (page) => {
   await go(page, "#/dish/chicken-soup");
   const before = await text(page, ".ing-list li:first-child .q");
-  assert.match(before, /700/);
+  assert.match(before, /550/);
   await page.getByRole("button", { name: /הוסף מנות/ }).click();
-  await page.waitForFunction(() => document.querySelector(".stepper output")?.textContent === "7");
+  await page.waitForFunction(() => document.querySelector(".stepper output")?.textContent === "6");
   const after = await text(page, ".ing-list li:first-child .q");
   assert.notEqual(before, after);
-  assert.match(page.url(), /s=7/);
+  assert.match(page.url(), /s=6/);
   const verdict = await text(page, ".verdict");
   assert.match(verdict, /בישול עצמי/);
   assert.match(verdict, /הזמנה/);

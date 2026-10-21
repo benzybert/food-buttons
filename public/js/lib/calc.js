@@ -303,3 +303,37 @@ export function basketReport(items, ctx, { pantry = new Set(), delivery = false,
   const saving = bestStore && bestOrder ? round2(bestOrder.total - cookTotal) : null;
   return { needs, custom, ranked, perItem, pair, orders, bestStore, bestOrder, timeTotal, cookTotal, saving };
 }
+
+// ------------------------------------------------------------------ insights
+
+/**
+ * What cooking "pays" per hour of active work: shekels saved vs the cheapest order, divided by prep time.
+ * null when there is nothing to compare or no prep time.
+ */
+export function hourlyGain(rec, cmp) {
+  const prep = rec.time?.prep ?? rec.prep ?? 0;
+  if (!cmp.order || !(prep > 0)) return null;
+  const saved = cmp.order.total - cmp.cook.ingredients;
+  return Math.round(saved / (prep / 60));
+}
+
+/**
+ * Dishes that are nearly free to add to the basket because they reuse packs you are already buying.
+ * Marginal cost = basket total with the dish minus basket total without it (cheapest store each time).
+ * Returns [{ rec, servings, marginal, standalone, saved }] best first.
+ */
+export function suggestAdditions(items, ctx, { pantry = new Set(), stores = ctx.stores, limit = 3, candidates = ctx.recById.values() } = {}) {
+  if (!items.length) return [];
+  const total = (list) => compareStores(basketNeeds(list, ctx).needs, ctx, { pantry, stores })[0]?.total ?? 0;
+  const base = total(items);
+  const inBasket = new Set(items.map((i) => i.dishId));
+  const out = [];
+  for (const rec of candidates) {
+    if (inBasket.has(rec.id)) continue;
+    const one = [{ dishId: rec.id, servings: rec.servings }];
+    const standalone = total(one);
+    const marginal = round2(total([...items, ...one]) - base);
+    if (standalone - marginal >= 5 && marginal < standalone * 0.7) out.push({ rec, servings: rec.servings, marginal, standalone, saved: round2(standalone - marginal) });
+  }
+  return out.sort((a, b) => b.saved / b.servings - a.saved / a.servings).slice(0, limit);
+}

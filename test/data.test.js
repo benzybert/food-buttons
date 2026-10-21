@@ -109,3 +109,12 @@ test("service worker precaches only files that exist", async () => {
   assert.ok(list.includes("index.html") && list.includes("js/main.js") && list.includes("manifest.webmanifest"));
   for (const f of list) if (f !== "./") assert.ok(fs.existsSync(path.join(PUBLIC, f)), `precached but missing: ${f}`);
 });
+
+test("soups, sauces and drinks fit in the bowl at their default servings", async () => {
+  const { bowlFillMl, BOWL_SAFE_ML } = await import("../public/js/lib/derive.js");
+  const cat = loadCatalog();
+  for (const r of cat.recipes) {
+    if (!["soup", "sauce", "drink"].includes(r.category)) continue;
+    assert.ok(bowlFillMl(r, cat.ingById) <= BOWL_SAFE_ML, `${r.id} fills ~${bowlFillMl(r, cat.ingById)} ml`);
+  }
+});

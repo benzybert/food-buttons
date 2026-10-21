@@ -161,3 +161,38 @@ test("basketReport ties it together", () => {
   assert.equal(empty.ranked[0].total, 0);
   assert.equal(empty.orders[0].fee, 0);
 });
+
+test("buildCatalog ignores corrupted custom recipes instead of crashing", () => {
+  const good = { id: "my-1", name: "טוב", servings: 2, ingredients: [{ id: "flour", qty: 100, unit: "g" }], steps: [{ text: "ערבבו" }] };
+  const bad = [null, {}, { id: "x", name: "y", servings: 0, ingredients: [], steps: [] }, { id: "z", name: "z", servings: 2, ingredients: [{ id: "flour", qty: "a", unit: "g" }], steps: [] }, { id: "w", name: "w", servings: 2, ingredients: "nope", steps: [] }];
+  const c = buildCatalog(raw, { customRecipes: [...bad, good] });
+  assert.ok(c.recById.has("my-1"));
+  assert.equal(c.recById.get("my-1").src, "custom");
+  assert.equal(c.recById.get("my-1").emoji, "🍲"); // defaults filled in
+  for (const id of ["x", "z", "w"]) assert.ok(!c.recById.has(id));
+});
+
+test("hourlyGain: shekels saved per hour of active work", async () => {
+  const { hourlyGain } = await import("../public/js/lib/calc.js");
+  const cmp = compareDish(cake, 4, ctx, { sources: raw.sources, orderPrice: cat.orderPrice });
+  const expected = Math.round((cmp.order.total - cmp.cook.ingredients) / (20 / 60));
+  assert.equal(hourlyGain(cake, cmp), expected);
+  assert.ok(expected > 100);
+  assert.equal(hourlyGain({ ...cake, prep: 0, time: { prep: 0 } }, cmp), null);
+  assert.equal(hourlyGain(cake, { order: null }), null);
+});
+
+test("suggestAdditions: favours dishes that reuse packs already in the basket", async () => {
+  const { suggestAdditions } = await import("../public/js/lib/calc.js");
+  const base = raw.recipes[0];
+  const reuse = { ...base, id: "reuse", name: "ממחזר", servings: 4, ingredients: [{ id: "flour", qty: 200, unit: "g" }, { id: "eggs", qty: 2, unit: "u" }] };
+  const sugar = { id: "sugar", name: "סוכר", aliases: [], aisle: "baking", base: "g", pack: { type: "pack", size: 1000 }, ref: 6, density: 0.85, flags: [] };
+  const fresh = { ...base, id: "fresh", name: "חדש", servings: 4, ingredients: [{ id: "sugar", qty: 300, unit: "g" }] };
+  const prices = { ...raw.prices, table: { ...raw.prices.table, sugar: { a: 6, b: 5.5 } } };
+  const c = buildCatalog({ ...raw, ingredients: [...raw.ingredients, sugar], prices, recipes: [base, reuse, fresh] });
+  const got = suggestAdditions([{ dishId: "cake", servings: 4 }], c, { limit: 5 });
+  assert.deepEqual(got.map((g) => g.rec.id), ["reuse"]); // flour+eggs packs are already in the basket
+  assert.ok(got[0].marginal < 1);
+  assert.ok(got[0].standalone > 15);
+  assert.deepEqual(suggestAdditions([], c), []);
+});

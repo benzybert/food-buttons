@@ -31,6 +31,36 @@ export function clock(sec) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+import { splitBySettings, extractSettings } from "./lib/parse.js";
+
+/** Machine setting spoken in words: "5 דקות, 100 מעלות, מהירות 2". */
+export function settingSpoken(s) {
+  const parts = [];
+  if (s.time) {
+    const m = Math.floor(s.time / 60);
+    const sec = s.time % 60;
+    if (m) parts.push(m === 1 ? "דקה" : `${m} דקות`);
+    if (sec) parts.push(`${sec} שניות`);
+  }
+  if (s.temp === "varoma") parts.push("וארומה");
+  else if (s.temp) parts.push(`${s.temp} מעלות`);
+  if (s.kneading) parts.push("תפקיד לישה");
+  if (s.reverse) parts.push("הפוך");
+  if (s.speed === "spoon") parts.push("מהירות כף");
+  else if (s.speed === "turbo") parts.push("טורבו");
+  else if (s.speed) parts.push(`מהירות ${s.speed.replace("–", " עד ")}`);
+  return parts.join(", ");
+}
+
+/** A step's text prepared for speech synthesis: setting groups like "5 דק'/100°C/מהירות 2" become words. */
+export function spokenStep(text) {
+  return splitBySettings(text)
+    .map((p) => (p.setting ? settingSpoken(extractSettings(p.text)[0]) : p.text))
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Thermomix setting -> short Hebrew chip texts. */
 export function settingParts(s) {
   const parts = [];

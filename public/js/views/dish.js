@@ -3,10 +3,10 @@ import { icon } from "../icons.js";
 import { store } from "../store.js";
 import { catalog, settings, stores as storeList, pantrySet, actions, sourcesFor } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { moneyEl, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
+import { moneyEl, notice, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
 import { duration, percent } from "../fmt.js";
-import { compareDish, dishLines } from "../lib/calc.js";
-import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS } from "../lib/derive.js";
+import { compareDish, dishLines, hourlyGain } from "../lib/calc.js";
+import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS, fillWarning, BOWL_SAFE_ML } from "../lib/derive.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
 
 export function dishView({ match, query }) {
@@ -83,6 +83,8 @@ export function dishView({ match, query }) {
         : h("p.verdict-msg", { style: { color: "var(--bad)" } }, "במקרה הזה ההזמנה זולה ב-", moneyEl(abs), hourly ? " (כולל שווי הזמן שלכם)" : "");
   }
 
+  const gain = cmp.winner === "cook" ? hourlyGain(rec, cmp) : null;
+  const fill = fillWarning(rec, c.ingById, factor);
   const orderRows = cmp.options.map((o) =>
     h("tr", h("td", o.source.name), h("td.n", o.unit != null ? moneyEl(o.unit) : "-"), h("td.n", o.fee ? moneyEl(o.fee) : "-"), h("td.n", o.total != null ? moneyEl(o.total) : "-")),
   );
@@ -102,6 +104,7 @@ export function dishView({ match, query }) {
     h("h2", { id: "cmp-h", style: { "margin-block-end": "0.75rem" } }, "בישול מול הזמנה"),
     h("div.verdict", cookSide, orderSide),
     message,
+    gain && gain > 0 ? h("p.small.muted", { style: { margin: "0.25rem 0 0" } }, `בישול המנה הזו שווה בערך `, moneyEl(gain), ` לשעת עבודה (עבודה פעילה: ${duration(rec.time.prep)})`) : null,
     h(
       "details",
       { style: { "margin-top": "0.75rem" } },
@@ -156,6 +159,7 @@ export function dishView({ match, query }) {
       h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => window.print() }, icon("printer", { size: 16 }), "הדפסה"),
     ),
     sampleBanner(),
+    fill ? h("div", { style: { "margin-top": "0.75rem" } }, notice("warn", fill.level === "over" ? `בכמות הזו הנפח המשוער בקערה הוא כ-${(fill.ml / 1000).toFixed(1)} ליטר, מעל המקסימום של המכשיר (2.2 ליטר). אפשר להכין בשני סבבים או להקטין את מספר המנות.` : `בכמות הזו הקערה כמעט מלאה (כ-${(fill.ml / 1000).toFixed(1)} ליטר, מעל ${BOWL_SAFE_ML / 1000} ליטר מומלצים לבישול). שימו לב לקו המילוי המקסימלי.`, "alert")) : null,
     h(
       "div.dish-cols",
       { style: { "margin-top": "1rem" } },

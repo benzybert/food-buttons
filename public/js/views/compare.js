@@ -1,9 +1,10 @@
 import { h } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, settings, report, actions, stores as storeList } from "../app.js";
+import { catalog, settings, report, actions, stores as storeList, pantrySet } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { pageHead, moneyEl, stepper, emptyState, sampleBanner, toast, dishInfo } from "../ui.js";
+import { pageHead, moneyEl, stepper, emptyState, sampleBanner, toast, dishInfo, addWithToast } from "../ui.js";
+import { suggestAdditions } from "../lib/calc.js";
 import { percent, money, signedMoney, countOf } from "../fmt.js";
 import { formatQty } from "../lib/units.js";
 
@@ -141,6 +142,12 @@ export function compareView({ query }) {
     splitCards.push(splitCard(`הכי זול לכל פריט (${rep.perItem.storeIds.length} חנויות)`, "קונים כל מצרך איפה שהוא הכי זול", rep.perItem.total, cheapest.subtotal - rep.perItem.total, "item"));
   }
 
+  // ------------------------------------------------ cheap additions (reuse packs already bought)
+  const additions = suggestAdditions(items.map((b) => ({ dishId: b.dishId, servings: b.servings })), c, { pantry: pantrySet(), stores: st, candidates: c.recipes.filter((r) => (set.kosher === "all" || r.kosher === set.kosher) && !set.avoid.some((a) => r.allergens.includes(a)) && set.diet.every((d) => r.diet.includes(d))) });
+  const additionCards = additions.map((a) =>
+    h("div.card.tight", h("div.row", h("span", { style: { "font-size": "1.8rem" }, "aria-hidden": "true" }, a.rec.emoji), h("a.strong", { href: `#/dish/${a.rec.id}`, style: { "text-decoration": "none" } }, a.rec.name)), h("p.small.muted", { style: { margin: "0.2rem 0 0.4rem" } }, "יתווסף לסל רק ", moneyEl(a.marginal), " (לבד: ", moneyEl(a.standalone), ")"), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => addWithToast(a.rec, a.servings) }, icon("plus", { size: 16 }), "הוספה לסל")),
+  );
+
   // ------------------------------------------------ per-item table
   const perStoreCosts = new Map();
   for (const r of rep.ranked) for (const l of r.lines) if (l.kind !== "missing") (perStoreCosts.get(l.ingId) || perStoreCosts.set(l.ingId, []).get(l.ingId)).push({ cost: l.cost, storeId: r.storeId });
@@ -191,6 +198,7 @@ export function compareView({ query }) {
     storesTable,
     h("p.small.muted", "הסכום הוא עלות קניית אריזות שלמות בפועל, בניכוי מה שיש לכם בבית (", h("a", { href: "#/pantry" }, "מזווה"), "). חנות שחסר בה פריט מופיעה אחרי החנויות המלאות, והפריט החסר מחושב באומדן."),
     splitCards.length ? [h("h2.section", "אפשר לחסוך עוד"), h("div.grid.two", splitCards)] : null,
+    additionCards.length ? [h("h2.section", "כמעט בחינם: מנות שמנצלות אריזות שכבר קונים"), h("div.grid", additionCards)] : null,
     h("h2.section", "הכי זול לכל מצרך"),
     itemsTable,
     h("h2.section", "אם מזמינים הכול"),

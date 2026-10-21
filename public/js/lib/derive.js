@@ -1,6 +1,8 @@
 // Derived recipe facts: kosher type, diet tags, allergens, equipment, timers.
 // Pure functions, shared by the build step and the in-browser importer.
 
+import { toBase } from "./units.js";
+
 const FLAG_ALLERGENS = { g: "gluten", e: "eggs", d: "milk", p: "peanuts", n: "tree-nuts", s: "sesame", o: "soy", f: "fish" };
 
 export const ALLERGEN_LABELS = {
@@ -74,4 +76,37 @@ export function deriveRecipe(recipe, ingById) {
     equipment: deriveEquipment(recipe),
     time: { prep, cook, total: prep + cook },
   };
+}
+
+// ------------------------------------------------------------------ bowl capacity
+
+export const BOWL_MAX_ML = 2200; // physical maximum of a Thermomix bowl
+export const BOWL_SAFE_ML = 2000; // recommended maximum when heating
+export const FILL_CATEGORIES = new Set(["soup", "sauce", "drink"]); // where everything goes into the bowl
+
+/**
+ * Rough volume of everything in the bowl: liquids count fully, solids ~85% (they pack and soften),
+ * fluffy powders (flour, spices) hardly count. Good enough to warn when scaling a soup too far.
+ */
+export function bowlFillMl(rec, ingById, factor = 1) {
+  let ml = 0;
+  for (const l of rec.ingredients) {
+    const ing = l.id ? ingById.get(l.id) : null;
+    if (!ing) continue;
+    const base = toBase(ing, l.qty * factor, l.unit);
+    if (!Number.isFinite(base)) continue;
+    if (ing.base === "ml") ml += base;
+    else if (ing.base === "g") ml += ing.density && ing.density < 0.6 ? 0 : base * 0.85;
+    else ml += base * (ing.unitWeight || 0) * 0.85;
+  }
+  return Math.round(ml);
+}
+
+/** null when it fits; { ml, level: "tight" | "over" } when scaled recipes risk overflowing the bowl. */
+export function fillWarning(rec, ingById, factor = 1) {
+  if (!FILL_CATEGORIES.has(rec.category)) return null;
+  const ml = bowlFillMl(rec, ingById, factor);
+  if (ml > BOWL_MAX_ML) return { ml, level: "over" };
+  if (ml > BOWL_SAFE_ML) return { ml, level: "tight" };
+  return null;
 }

@@ -122,7 +122,13 @@ async function boot() {
   route(/^\/surprise$/, lazy("surprise", "surpriseView"));
   route(/.*/, lazy("more", "notFoundView"), { fallback: true });
 
-  onRouteRender(mount);
+  onRouteRender(mount, (err) => ({
+    title: "שגיאה",
+    el: h(
+      "div.page",
+      h("div.notice.bad", icon("alert"), h("div", h("h1", { style: { "font-size": "1.4rem" } }, "משהו השתבש במסך הזה"), h("p.small", String(err?.message || err)), h("p", "אפשר לחזור לדף הבית. אם הבעיה חוזרת, ייתכן שנתונים שמורים פגומים: אפשר לאפס אותם בהגדרות."), h("div.row", h("a.btn", { href: "#/" }, "לדף הבית"), h("a.btn.btn-ghost", { href: "#/settings" }, "להגדרות"), h("button.btn.btn-ghost", { type: "button", onclick: () => confirm("למחוק את כל הנתונים השמורים?") && (store.reset(), location.hash = "#/", location.reload()) }, "איפוס נתונים")))),
+    ),
+  }));
 
   let queued = false;
   store.subscribe(() => {

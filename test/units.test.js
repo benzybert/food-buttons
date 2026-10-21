@@ -50,3 +50,24 @@ test("scaleQty keeps small units tidy", () => {
   assert.deepEqual(scaleQty(2, "tbsp", 0.5), { qty: 1, unit: "tbsp" });
   assert.deepEqual(scaleQty(100, "g", 2), { qty: 200, unit: "g" });
 });
+
+test("spokenStep turns machine settings into words for speech", async () => {
+  const { spokenStep, settingSpoken } = await import("../public/js/fmt.js");
+  assert.equal(spokenStep("בשלו 5 דק'/100°C/מהירות 2. אחר כך ערבבו."), "בשלו 5 דקות, 100 מעלות, מהירות 2. אחר כך ערבבו.");
+  assert.equal(spokenStep("קצצו 5 שנ'/מהירות 5."), "קצצו 5 שניות, מהירות 5.");
+  assert.match(spokenStep("בשלו 35 דק'/100°C/↺/מהירות 1"), /35 דקות, 100 מעלות, הפוך, מהירות 1/);
+  assert.equal(settingSpoken({ time: 90, temp: "varoma", speed: "1" }), "דקה, 30 שניות, וארומה, מהירות 1");
+  assert.equal(spokenStep("ערבבו ביד."), "ערבבו ביד.");
+});
+
+test("bowlFillMl / fillWarning: soups warn when scaled beyond the bowl", async () => {
+  const { bowlFillMl, fillWarning } = await import("../public/js/lib/derive.js");
+  const { loadCatalog } = await import("./helpers.js");
+  const c = loadCatalog();
+  const soup = c.recById.get("veg-soup");
+  assert.equal(fillWarning(soup, c.ingById, 1), null);
+  assert.ok(bowlFillMl(soup, c.ingById, 2) > 2 * bowlFillMl(soup, c.ingById, 1) - 5);
+  assert.equal(fillWarning(soup, c.ingById, 1.1).level, "tight");
+  assert.equal(fillWarning(soup, c.ingById, 2).level, "over");
+  assert.equal(fillWarning(c.recById.get("shakshuka"), c.ingById, 5), null); // only checked for soups/sauces/drinks
+});

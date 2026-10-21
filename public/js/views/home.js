@@ -16,12 +16,14 @@ export function homeView() {
   const month = new Date().toISOString().slice(0, 7);
   const savedMonth = s.cooked.filter((c) => c.at.startsWith(month)).reduce((a, c) => a + Math.max(0, c.saved), 0);
 
+  const weekday = new Date().getDay();
+  const shabbat = weekday === 4 || weekday === 5 ? h("a", { href: "#/cook?q=%D7%A9%D7%99%D7%A9%D7%99" }, "מתכוננים לשבת? מתכונים לשישי") : null;
   const el = h(
     "div.home",
     h(
       "div.home-buttons",
       h("a.big", { id: "sharon", href: "#/order" }, h("span.kicker", "הזמנת אוכל דרך"), h("span.name", "שרון"), h("span.hint", "לראות תפריט ולהזמין")),
-      h("a.big", { id: "thermomix", href: "#/cook" }, h("span.kicker", "הזמנת אוכל דרך"), h("span.name", { dir: "ltr" }, "Thermomix"), h("span.hint", `${catalog().recipes.length} מתכונים לבחירה`)),
+      h("a.big", { id: "thermomix", href: "#/cook" }, h("span.kicker", "הזמנת אוכל דרך"), h("span.name", { lang: "en", dir: "ltr" }, "Thermomix"), h("span.hint", `${catalog().recipes.length} מתכונים לבחירה`)),
     ),
     h(
       "nav.quick",
@@ -35,6 +37,7 @@ export function homeView() {
       "div.home-foot",
       h("span", hebrewDate()),
       savedMonth > 0 ? h("span", "חסכתם החודש ", moneyEl(savedMonth), " בבישול ביתי") : null,
+      shabbat,
       h("a", { href: "#/more" }, "עוד"),
     ),
   );

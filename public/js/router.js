@@ -4,6 +4,9 @@ const routes = [];
 let current = null;
 let renderToken = 0;
 let onRender = () => {};
+let onError = (err) => {
+  throw err;
+};
 
 export function route(pattern, view, opts = {}) {
   routes.push({ pattern, view, ...opts });
@@ -33,8 +36,9 @@ export function currentRoute() {
   return current;
 }
 
-export function onRouteRender(fn) {
+export function onRouteRender(fn, errorFn) {
   onRender = fn;
+  if (errorFn) onError = errorFn;
 }
 
 /** Render the view for the current hash. `keep` keeps scroll position and focus (state-change re-render). */
@@ -66,7 +70,14 @@ export async function render(keep = false) {
       /* ignore */
     }
   }
-  const result = await found.view({ match, query, path });
+  let result;
+  try {
+    result = await found.view({ match, query, path });
+  } catch (err) {
+    if (token !== renderToken) return;
+    console.error(err);
+    result = onError(err);
+  }
   if (token !== renderToken) return; // a newer navigation won
   current = { ...result, path, route: found };
   onRender(current, { keep });

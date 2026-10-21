@@ -22,9 +22,10 @@ export function browseView({ query }) {
   const f = {
     q: query.get("q") || "",
     cat: query.get("cat") || "",
-    k: query.get("k") ?? (prefs.kosher === "all" ? "" : prefs.kosher),
-    d: query.has("d") ? csv(query.get("d")) : [...prefs.diet],
-    a: query.has("a") ? csv(query.get("a")) : [...prefs.avoid],
+    // "all"/"none" in the URL means "the person cleared the preference from settings"
+    k: query.has("k") ? (query.get("k") === "all" ? "" : query.get("k")) : prefs.kosher === "all" ? "" : prefs.kosher,
+    d: query.has("d") ? csv(query.get("d")).filter((x) => x !== "none") : [...prefs.diet],
+    a: query.has("a") ? csv(query.get("a")).filter((x) => x !== "none") : [...prefs.avoid],
     t: Number(query.get("t")) || 0,
     p: Number(query.get("p")) || 0,
     fav: query.get("fav") === "1",
@@ -36,7 +37,7 @@ export function browseView({ query }) {
   const filtersHost = h("div.filters");
 
   const sync = () =>
-    replaceQuery({ q: f.q, cat: f.cat, k: f.k, d: f.d, a: f.a, t: f.t || "", p: f.p || "", fav: f.fav ? "1" : "", sort: f.sort === "default" ? "" : f.sort });
+    replaceQuery({ q: f.q, cat: f.cat, k: f.k || (prefs.kosher !== "all" ? "all" : ""), d: f.d.length || !prefs.diet.length ? f.d : ["none"], a: f.a.length || !prefs.avoid.length ? f.a : ["none"], t: f.t || "", p: f.p || "", fav: f.fav ? "1" : "", sort: f.sort === "default" ? "" : f.sort });
 
   function matches(rec) {
     if (f.cat && rec.category !== f.cat) return false;

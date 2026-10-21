@@ -5,7 +5,7 @@ import { icon } from "../icons.js";
 
 import { catalog, actions, sourcesFor, stores as storeList } from "../app.js";
 import { moneyEl, settingChips, stepText, ingredientText, openDialog, toast } from "../ui.js";
-import { clock, settingParts } from "../fmt.js";
+import { clock, settingParts, spokenStep } from "../fmt.js";
 import { compareDish } from "../lib/calc.js";
 
 // Survives re-renders triggered by state changes; reset when another dish is opened.
@@ -18,7 +18,7 @@ export function cookView({ match, query }) {
   const servings = Math.min(99, Math.max(1, Number(query.get("s")) || rec.servings));
   const factor = servings / rec.servings;
 
-  if (!session || session.dishId !== rec.id || session.servings !== servings) session = { dishId: rec.id, servings, idx: 0, timers: new Map(), gathered: new Set(), logged: false };
+  if (!session || session.dishId !== rec.id || session.servings !== servings) session = { dishId: rec.id, servings, idx: 0, timers: new Map(), gathered: new Set(), logged: false, speak: false };
 
   const pages = ["overview", ...rec.steps.map((_, i) => i), "done"];
   const last = pages.length - 1;
@@ -178,6 +178,31 @@ export function cookView({ match, query }) {
   }
   const onVisible = () => document.visibilityState === "visible" && keepAwake();
 
+  // ------------------------------------------------------------ speech
+  const canSpeak = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+  function say(text) {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "he-IL";
+    const voice = speechSynthesis.getVoices().find((v) => v.lang?.replace("_", "-").startsWith("he"));
+    if (voice) u.voice = voice;
+    speechSynthesis.speak(u);
+  }
+  function sayCurrent() {
+    const page = pages[session.idx];
+    if (typeof page === "number") say(spokenStep(rec.steps[page].text));
+    else if (page === "done") say("סיימתם. בתיאבון!");
+  }
+  const speakBtn = canSpeak
+    ? h("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(session.speak), onclick: (e) => {
+        session.speak = !session.speak;
+        e.currentTarget.setAttribute("aria-pressed", String(session.speak));
+        if (session.speak) sayCurrent();
+        else speechSynthesis.cancel();
+      } }, icon("volume", { size: 18 }), "הקראה")
+    : null;
+
   // ------------------------------------------------------------ pages
   function stepPage(i) {
     const step = rec.steps[i];
@@ -227,6 +252,8 @@ export function cookView({ match, query }) {
     nextBtn.disabled = session.idx === last;
     paintBar();
     stepArea.scrollTo?.(0, 0);
+    if (session.speak) sayCurrent();
+    else if (canSpeak) speechSynthesis.cancel();
   }
 
   // keyboard + swipe (RTL: left = forward)
@@ -248,7 +275,7 @@ export function cookView({ match, query }) {
   const el = h(
     "div.cookmode",
     { role: "region", "aria-label": `מצב בישול: ${rec.name}` },
-    h("div.cook-top", h("a.btn.btn-ghost.btn-sm.btn-icon", { href: `#/dish/${rec.id}?s=${servings}`, "aria-label": "יציאה ממצב בישול" }, icon("x", { size: 20 })), h("span.title", rec.name), h("span.muted.small", "המסך נשאר דלוק")),
+    h("div.cook-top", h("a.btn.btn-ghost.btn-sm.btn-icon", { href: `#/dish/${rec.id}?s=${servings}`, "aria-label": "יציאה ממצב בישול" }, icon("x", { size: 20 })), h("span.title", rec.name), speakBtn),
     h("div.cook-progress", { role: "progressbar", "aria-label": "התקדמות במתכון", "aria-valuemin": "0", "aria-valuemax": String(last), "aria-valuenow": String(session.idx) }, progress),
     timerBar,
     stepArea,
@@ -271,6 +298,7 @@ export function cookView({ match, query }) {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("visibilitychange", onVisible);
       wake?.release?.().catch(() => {});
+      if (canSpeak) speechSynthesis.cancel();
       audio?.close?.().catch(() => {});
     },
   };
