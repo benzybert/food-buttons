@@ -65,7 +65,26 @@ export const EQUIPMENT_LABELS = {
   soak: "השרייה מראש",
 };
 
-/** Adds derived fields (kosher/diet/allergens/equipment/time) onto a copy of the recipe. */
+// Oil used for deep frying is mostly left in the pan; only about a fifth ends up in the food.
+const FRY_ABSORPTION = 0.2;
+
+/** Approximate kilocalories per serving (null when no ingredient has nutrition data). */
+export function kcalPerServing(recipe, ingById, factor = 1) {
+  let total = 0;
+  let known = 0;
+  for (const l of recipe.ingredients) {
+    const ing = l.id ? ingById.get(l.id) : null;
+    if (!ing || ing.kcal == null) continue;
+    const base = toBase(ing, l.qty * factor, l.unit);
+    if (!Number.isFinite(base)) continue;
+    const amount100 = ing.base === "u" ? (base * (ing.unitWeight || 0)) / 100 : base / 100;
+    total += amount100 * ing.kcal * (/לטיגון/.test(l.note || "") ? FRY_ABSORPTION : 1);
+    known++;
+  }
+  return known ? Math.round(total / (recipe.servings * factor)) : null;
+}
+
+/** Adds derived fields (kosher/diet/allergens/equipment/time/kcal) onto a copy of the recipe. */
 export function deriveRecipe(recipe, ingById) {
   const base = deriveFromIngredients(recipe, ingById);
   const prep = Number(recipe.prep) || 0;
@@ -74,6 +93,7 @@ export function deriveRecipe(recipe, ingById) {
     ...recipe,
     ...base,
     equipment: deriveEquipment(recipe),
+    kcal: kcalPerServing(recipe, ingById),
     time: { prep, cook, total: prep + cook },
   };
 }

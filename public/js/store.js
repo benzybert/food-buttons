@@ -31,6 +31,7 @@ export function defaults() {
     orderPrices: {}, // dishId -> sourceId -> per-serving price
     orderOff: {}, // sourceId -> [dishId] not offered
     orderCart: {}, // dishId -> servings being ordered from the order page
+    notes: {}, // dishId -> personal note
     customSources: [], // user-added order sources: { id, name, markup, fee, min, phone }
     checked: {}, // shopping list ticks: ingId -> true
     seen: {}, // one-time hints

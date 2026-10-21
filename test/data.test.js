@@ -118,3 +118,23 @@ test("soups, sauces and drinks fit in the bowl at their default servings", async
     assert.ok(bowlFillMl(r, cat.ingById) <= BOWL_SAFE_ML, `${r.id} fills ~${bowlFillMl(r, cat.ingById)} ml`);
   }
 });
+
+test("nutrition: every ingredient has kcal and recipes land in a plausible range", () => {
+  const cat = loadCatalog();
+  for (const i of cat.ingredients) assert.ok(Number.isFinite(i.kcal) && i.kcal >= 0, `${i.id} kcal`);
+  for (const r of cat.recipes) assert.ok(r.kcal >= 20 && r.kcal <= 900, `${r.id}: ${r.kcal} kcal per serving`);
+  // spot checks against well-known values
+  assert.ok(Math.abs(cat.recById.get("pasta-pomodoro").kcal - 482) <= 60);
+  assert.ok(cat.recById.get("tomato-salsa").kcal < 60);
+});
+
+test("deriveRecipe computes kcal for imported recipes and discounts frying oil", async () => {
+  const { kcalPerServing } = await import("../public/js/lib/derive.js");
+  const cat = loadCatalog();
+  const r = { servings: 2, ingredients: [{ id: "oil", qty: 100, unit: "ml" }] };
+  const fried = { servings: 2, ingredients: [{ id: "oil", qty: 100, unit: "ml", note: "לטיגון" }] };
+  assert.equal(kcalPerServing(r, cat.ingById), 442);
+  assert.equal(kcalPerServing(fried, cat.ingById), 88);
+  assert.equal(kcalPerServing({ servings: 1, ingredients: [{ custom: "x", qty: 1, unit: "g" }] }, cat.ingById), null);
+  assert.equal(kcalPerServing({ servings: 2, ingredients: [{ id: "eggs", qty: 2, unit: "u" }] }, cat.ingById), Math.round((2 * 55 * 1.43) / 2));
+});

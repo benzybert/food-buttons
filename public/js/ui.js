@@ -160,6 +160,7 @@ export function dishCard(rec) {
           "div.meta",
           h("span", icon("clock", { size: 16 }), duration(total)),
           h("span", icon("users", { size: 16 }), `${rec.servings} מנות`),
+          rec.kcal ? h("span", `≈${rec.kcal} קק״ל`) : null,
           kosherChip(rec),
           rec.src === "custom" ? h("span.chip.info", "שלי") : null,
         ),

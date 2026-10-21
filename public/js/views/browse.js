@@ -13,6 +13,7 @@ const SORTS = [
   ["cheap", "הזול ביותר למנה"],
   ["fast", "המהיר ביותר"],
   ["name", "לפי שם"],
+  ["kcal", "הכי קל בקלוריות"],
 ];
 const csv = (s) => (s ? s.split(",").filter(Boolean) : []);
 
@@ -28,6 +29,7 @@ export function browseView({ query }) {
     a: query.has("a") ? csv(query.get("a")).filter((x) => x !== "none") : [...prefs.avoid],
     t: Number(query.get("t")) || 0,
     p: Number(query.get("p")) || 0,
+    e: Number(query.get("e")) || 0,
     fav: query.get("fav") === "1",
     sort: query.get("sort") || "default",
   };
@@ -37,7 +39,7 @@ export function browseView({ query }) {
   const filtersHost = h("div.filters");
 
   const sync = () =>
-    replaceQuery({ q: f.q, cat: f.cat, k: f.k || (prefs.kosher !== "all" ? "all" : ""), d: f.d.length || !prefs.diet.length ? f.d : ["none"], a: f.a.length || !prefs.avoid.length ? f.a : ["none"], t: f.t || "", p: f.p || "", fav: f.fav ? "1" : "", sort: f.sort === "default" ? "" : f.sort });
+    replaceQuery({ q: f.q, cat: f.cat, k: f.k || (prefs.kosher !== "all" ? "all" : ""), d: f.d.length || !prefs.diet.length ? f.d : ["none"], a: f.a.length || !prefs.avoid.length ? f.a : ["none"], t: f.t || "", p: f.p || "", e: f.e || "", fav: f.fav ? "1" : "", sort: f.sort === "default" ? "" : f.sort });
 
   function matches(rec) {
     if (f.cat && rec.category !== f.cat) return false;
@@ -46,6 +48,7 @@ export function browseView({ query }) {
     if (f.a.some((a) => rec.allergens.includes(a))) return false;
     if (f.t && rec.time.total > f.t) return false;
     if (f.p && dishInfo(rec.id).perServing > f.p) return false;
+    if (f.e && (rec.kcal ?? 0) > f.e) return false;
     if (f.fav && !store.get().favorites.includes(rec.id)) return false;
     if (f.q) {
       const hay = norm([rec.name, rec.description, ...(rec.tags || []), ...rec.ingredients.map((l) => (l.id ? c.ingById.get(l.id)?.name : l.custom))].join(" "));
@@ -66,6 +69,7 @@ export function browseView({ query }) {
       cheap: (a, b) => dishInfo(a.id).perServing - dishInfo(b.id).perServing,
       fast: (a, b) => a.time.total - b.time.total,
       name: (a, b) => a.name.localeCompare(b.name, "he"),
+      kcal: (a, b) => (a.kcal ?? 9999) - (b.kcal ?? 9999),
     }[f.sort];
     list = list.sort(by);
     count.textContent = list.length === c.recipes.length ? `${list.length} מתכונים` : `${list.length} מתוך ${c.recipes.length} מתכונים`;
@@ -78,7 +82,7 @@ export function browseView({ query }) {
   }
 
   function clearFilters() {
-    Object.assign(f, { q: "", cat: "", k: "", d: [], a: [], t: 0, p: 0, fav: false, sort: "default" });
+    Object.assign(f, { q: "", cat: "", k: "", d: [], a: [], t: 0, p: 0, e: 0, fav: false, sort: "default" });
     search.value = "";
     refresh();
   }
@@ -87,7 +91,7 @@ export function browseView({ query }) {
   const pill = (label, on, onClick, fk) => h("button.chip", { type: "button", "aria-pressed": String(on), "data-fk": fk, onclick: onClick }, label);
 
   function buildFilters() {
-    const advancedCount = (f.k ? 1 : 0) + f.d.length + f.a.length + (f.t ? 1 : 0) + (f.p ? 1 : 0);
+    const advancedCount = (f.k ? 1 : 0) + f.d.length + f.a.length + (f.t ? 1 : 0) + (f.p ? 1 : 0) + (f.e ? 1 : 0);
     const open = filtersHost.querySelector("details")?.open ?? advancedCount > 0;
     filtersHost.replaceChildren(
       h(
@@ -119,6 +123,11 @@ export function browseView({ query }) {
           "div.filter-group",
           h("span.label", "זמן כולל"),
           h("div.chips", ...[[0, "הכול"], [20, "עד 20 דק׳"], [40, "עד 40 דק׳"], [60, "עד שעה"]].map(([v, l]) => pill(l, f.t === v, () => ((f.t = v), refresh()), `t-${v}`))),
+        ),
+        h(
+          "div.filter-group",
+          h("span.label", "קלוריות למנה (משוער)"),
+          h("div.chips", ...[[0, "הכול"], [250, "עד 250"], [400, "עד 400"], [550, "עד 550"]].map(([v, l]) => pill(l, f.e === v, () => ((f.e = v), refresh()), `e-${v}`))),
         ),
         h(
           "div.filter-group",

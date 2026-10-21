@@ -124,6 +124,11 @@ await step("dish page: servings scale the ingredients and cost", async (page) =>
   const verdict = await text(page, ".verdict");
   assert.match(verdict, /בישול עצמי/);
   assert.match(verdict, /הזמנה/);
+  assert.match(await text(page, ".dish-hero"), /קק״ל/);
+  await page.locator('[data-fk="note-chicken-soup"]').fill("פחות מלח");
+  await page.locator('[data-fk="note-chicken-soup"]').press("Tab");
+  await page.reload();
+  assert.equal(await page.locator('[data-fk="note-chicken-soup"]').inputValue(), "פחות מלח");
 });
 
 await step("basket and compare: totals, stores, delivery toggle", async (page) => {

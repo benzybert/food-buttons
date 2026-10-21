@@ -119,6 +119,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 255,
   "time": {
    "prep": 15,
    "cook": 40,
@@ -255,6 +256,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 96,
   "time": {
    "prep": 15,
    "cook": 30,
@@ -401,6 +403,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 247,
   "time": {
    "prep": 10,
    "cook": 30,
@@ -533,6 +536,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 312,
   "time": {
    "prep": 10,
    "cook": 30,
@@ -661,6 +665,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 142,
   "time": {
    "prep": 10,
    "cook": 25,
@@ -784,6 +789,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 121,
   "time": {
    "prep": 5,
    "cook": 25,
@@ -933,6 +939,7 @@
   "equipment": [
    "varoma"
   ],
+  "kcal": 424,
   "time": {
    "prep": 25,
    "cook": 30,
@@ -1077,6 +1084,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 248,
   "time": {
    "prep": 15,
    "cook": 25,
@@ -1187,6 +1195,7 @@
   "equipment": [
    "varoma"
   ],
+  "kcal": 227,
   "time": {
    "prep": 15,
    "cook": 25,
@@ -1303,6 +1312,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 472,
   "time": {
    "prep": 10,
    "cook": 40,
@@ -1402,6 +1412,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 481,
   "time": {
    "prep": 15,
    "cook": 55,
@@ -1540,6 +1551,7 @@
    "eggs"
   ],
   "equipment": [],
+  "kcal": 348,
   "time": {
    "prep": 10,
    "cook": 25,
@@ -1684,6 +1696,7 @@
    "gluten"
   ],
   "equipment": [],
+  "kcal": 393,
   "time": {
    "prep": 15,
    "cook": 30,
@@ -1782,6 +1795,7 @@
   "equipment": [
    "basket"
   ],
+  "kcal": 252,
   "time": {
    "prep": 5,
    "cook": 25,
@@ -1910,6 +1924,7 @@
    "gluten"
   ],
   "equipment": [],
+  "kcal": 482,
   "time": {
    "prep": 5,
    "cook": 25,
@@ -2056,6 +2071,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 598,
   "time": {
    "prep": 10,
    "cook": 20,
@@ -2203,6 +2219,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 450,
   "time": {
    "prep": 10,
    "cook": 25,
@@ -2346,6 +2363,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 730,
   "time": {
    "prep": 25,
    "cook": 70,
@@ -2464,6 +2482,7 @@
   "equipment": [
    "soak"
   ],
+  "kcal": 358,
   "time": {
    "prep": 15,
    "cook": 70,
@@ -2578,6 +2597,7 @@
    "sesame"
   ],
   "equipment": [],
+  "kcal": 332,
   "time": {
    "prep": 10,
    "cook": 0,
@@ -2682,6 +2702,7 @@
    "sesame"
   ],
   "equipment": [],
+  "kcal": 122,
   "time": {
    "prep": 5,
    "cook": 0,
@@ -2784,6 +2805,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 127,
   "time": {
    "prep": 10,
    "cook": 40,
@@ -2879,6 +2901,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 32,
   "time": {
    "prep": 10,
    "cook": 0,
@@ -2982,6 +3005,7 @@
    "tree-nuts"
   ],
   "equipment": [],
+  "kcal": 190,
   "time": {
    "prep": 10,
    "cook": 0,
@@ -3099,6 +3123,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 128,
   "time": {
    "prep": 10,
    "cook": 45,
@@ -3202,6 +3227,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 82,
   "time": {
    "prep": 10,
    "cook": 0,
@@ -3297,6 +3323,7 @@
   "equipment": [
    "basket"
   ],
+  "kcal": 215,
   "time": {
    "prep": 10,
    "cook": 30,
@@ -3387,6 +3414,7 @@
    "eggs"
   ],
   "equipment": [],
+  "kcal": 86,
   "time": {
    "prep": 10,
    "cook": 0,
@@ -3510,6 +3538,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 417,
   "time": {
    "prep": 10,
    "cook": 15,
@@ -3618,6 +3647,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 216,
   "time": {
    "prep": 20,
    "cook": 120,
@@ -3723,6 +3753,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 335,
   "time": {
    "prep": 10,
    "cook": 35,
@@ -3845,6 +3876,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 300,
   "time": {
    "prep": 15,
    "cook": 40,
@@ -3953,6 +3985,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 229,
   "time": {
    "prep": 20,
    "cook": 15,
@@ -4040,6 +4073,7 @@
   "equipment": [
    "butterfly"
   ],
+  "kcal": 472,
   "time": {
    "prep": 15,
    "cook": 5,
@@ -4118,6 +4152,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 127,
   "time": {
    "prep": 5,
    "cook": 0,
@@ -4201,6 +4236,7 @@
    "peanuts"
   ],
   "equipment": [],
+  "kcal": 213,
   "time": {
    "prep": 5,
    "cook": 0,
@@ -4291,6 +4327,7 @@
    "milk"
   ],
   "equipment": [],
+  "kcal": 242,
   "time": {
    "prep": 5,
    "cook": 0,
@@ -4378,6 +4415,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 122,
   "time": {
    "prep": 5,
    "cook": 0,
@@ -4481,11 +4519,11 @@
   "name": "חלה לשבת",
   "emoji": "🥖",
   "category": "bread",
-  "servings": 10,
+  "servings": 16,
   "prep": 30,
   "cook": 120,
   "level": 2,
-  "order": 3,
+  "order": 2,
   "description": "חלה קלועה ורכה, הבצק נלוש במכשיר.",
   "kosher": "parve",
   "diet": [
@@ -4499,6 +4537,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 266,
   "time": {
    "prep": 30,
    "cook": 120,
@@ -4562,7 +4601,8 @@
    {
     "qty": 300,
     "unit": "ml",
-    "id": "oil"
+    "id": "oil",
+    "note": "לטיגון"
    }
   ],
   "steps": [
@@ -4630,6 +4670,7 @@
   "equipment": [
    "soak"
   ],
+  "kcal": 357,
   "time": {
    "prep": 30,
    "cook": 25,
@@ -4677,7 +4718,8 @@
    {
     "qty": 150,
     "unit": "ml",
-    "id": "oil"
+    "id": "oil",
+    "note": "לטיגון"
    }
   ],
   "steps": [
@@ -4738,6 +4780,7 @@
    "gluten"
   ],
   "equipment": [],
+  "kcal": 286,
   "time": {
    "prep": 15,
    "cook": 20,
@@ -4868,6 +4911,7 @@
   "equipment": [
    "oven"
   ],
+  "kcal": 277,
   "time": {
    "prep": 15,
    "cook": 45,
@@ -4992,6 +5036,7 @@
   ],
   "allergens": [],
   "equipment": [],
+  "kcal": 103,
   "time": {
    "prep": 10,
    "cook": 25,
@@ -5098,6 +5143,7 @@
   "equipment": [
    "basket"
   ],
+  "kcal": 236,
   "time": {
    "prep": 5,
    "cook": 25,

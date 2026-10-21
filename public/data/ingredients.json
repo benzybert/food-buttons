@@ -17,7 +17,8 @@
   "ref": 6,
   "flags": [],
   "unitWeight": 150,
-  "density": 1
+  "density": 1,
+  "kcal": 40
  },
  {
   "id": "red-onion",
@@ -35,7 +36,8 @@
   "ref": 9,
   "flags": [],
   "unitWeight": 120,
-  "density": 1
+  "density": 1,
+  "kcal": 40
  },
  {
   "id": "scallion",
@@ -54,7 +56,8 @@
   "ref": 18,
   "flags": [],
   "unitWeight": 30,
-  "density": 1
+  "density": 1,
+  "kcal": 32
  },
  {
   "id": "garlic",
@@ -75,7 +78,8 @@
   "ref": 38,
   "flags": [],
   "unitWeight": 5,
-  "density": 1
+  "density": 1,
+  "kcal": 149
  },
  {
   "id": "ginger",
@@ -96,7 +100,8 @@
   "ref": 40,
   "flags": [],
   "unitWeight": 20,
-  "density": 1
+  "density": 1,
+  "kcal": 80
  },
  {
   "id": "carrot",
@@ -114,7 +119,8 @@
   "ref": 6,
   "flags": [],
   "unitWeight": 100,
-  "density": 1
+  "density": 1,
+  "kcal": 41
  },
  {
   "id": "potato",
@@ -134,7 +140,8 @@
   "ref": 7,
   "flags": [],
   "unitWeight": 170,
-  "density": 1
+  "density": 1,
+  "kcal": 77
  },
  {
   "id": "sweet-potato",
@@ -152,7 +159,8 @@
   "ref": 9,
   "flags": [],
   "unitWeight": 300,
-  "density": 1
+  "density": 1,
+  "kcal": 86
  },
  {
   "id": "tomato",
@@ -172,7 +180,8 @@
   "ref": 8,
   "flags": [],
   "unitWeight": 130,
-  "density": 1
+  "density": 1,
+  "kcal": 18
  },
  {
   "id": "cherry-tomato",
@@ -190,7 +199,8 @@
   "ref": 16,
   "flags": [],
   "unitWeight": 15,
-  "density": 1
+  "density": 1,
+  "kcal": 18
  },
  {
   "id": "cucumber",
@@ -208,7 +218,8 @@
   "ref": 8,
   "flags": [],
   "unitWeight": 110,
-  "density": 1
+  "density": 1,
+  "kcal": 15
  },
  {
   "id": "red-pepper",
@@ -226,7 +237,8 @@
   "ref": 14,
   "flags": [],
   "unitWeight": 180,
-  "density": 1
+  "density": 1,
+  "kcal": 31
  },
  {
   "id": "green-pepper",
@@ -244,7 +256,8 @@
   "ref": 12,
   "flags": [],
   "unitWeight": 150,
-  "density": 1
+  "density": 1,
+  "kcal": 20
  },
  {
   "id": "chili",
@@ -264,7 +277,8 @@
   "ref": 28,
   "flags": [],
   "unitWeight": 15,
-  "density": 1
+  "density": 1,
+  "kcal": 40
  },
  {
   "id": "eggplant",
@@ -282,7 +296,8 @@
   "ref": 10,
   "flags": [],
   "unitWeight": 350,
-  "density": 1
+  "density": 1,
+  "kcal": 25
  },
  {
   "id": "zucchini",
@@ -300,7 +315,8 @@
   "ref": 9,
   "flags": [],
   "unitWeight": 200,
-  "density": 1
+  "density": 1,
+  "kcal": 17
  },
  {
   "id": "broccoli",
@@ -318,7 +334,8 @@
   "ref": 16,
   "flags": [],
   "unitWeight": 350,
-  "density": 1
+  "density": 1,
+  "kcal": 34
  },
  {
   "id": "cauliflower",
@@ -334,7 +351,8 @@
   "ref": 12,
   "flags": [],
   "unitWeight": 700,
-  "density": 1
+  "density": 1,
+  "kcal": 25
  },
  {
   "id": "cabbage",
@@ -352,7 +370,8 @@
   "ref": 6,
   "flags": [],
   "unitWeight": 1000,
-  "density": 1
+  "density": 1,
+  "kcal": 25
  },
  {
   "id": "celery",
@@ -371,7 +390,8 @@
   "ref": 12,
   "flags": [],
   "unitWeight": 40,
-  "density": 1
+  "density": 1,
+  "kcal": 16
  },
  {
   "id": "celeriac",
@@ -387,7 +407,8 @@
   "ref": 14,
   "flags": [],
   "unitWeight": 400,
-  "density": 1
+  "density": 1,
+  "kcal": 42
  },
  {
   "id": "leek",
@@ -405,7 +426,8 @@
   "ref": 14,
   "flags": [],
   "unitWeight": 200,
-  "density": 1
+  "density": 1,
+  "kcal": 61
  },
  {
   "id": "mushroom",
@@ -425,7 +447,8 @@
   "ref": 28,
   "flags": [],
   "unitWeight": 20,
-  "density": 1
+  "density": 1,
+  "kcal": 22
  },
  {
   "id": "spinach",
@@ -444,7 +467,8 @@
   "ref": 18,
   "flags": [],
   "unitWeight": 30,
-  "density": 1
+  "density": 1,
+  "kcal": 23
  },
  {
   "id": "lemon",
@@ -462,7 +486,8 @@
   "ref": 10,
   "flags": [],
   "unitWeight": 100,
-  "density": 1
+  "density": 1,
+  "kcal": 29
  },
  {
   "id": "parsley",
@@ -481,7 +506,8 @@
   "ref": 40,
   "flags": [],
   "unitWeight": 50,
-  "density": 1
+  "density": 1,
+  "kcal": 36
  },
  {
   "id": "cilantro",
@@ -499,7 +525,8 @@
   "ref": 40,
   "flags": [],
   "unitWeight": 50,
-  "density": 1
+  "density": 1,
+  "kcal": 23
  },
  {
   "id": "dill",
@@ -515,7 +542,8 @@
   "ref": 40,
   "flags": [],
   "unitWeight": 50,
-  "density": 1
+  "density": 1,
+  "kcal": 43
  },
  {
   "id": "mint",
@@ -533,7 +561,8 @@
   "ref": 40,
   "flags": [],
   "unitWeight": 30,
-  "density": 1
+  "density": 1,
+  "kcal": 44
  },
  {
   "id": "basil",
@@ -551,7 +580,8 @@
   "ref": 90,
   "flags": [],
   "unitWeight": 30,
-  "density": 1
+  "density": 1,
+  "kcal": 23
  },
  {
   "id": "banana",
@@ -569,7 +599,8 @@
   "ref": 8,
   "flags": [],
   "unitWeight": 130,
-  "density": 1
+  "density": 1,
+  "kcal": 89
  },
  {
   "id": "apple",
@@ -588,7 +619,8 @@
   "ref": 11,
   "flags": [],
   "unitWeight": 180,
-  "density": 1
+  "density": 1,
+  "kcal": 52
  },
  {
   "id": "strawberry",
@@ -607,7 +639,8 @@
   "ref": 32,
   "flags": [],
   "unitWeight": 20,
-  "density": 1
+  "density": 1,
+  "kcal": 32
  },
  {
   "id": "orange",
@@ -625,7 +658,8 @@
   "ref": 7,
   "flags": [],
   "unitWeight": 200,
-  "density": 1
+  "density": 1,
+  "kcal": 47
  },
  {
   "id": "avocado",
@@ -641,7 +675,8 @@
   "ref": 18,
   "flags": [],
   "unitWeight": 220,
-  "density": 1
+  "density": 1,
+  "kcal": 160
  },
  {
   "id": "pumpkin",
@@ -659,7 +694,8 @@
   "ref": 6,
   "flags": [],
   "unitWeight": 1000,
-  "density": 1
+  "density": 1,
+  "kcal": 26
  },
  {
   "id": "chicken-breast",
@@ -681,7 +717,8 @@
    "m"
   ],
   "unitWeight": 250,
-  "density": 1
+  "density": 1,
+  "kcal": 120
  },
  {
   "id": "chicken-thighs",
@@ -704,7 +741,8 @@
    "m"
   ],
   "unitWeight": 160,
-  "density": 1
+  "density": 1,
+  "kcal": 190
  },
  {
   "id": "ground-beef",
@@ -726,7 +764,8 @@
    "m"
   ],
   "unitWeight": 100,
-  "density": 1
+  "density": 1,
+  "kcal": 250
  },
  {
   "id": "tilapia",
@@ -748,7 +787,8 @@
    "f"
   ],
   "unitWeight": 150,
-  "density": 1
+  "density": 1,
+  "kcal": 96
  },
  {
   "id": "eggs",
@@ -769,7 +809,8 @@
    "e"
   ],
   "unitWeight": 55,
-  "density": 1
+  "density": 1,
+  "kcal": 143
  },
  {
   "id": "milk",
@@ -788,7 +829,8 @@
   "flags": [
    "d"
   ],
-  "density": 1.03
+  "density": 1.03,
+  "kcal": 60
  },
  {
   "id": "butter",
@@ -807,7 +849,8 @@
   "flags": [
    "d"
   ],
-  "density": 0.95
+  "density": 0.95,
+  "kcal": 717
  },
  {
   "id": "cream",
@@ -826,7 +869,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 340
  },
  {
   "id": "cooking-cream",
@@ -844,7 +888,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 160
  },
  {
   "id": "white-cheese",
@@ -862,7 +907,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 100
  },
  {
   "id": "mozzarella",
@@ -881,7 +927,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 280
  },
  {
   "id": "yellow-cheese",
@@ -900,7 +947,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 350
  },
  {
   "id": "parmesan",
@@ -919,7 +967,8 @@
   "flags": [
    "d"
   ],
-  "density": 1
+  "density": 1,
+  "kcal": 430
  },
  {
   "id": "yogurt",
@@ -937,7 +986,8 @@
   "flags": [
    "d"
   ],
-  "density": 1.03
+  "density": 1.03,
+  "kcal": 60
  },
  {
   "id": "flour",
@@ -958,7 +1008,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.55
+  "density": 0.55,
+  "kcal": 364
  },
  {
   "id": "whole-flour",
@@ -976,7 +1027,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.55
+  "density": 0.55,
+  "kcal": 340
  },
  {
   "id": "sugar",
@@ -993,7 +1045,8 @@
   "ref": 6.5,
   "flags": [],
   "density": 0.85,
-  "home": true
+  "home": true,
+  "kcal": 387
  },
  {
   "id": "brown-sugar",
@@ -1007,7 +1060,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 380
  },
  {
   "id": "powdered-sugar",
@@ -1023,7 +1077,8 @@
   },
   "ref": 8,
   "flags": [],
-  "density": 0.55
+  "density": 0.55,
+  "kcal": 389
  },
  {
   "id": "salt",
@@ -1042,7 +1097,8 @@
   "ref": 3.5,
   "flags": [],
   "density": 1.2,
-  "home": true
+  "home": true,
+  "kcal": 0
  },
  {
   "id": "rice-basmati",
@@ -1056,7 +1112,8 @@
   },
   "ref": 14,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 360
  },
  {
   "id": "rice-white",
@@ -1074,7 +1131,8 @@
   },
   "ref": 10,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 360
  },
  {
   "id": "pasta",
@@ -1096,7 +1154,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.45
+  "density": 0.45,
+  "kcal": 360
  },
  {
   "id": "couscous",
@@ -1112,7 +1171,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.7
+  "density": 0.7,
+  "kcal": 360
  },
  {
   "id": "lentils-red",
@@ -1128,7 +1188,8 @@
   },
   "ref": 9.5,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 350
  },
  {
   "id": "lentils-green",
@@ -1145,7 +1206,8 @@
   },
   "ref": 9.5,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 350
  },
  {
   "id": "chickpeas-dry",
@@ -1163,7 +1225,8 @@
   },
   "ref": 8.5,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 360
  },
  {
   "id": "oats",
@@ -1183,7 +1246,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.35
+  "density": 0.35,
+  "kcal": 380
  },
  {
   "id": "breadcrumbs",
@@ -1201,7 +1265,8 @@
   "flags": [
    "g"
   ],
-  "density": 0.45
+  "density": 0.45,
+  "kcal": 395
  },
  {
   "id": "cornstarch",
@@ -1217,7 +1282,8 @@
   },
   "ref": 7.5,
   "flags": [],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 381
  },
  {
   "id": "honey",
@@ -1233,7 +1299,8 @@
   "flags": [
    "h"
   ],
-  "density": 1.4
+  "density": 1.4,
+  "kcal": 304
  },
  {
   "id": "cocoa",
@@ -1249,7 +1316,8 @@
   },
   "ref": 16,
   "flags": [],
-  "density": 0.5
+  "density": 0.5,
+  "kcal": 228
  },
  {
   "id": "dark-chocolate",
@@ -1267,7 +1335,8 @@
   },
   "ref": 14,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 540
  },
  {
   "id": "baking-powder",
@@ -1283,7 +1352,8 @@
   },
   "ref": 6.5,
   "flags": [],
-  "density": 0.8
+  "density": 0.8,
+  "kcal": 53
  },
  {
   "id": "baking-soda",
@@ -1300,7 +1370,8 @@
   },
   "ref": 5,
   "flags": [],
-  "density": 1.1
+  "density": 1.1,
+  "kcal": 0
  },
  {
   "id": "yeast",
@@ -1317,7 +1388,8 @@
   },
   "ref": 8,
   "flags": [],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 325
  },
  {
   "id": "vanilla",
@@ -1334,7 +1406,8 @@
   },
   "ref": 15,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 288
  },
  {
   "id": "oil",
@@ -1353,7 +1426,8 @@
   "ref": 12,
   "flags": [],
   "density": 0.92,
-  "home": true
+  "home": true,
+  "kcal": 884
  },
  {
   "id": "olive-oil",
@@ -1371,7 +1445,8 @@
   "ref": 38,
   "flags": [],
   "density": 0.91,
-  "home": true
+  "home": true,
+  "kcal": 884
  },
  {
   "id": "vinegar",
@@ -1389,7 +1464,8 @@
   },
   "ref": 6,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 20
  },
  {
   "id": "soy-sauce",
@@ -1408,7 +1484,8 @@
    "g",
    "o"
   ],
-  "density": 1.1
+  "density": 1.1,
+  "kcal": 53
  },
  {
   "id": "mayo",
@@ -1424,7 +1501,8 @@
   "flags": [
    "e"
   ],
-  "density": 0.95
+  "density": 0.95,
+  "kcal": 680
  },
  {
   "id": "mustard",
@@ -1441,7 +1519,8 @@
   },
   "ref": 7,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 66
  },
  {
   "id": "crushed-tomatoes",
@@ -1459,7 +1538,8 @@
   },
   "ref": 5,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 32
  },
  {
   "id": "tomato-paste",
@@ -1473,7 +1553,8 @@
   },
   "ref": 5.5,
   "flags": [],
-  "density": 1.1
+  "density": 1.1,
+  "kcal": 82
  },
  {
   "id": "chickpeas-canned",
@@ -1490,7 +1571,8 @@
   },
   "ref": 5.5,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 120
  },
  {
   "id": "coconut-milk",
@@ -1504,7 +1586,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 1
+  "density": 1,
+  "kcal": 197
  },
  {
   "id": "peas-frozen",
@@ -1520,7 +1603,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.7
+  "density": 0.7,
+  "kcal": 77
  },
  {
   "id": "veg-stock",
@@ -1537,7 +1621,8 @@
   },
   "ref": 11,
   "flags": [],
-  "density": 0.7
+  "density": 0.7,
+  "kcal": 250
  },
  {
   "id": "chicken-stock",
@@ -1556,7 +1641,8 @@
   "flags": [
    "a"
   ],
-  "density": 0.7
+  "density": 0.7,
+  "kcal": 250
  },
  {
   "id": "pepper",
@@ -1575,7 +1661,8 @@
   "ref": 11,
   "flags": [],
   "density": 0.5,
-  "home": true
+  "home": true,
+  "kcal": 251
  },
  {
   "id": "cumin",
@@ -1591,7 +1678,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.45
+  "density": 0.45,
+  "kcal": 375
  },
  {
   "id": "paprika",
@@ -1608,7 +1696,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.5
+  "density": 0.5,
+  "kcal": 282
  },
  {
   "id": "turmeric",
@@ -1622,7 +1711,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 312
  },
  {
   "id": "cinnamon",
@@ -1638,7 +1728,8 @@
   },
   "ref": 9,
   "flags": [],
-  "density": 0.5
+  "density": 0.5,
+  "kcal": 247
  },
  {
   "id": "oregano",
@@ -1654,7 +1745,8 @@
   },
   "ref": 8,
   "flags": [],
-  "density": 0.2
+  "density": 0.2,
+  "kcal": 265
  },
  {
   "id": "peanuts",
@@ -1672,7 +1764,8 @@
   "flags": [
    "p"
   ],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 590
  },
  {
   "id": "almonds",
@@ -1691,7 +1784,8 @@
   "flags": [
    "n"
   ],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 579
  },
  {
   "id": "walnuts",
@@ -1707,7 +1801,8 @@
   "flags": [
    "n"
   ],
-  "density": 0.4
+  "density": 0.4,
+  "kcal": 654
  },
  {
   "id": "sesame",
@@ -1726,7 +1821,8 @@
   "flags": [
    "s"
   ],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 573
  },
  {
   "id": "tahini",
@@ -1745,7 +1841,8 @@
   "flags": [
    "s"
   ],
-  "density": 0.95
+  "density": 0.95,
+  "kcal": 595
  },
  {
   "id": "raisins",
@@ -1759,7 +1856,8 @@
   },
   "ref": 10,
   "flags": [],
-  "density": 0.6
+  "density": 0.6,
+  "kcal": 299
  },
  {
   "id": "water",
@@ -1779,6 +1877,7 @@
   "ref": 0,
   "flags": [],
   "density": 1,
-  "free": true
+  "free": true,
+  "kcal": 0
  }
 ]

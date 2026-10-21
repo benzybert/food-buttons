@@ -67,6 +67,23 @@ export function parseIngredientsFile(text) {
   return out;
 }
 
+/** Adds `kcal` (per 100 g / 100 ml) to each ingredient from data-src/nutrition.txt. */
+export function applyNutrition(ingredients, text) {
+  const kcal = new Map();
+  text.split(/\r?\n/).forEach((line, i) => {
+    if (!line.trim() || line.trim().startsWith("#")) return;
+    const [id, v] = line.split("|").map((x) => x.trim());
+    const n = Number(v);
+    if (!id || !Number.isFinite(n) || n < 0) return fail(`nutrition.txt:${i + 1}: bad line ${line}`);
+    kcal.set(id, n);
+  });
+  for (const ing of ingredients) {
+    if (!kcal.has(ing.id)) fail(`nutrition.txt: missing kcal for ${ing.id}`);
+    else ing.kcal = kcal.get(ing.id);
+  }
+  for (const id of kcal.keys()) if (!ingredients.some((i) => i.id === id)) fail(`nutrition.txt: unknown ingredient ${id}`);
+}
+
 // ------------------------------------------------------------------ recipes
 
 export function parseRecipeSource(text, file, index) {
@@ -139,6 +156,7 @@ function validateRecipe(r, ingById) {
 export function buildAll() {
   errors.length = 0;
   const ingredients = parseIngredientsFile(fs.readFileSync(path.join(SRC, "ingredients.txt"), "utf8"));
+  applyNutrition(ingredients, fs.readFileSync(path.join(SRC, "nutrition.txt"), "utf8"));
   const index = buildIndex(ingredients);
   const ingById = new Map(ingredients.map((i) => [i.id, i]));
 

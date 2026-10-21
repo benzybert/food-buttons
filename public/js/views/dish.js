@@ -6,7 +6,7 @@ import { replaceQuery, render } from "../router.js";
 import { moneyEl, notice, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
 import { duration, percent } from "../fmt.js";
 import { compareDish, dishLines, hourlyGain } from "../lib/calc.js";
-import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS, fillWarning, BOWL_SAFE_ML } from "../lib/derive.js";
+import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS, fillWarning, BOWL_SAFE_ML, kcalPerServing } from "../lib/derive.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
 
 export function dishView({ match, query }) {
@@ -42,6 +42,7 @@ export function dishView({ match, query }) {
   // ---- hero
   const chips = [
     h("span.chip", icon("clock", { size: 14 }), duration(rec.time.total)),
+    rec.kcal ? h("span.chip", { title: "ערך משוער למנה, לפי טבלאות תזונה כלליות" }, `≈ ${kcalPerServing(rec, c.ingById, factor) ?? rec.kcal} קק״ל למנה`) : null,
     rec.time.prep ? h("span.chip", `עבודה ${duration(rec.time.prep)}`) : null,
     kosherChip(rec),
     ...rec.diet.map((d) => h("span.chip.good", DIET_LABELS[d])),
@@ -52,7 +53,7 @@ export function dishView({ match, query }) {
     "div.dish-hero",
     { class: `cat-${rec.category}` },
     h("div.art", { "aria-hidden": "true" }, rec.emoji),
-    h("div.grow", h("h1", rec.name), rec.description ? h("p.muted", { style: { margin: "0.25rem 0 0.5rem" } }, rec.description) : null, h("div.chips", chips)),
+    h("div.grow", h("h1", rec.name), cookedChip, rec.description ? h("p.muted", { style: { margin: "0.25rem 0 0.5rem" } }, rec.description) : null, h("div.chips", chips)),
   );
 
   // ---- compare card
@@ -134,6 +135,16 @@ export function dishView({ match, query }) {
 
   const stepsList = rec.steps.map((s) => h("li", h("div", h("p", stepText(s.text)), s.settings?.length ? h("div.chips", settingChips(s.settings)) : null)));
 
+  const lastCooked = [...store.get().cooked].reverse().find((x) => x.dishId === rec.id);
+  const daysAgo = lastCooked ? Math.floor((Date.now() - new Date(lastCooked.at).getTime()) / 86400000) : null;
+  const cookedChip = lastCooked ? h("span.chip.good", daysAgo <= 0 ? "בושל היום" : daysAgo === 1 ? "בושל אתמול" : `בושל לפני ${daysAgo} ימים`) : null;
+  const noteCard = h(
+    "section.card",
+    { "aria-labelledby": "note-h" },
+    h("h2", { id: "note-h", style: { "margin-block-end": "0.5rem" } }, "ההערות שלי"),
+    h("textarea.textarea", { dir: "auto", rows: "3", style: { "min-block-size": "5rem" }, placeholder: "למשל: פחות מלח, להוסיף כורכום", "aria-label": "הערות אישיות למתכון", value: store.get().notes[rec.id] || "", "data-fk": `note-${rec.id}`, onchange: (e) => store.update((x) => (e.target.value.trim() ? (x.notes[rec.id] = e.target.value.trim()) : delete x.notes[rec.id])) }),
+    h("p.small.muted", { style: { margin: "0.3rem 0 0" } }, "נשמר בדפדפן הזה בלבד."),
+  );
   const allergens = rec.allergens.length ? h("p.small.muted", "מכיל: ", rec.allergens.map((a) => ALLERGEN_LABELS[a]).join(", ")) : null;
   const equipment = rec.equipment.length ? h("div.chips", rec.equipment.map((e) => h("span.chip.info", EQUIPMENT_LABELS[e]))) : null;
 
@@ -168,6 +179,7 @@ export function dishView({ match, query }) {
         "div.stack",
         h("section.card", { "aria-labelledby": "ing-h" }, h("h2", { id: "ing-h" }, "מצרכים"), h("ul.ing-list", ingItems), h("p.small.muted", "המחיר ליד כל מצרך הוא על הכמות הנצרכת ב", cheapestStore.name, ".")),
         h("section.card", { "aria-labelledby": "steps-h" }, h("h2", { id: "steps-h", style: { "margin-block-end": "0.75rem" } }, "אופן ההכנה"), h("ol.step-list", stepsList)),
+        noteCard,
         rec.src !== "custom" ? h("p.small.muted", "המתכון נכתב במיוחד לאפליקציה והוא מקורי. הגדרות המכשיר נכתבות בפורמט זמן/טמפרטורה/מהירות, ויש לוודא התאמה לדגם שלכם.") : null,
       ),
     ),
