@@ -10,6 +10,9 @@ let catKey = "";
 let memo = { key: "", report: null };
 
 async function getJSON(name) {
+  // A host page can ship the data inline (window.__FB_DATA__) instead of serving the files.
+  const inline = globalThis.__FB_DATA__?.[name];
+  if (inline) return inline;
   const res = await fetch(`data/${name}`);
   if (!res.ok) throw new Error(`${name}: ${res.status}`);
   return res.json();

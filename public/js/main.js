@@ -27,11 +27,18 @@ const TOP = [
   ["#/settings", "הגדרות"],
 ];
 
+let ownsTheme = false; // true once we set data-theme ourselves; never remove one the host page set
+
 function applySettings() {
   const s = store.get().settings;
   const root = document.documentElement;
-  if (s.theme === "auto") root.removeAttribute("data-theme");
-  else root.setAttribute("data-theme", s.theme);
+  if (s.theme !== "auto") {
+    root.setAttribute("data-theme", s.theme);
+    ownsTheme = true;
+  } else if (ownsTheme) {
+    root.removeAttribute("data-theme");
+    ownsTheme = false;
+  }
   root.setAttribute("data-text", String(s.textSize));
 }
 
@@ -142,13 +149,17 @@ async function boot() {
   });
 
   await start();
-  if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    const hadController = !!navigator.serviceWorker.controller;
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-    // A new version took over while the app is open: offer a reload (not on the very first install).
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (hadController) toast("יצאה גרסה חדשה של האפליקציה", { label: "רענון", onClick: () => location.reload() });
-    });
+  try {
+    if ("serviceWorker" in navigator && location.protocol !== "file:" && !globalThis.__FB_DATA__) {
+      const hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+      // A new version took over while the app is open: offer a reload (not on the very first install).
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (hadController) toast("יצאה גרסה חדשה של האפליקציה", { label: "רענון", onClick: () => location.reload() });
+      });
+    }
+  } catch {
+    /* service workers are unavailable (sandboxed frame, private mode): the app works without them */
   }
 }
 
