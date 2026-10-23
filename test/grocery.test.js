@@ -44,10 +44,13 @@ test.before(async () => {
     req.on("data", (c) => (raw += c));
     req.on("end", () => {
       seen.push({ method: req.method, url: req.url, key: req.headers["x-api-key"], body: raw });
-      if (mode === "unauthorized") return res.writeHead(401, { "Content-Type": "application/json" }).end('{"error":"לא מורשה"}');
-      res.writeHead(200, { "Content-Type": "application/json" });
-      if (req.url === "/health") return res.end('{"ok":true}');
-      res.end(JSON.stringify(fakeCompare(JSON.parse(raw).text)));
+      const json = { "Content-Type": "application/json" };
+      if (req.url === "/health") return res.writeHead(200, json).end('{"ok":true}');
+      // like the real API: the token is checked first, then the body
+      if (mode === "unauthorized" || req.headers["x-api-key"] !== TOKEN) return res.writeHead(401, json).end('{"error":"לא מורשה"}');
+      const body = JSON.parse(raw);
+      if (typeof body.text !== "string") return res.writeHead(400, json).end('{"error":"בקשה לא תקינה"}');
+      res.writeHead(200, json).end(JSON.stringify(fakeCompare(body.text)));
     });
   });
   await new Promise((r) => upstream.listen(0, "127.0.0.1", r));
@@ -66,7 +69,7 @@ test.before(async () => {
   });
   base = `http://127.0.0.1:${port}`;
   app.stdout.on("data", (d) => (log += d));
-  await new Promise((resolve) => app.stdout.on("data", () => log.includes("reachable") && resolve()));
+  await new Promise((resolve) => app.stdout.on("data", () => log.includes("token") && resolve()));
 });
 
 test.after(() => {
@@ -76,8 +79,10 @@ test.after(() => {
 
 test("the startup probe reports the grocery API in the deploy log", () => {
   assert.match(log, /grocery api: reachable at 127\.0\.0\.1:\d+ \(health 200\)/);
+  assert.match(log, /grocery api: token accepted/);
   assert.equal(seen[0].url, "/health");
-  assert.equal(seen[0].key, TOKEN);
+  assert.equal(seen[1].url, "/compare");
+  assert.equal(seen[1].key, TOKEN);
 });
 
 test("/api/compare is proxied with the token and stays public", async () => {
