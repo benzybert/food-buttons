@@ -1,17 +1,53 @@
-# food-buttons
+# food-buttons (הזמנת אוכל)
 
-Two giant food-order buttons (Sharon, Thermomix), Alef font, Hebrew RTL. Static files in `public/`, served by `server.js` (no dependencies, reads `PORT`).
+Hebrew RTL web app that answers one question: **order food (from Sharon or a delivery app) or cook it at home with a Thermomix, and what does each cost?** One small Node server (`server.js`, no runtime dependencies, reads `PORT`) serves two parts that share the same site:
 
-- Run: `npm start`, test: `npm test` (Node) and `pytest` in `grocery-api/`
-- Home: `public/index.html`, each button is an `<a>` to its workflow page, plus a bar linking to the shared cart
-- Sharon (`public/sharon/`): Sharon is the chef who comes on Sundays. Choose dishes from her menu, or paste a recipe
-- Thermomix (`public/thermomix/`): paste a recipe's ingredients
-- Both end in **🛒 קנה מצרכים** → `public/groceries/`, which compares prices at Shufersal and Tiv Taam
-- Sharon's menu: `public/menu.json`, `{"dishes": [{"name": "...", "ingredients": ["2 כוסות קמח", "..."]}]}` (a dish without `ingredients` is listed but can't be priced)
-- Price comparison runs in `grocery-api/` (Python, separate service). `server.js` proxies `POST /api/compare` and `GET /api/health` to `GROCERY_API_URL`; see `grocery-api/README.md`
-- **Shared cart** (`public/cart.html`, API under `/api/cart`): see below
-- Fonts: Alef (SIL OFL), subset to Hebrew letters and ASCII in `public/fonts/`
-- Deploy: Railway (site service from the repo root, grocery API service from `grocery-api/`)
+1. **The app** (`public/index.html`, hash routes like `#/cook`): two giant buttons, **שרון** (order) and **Thermomix** (cook).
+   - 49 original Thermomix-style recipes with cost per serving, calories, and the price of ordering the same dish.
+   - **Price comparison** of a basket of dishes at 8 supermarkets (whole packs, pantry-aware), the best two-store split, and cook vs. order. *Prices in the app are sample data* until replaced (see `docs/DATA.md`); the UI says so.
+   - Shopping list, weekly planner, pantry, cook mode with timers, "what should I eat tonight?", Sharon menu with a WhatsApp order message, recipe import (paste text or JSON-LD), price editing, backup/restore.
+   - Installable PWA that works offline. Everything is stored in the browser (`localStorage`), no accounts, no tracking.
+2. **The shop** (real prices and a family cart, needs the server):
+   - **Real prices** at Shufersal and Tiv Taam: `/sharon/` (pick Sharon's dishes or paste a recipe) and `/thermomix/` (paste ingredients) both end in **🛒 קנה מצרכים** → `/groceries/`. Comparison runs in `grocery-api/` (Python, separate service); `server.js` proxies `/api/compare` and `/api/health` to `GROCERY_API_URL`, see `grocery-api/README.md`.
+   - **Shared cart** (`/cart.html`, API under `/api/cart`), plus the **Instinct** event feed: see below.
+   - Linked from the app's home screen and from "עוד". The app's own price screens and the shop's real prices are separate: the cart does not read the app's basket.
+
+## Run
+
+```sh
+npm start            # http://localhost:3000  (PORT is respected)
+npm test             # app logic, server, and the shop (test/shop/): cart, API, grocery proxy
+npm run e2e          # browser tests (needs playwright + Chromium; optional axe-core for the a11y sweep)
+npm run check        # generated files are current + unit tests
+npm run check:grocery   # pytest in grocery-api/ (Python)
+```
+
+No runtime dependencies (Node >= 22). Without `GROCERY_API_URL` the shop still works except real prices ("מלא מחירים"). Set `ACCESS_KEY`, otherwise a temporary key is printed at startup.
+
+## Layout
+
+```
+server.js               static files (gzip, ETag, strict CSP, /healthz) + /api via lib/api.js
+lib/                    the shop's server code (CommonJS, see lib/package.json): cart, instinct, grocery client, state
+public/                 the app and the shop pages
+  index.html, style.css (tokens + home buttons), app.css (components), manifest, sw.js, icons/, fonts/
+  js/lib/               pure logic, shared with Node tests: units, parse, calc, derive, catalog, plan, text
+  js/views/             one file per screen (hash routes)
+  js/{app,store,router,ui,dom,fmt,icons}.js
+  data/                 GENERATED/committed JSON: ingredients, recipes, prices (sample), stores, sources
+  cart.html cart.css cart.js    the shared cart
+  sharon/ thermomix/ groceries/  workflow pages; app.js, to-cart.js, menu.json (Sharon's menu), shop.css
+data-src/               editable sources: ingredients.txt and recipes/*.txt (compact Hebrew format)
+tools/                  build-data (txt -> json), build-sw, gen-sample-prices, ingest-prices
+grocery-api/            Python price-comparison service (own Railway service, Root Directory /grocery-api)
+bridge/                 optional Cookidoo bridge (own Railway service, see docs/COOKIDOO.md)
+test/                   node:test unit tests + test/e2e (Playwright); test/shop/ = cart, API, grocery (CommonJS)
+docs/                   DATA.md, DEPLOY.md, ROADMAP.md, HANDOFF.md (Hebrew)
+```
+
+Sharon's menu for the shop pages: `public/menu.json`, `{"dishes": [{"name": "...", "ingredients": ["2 כוסות קמח", "..."]}]}` (a dish without `ingredients` is listed but can't be priced).
+
+**The service worker never touches the shop.** `/api/*` and the shop pages (list in `tools/build-sw.js`, `NETWORK_ONLY`) are neither precached nor cached: the cart must be live and `/api/instinct/invite` contains a key. Add any new shop page or file to that list.
 
 ## Configuration (environment variables)
 
@@ -24,6 +60,8 @@ Two giant food-order buttons (Sharon, Thermomix), Alef font, Hebrew RTL. Static 
 | `INSTINCT_READ_KEY` | Read-only key for Instinct. Defaults to one derived from `ACCESS_KEY`. |
 | `INSTINCT_WHATSAPP` | Number the "ask Instinct to connect" button writes to. Default `16508702892`. |
 | `PUBLIC_URL` | The site's public URL, if it can't be taken from the request headers. |
+| `BRIDGE_ORIGIN` | Optional: https origin of the Cookidoo bridge (`bridge/`), added to the CSP `connect-src`. See [docs/COOKIDOO.md](docs/COOKIDOO.md). |
+| `PORT` | Set by Railway. |
 
 ## Shared cart
 
@@ -75,3 +113,14 @@ All JSON and all need a key; the read-only key only works on the rows marked rea
 | `GET /api/instinct/spec` (read), `GET /api/instinct/invite` | integration doc; WhatsApp invite (main key only) |
 
 Thermomix/Cookidoo has no public API, so recipes come in as a pasted ingredient list.
+
+## Editing content
+
+- Recipes: edit `data-src/recipes/*.txt`, then `npm run build`. The build fails loudly on an unknown ingredient, a unit it cannot convert, or a recipe that mixes meat and dairy.
+- Ingredients and their packs: `data-src/ingredients.txt`.
+- Prices: `public/data/prices.json` (see `docs/DATA.md`); people can also type their own prices in the app.
+
+## Notes
+
+- Recipes in `data-src/` were written for this project. The app is not affiliated with Vorwerk/Thermomix/Cookidoo and does not fetch anything from them; the importer works on text you paste. Optionally you can run your own small service (`bridge/`, see [docs/COOKIDOO.md](docs/COOKIDOO.md)) that searches and imports from *your* Cookidoo account through an unofficial library; it is off unless you configure it.
+- Fonts: Alef (SIL OFL 1.1), subset with fonttools, see `public/fonts/README.txt`.

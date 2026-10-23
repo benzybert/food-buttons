@@ -1,6 +1,13 @@
 node_modules/
+.DS_Store
+*.log
+.env
+
+# Shared-cart state (DATA_DIR default). Anchored: public/data/ is committed app data.
+/data/
+
+# Python (bridge/, grocery-api/)
 __pycache__/
+*.pyc
 .pytest_cache/
 .venv/
-.env
-data/

@@ -1,0 +1,140 @@
+// App state: one plain object, persisted to localStorage (when available).
+// Mutate it only through update(); subscribers re-render afterwards.
+
+const KEY = "fb:v1";
+const VERSION = 1;
+
+export function defaults() {
+  return {
+    v: VERSION,
+    settings: {
+      household: 4, // default servings
+      stores: [], // enabled store ids; [] = all
+      delivery: false, // price baskets with delivery fees
+      hourly: 0, // value of own time, shekel per hour
+      budget: 0, // weekly food budget, 0 = none
+      deviceCost: 0, // what the Thermomix cost; used for the break-even tracker
+      kosher: "all", // all | parve | dairy | meat  (filters recipe browsing)
+      diet: [], // vegan | vegetarian | gluten-free
+      avoid: [], // allergens to avoid
+      sharonPhone: "",
+      theme: "auto", // auto | light | dark
+      textSize: 100, // percent
+      primaryStore: "", // store used for the shopping list; "" = cheapest
+      bridgeUrl: "", // optional cookidoo-bridge service (docs/COOKIDOO.md)
+      bridgeToken: "", // its access token: a secret, kept only in this browser and left out of backups
+      bridgeSession: "", // the sealed Cookidoo login the bridge gave us (never the password); also a secret, also left out of backups
+      bridgeAccount: "", // the Cookidoo email that session belongs to, shown in settings
+    },
+    basket: [], // { id, dishId, servings, day?, slot? }
+    pantry: null, // array of ingredient ids at home; null until initialised from the catalog
+    favorites: [],
+    cooked: [], // { dishId, at, servings, saved }
+    customRecipes: [],
+    priceOverrides: {}, // ingId -> storeId -> pack price
+    orderPrices: {}, // dishId -> sourceId -> per-serving price
+    orderOff: {}, // sourceId -> [dishId] not offered
+    orderCart: {}, // dishId -> servings being ordered from the order page
+    notes: {}, // dishId -> personal note
+    customSources: [], // user-added order sources: { id, name, markup, fee, min, phone }
+    checked: {}, // shopping list ticks: ingId -> true
+    seen: {}, // one-time hints
+  };
+}
+
+let state = defaults();
+let persistOk = true;
+const subs = new Set();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    state = merge(defaults(), saved);
+  } catch {
+    persistOk = false;
+  }
+}
+
+/** Shallow-per-section merge so new settings keys get defaults but old data survives. */
+function merge(base, saved) {
+  const out = { ...base };
+  for (const k of Object.keys(base)) {
+    if (!(k in saved)) continue;
+    if (k === "settings") out.settings = { ...base.settings, ...saved.settings };
+    else if (typeof base[k] === typeof saved[k] && Array.isArray(base[k]) === Array.isArray(saved[k])) out[k] = saved[k];
+    else if (k === "pantry" && Array.isArray(saved.pantry)) out.pantry = saved.pantry;
+  }
+  out.v = VERSION;
+  return out;
+}
+
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch {
+    persistOk = false;
+  }
+}
+
+export const store = {
+  init() {
+    load();
+    return state;
+  },
+  get: () => state,
+  get persistent() {
+    return persistOk;
+  },
+  /** update(s => { s.basket.push(...) }) */
+  update(fn) {
+    fn(state);
+    persist();
+    for (const f of subs) f(state);
+  },
+  subscribe(fn) {
+    subs.add(fn);
+    return () => subs.delete(fn);
+  },
+  reset() {
+    state = defaults();
+    try {
+      localStorage.removeItem(KEY);
+    } catch {
+      /* ignore */
+    }
+    for (const f of subs) f(state);
+  },
+  exportJSON() {
+    const data = { ...state, settings: { ...state.settings, bridgeToken: "", bridgeSession: "", bridgeAccount: "" } };
+    return JSON.stringify({ app: "food-buttons", exportedAt: new Date().toISOString(), data }, null, 1);
+  },
+  /** Returns { ok, error? }. Replaces the current data. */
+  importJSON(text) {
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return { ok: false, error: "הקובץ אינו JSON תקין" };
+    }
+    const data = parsed?.app === "food-buttons" ? parsed.data : null;
+    if (!data || typeof data !== "object" || !data.settings) return { ok: false, error: "הקובץ אינו גיבוי של האפליקציה" };
+    const { bridgeUrl, bridgeToken, bridgeSession, bridgeAccount } = state.settings;
+    state = merge(defaults(), data);
+    // Backups never carry the token or the login; keep the ones this browser has when the bridge address is unchanged.
+    if (state.settings.bridgeUrl === bridgeUrl) {
+      if (!state.settings.bridgeToken) state.settings.bridgeToken = bridgeToken;
+      if (!state.settings.bridgeSession) Object.assign(state.settings, { bridgeSession, bridgeAccount });
+    }
+    persist();
+    for (const f of subs) f(state);
+    return { ok: true };
+  },
+};
+
+let idCounter = 0;
+export function uid(prefix = "i") {
+  idCounter += 1;
+  return `${prefix}${Date.now().toString(36)}${idCounter.toString(36)}${Math.random().toString(36).slice(2, 5)}`;
+}

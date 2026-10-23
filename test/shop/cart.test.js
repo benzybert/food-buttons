@@ -7,9 +7,9 @@ const path = require("node:path");
 process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "fb-test-"));
 delete process.env.INSTINCT_WEBHOOK_URL;
 
-const cart = require("../lib/cart");
-const { compare } = require("../lib/compare");
-const { state } = require("../lib/state");
+const cart = require("../../lib/cart");
+const { compare } = require("../../lib/compare");
+const { state } = require("../../lib/state");
 
 test("the same item from two sources becomes one line with both sources", () => {
   cart.addItem({ name: "קמח", qty: 1, unit: "ק״ג", source: "sharon" }, "דנה");

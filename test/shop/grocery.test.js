@@ -56,7 +56,7 @@ test.before(async () => {
   await new Promise((r) => upstream.listen(0, "127.0.0.1", r));
 
   const port = 20000 + Math.floor(Math.random() * 20000);
-  app = spawn(process.execPath, [path.join(__dirname, "..", "server.js")], {
+  app = spawn(process.execPath, [path.join(__dirname, "..", "..", "server.js")], {
     env: {
       ...process.env,
       PORT: String(port),

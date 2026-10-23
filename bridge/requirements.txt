@@ -1,0 +1,2 @@
+cookidoo-api~=0.19
+cryptography>=44,<50
