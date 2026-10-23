@@ -137,7 +137,7 @@ export function dishView({ match, query }) {
     );
   });
 
-  const stepsList = rec.steps.map((s) => h("li", h("div", h("p", stepText(s.text)), s.settings?.length ? h("div.chips", settingChips(s.settings)) : null)));
+  const stepsList = rec.steps.map((s) => h("li", h("div", h("p", { dir: "auto" }, stepText(s.text)), s.settings?.length ? h("div.chips", settingChips(s.settings)) : null)));
 
   const noteCard = h(
     "section.card",

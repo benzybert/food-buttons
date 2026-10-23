@@ -17,6 +17,10 @@ The app is static. Pick one; all three configs are in the repo and the tests che
 railway up        # or connect the GitHub repo in the dashboard
 ```
 
+### Optional second service: Cookidoo bridge
+
+`bridge/` is a separate Python service (Root Directory `/bridge`) and the web service needs `BRIDGE_ORIGIN=<its https origin>` to be allowed to call it. Steps, variables and security notes: [COOKIDOO.md](COOKIDOO.md). Do not set it up before you have decided you are comfortable using the unofficial Cookidoo API with your account.
+
 ## Vercel (static)
 
 `vercel.json`: build command `npm run build`, output `public`, security headers, no-cache on code and data, immutable caching on fonts.

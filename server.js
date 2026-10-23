@@ -33,6 +33,29 @@ export const SECURITY_HEADERS = {
     "connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
 };
 
+/**
+ * The one extra origin pages may call: the optional cookidoo-bridge service (docs/COOKIDOO.md).
+ * Accepts only a bare https origin (or http on localhost); anything else is ignored rather than put into the CSP.
+ */
+export function bridgeOrigin(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value.trim());
+    const local = ["localhost", "127.0.0.1"].includes(url.hostname);
+    if (url.protocol !== "https:" && !(url.protocol === "http:" && local)) return "";
+    if (url.username || url.password || url.pathname !== "/" || url.search || url.hash) return "";
+    return url.origin;
+  } catch {
+    return "";
+  }
+}
+
+export function securityHeaders(env = process.env) {
+  const origin = bridgeOrigin(env.BRIDGE_ORIGIN);
+  if (!origin) return SECURITY_HEADERS;
+  return { ...SECURITY_HEADERS, "Content-Security-Policy": SECURITY_HEADERS["Content-Security-Policy"].replace("connect-src 'self';", `connect-src 'self' ${origin};`) };
+}
+
 // path -> { mtimeMs, etag, raw, gzip }
 const cache = new Map();
 
@@ -50,12 +73,12 @@ function load(file, stat, ext) {
   return entry;
 }
 
-function send(res, status, headers, body) {
-  res.writeHead(status, { ...SECURITY_HEADERS, ...headers });
-  res.end(body);
-}
-
-export function createServer() {
+export function createServer({ env = process.env } = {}) {
+  const baseHeaders = securityHeaders(env);
+  const send = (res, status, headers, body) => {
+    res.writeHead(status, { ...baseHeaders, ...headers });
+    res.end(body);
+  };
   return http.createServer((req, res) => {
     if (req.method !== "GET" && req.method !== "HEAD") {
       send(res, 405, { Allow: "GET, HEAD" });

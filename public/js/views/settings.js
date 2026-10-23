@@ -4,6 +4,7 @@ import { store } from "../store.js";
 import { catalog, settings } from "../app.js";
 import { pageHead, stepper, toast } from "../ui.js";
 import { ALLERGEN_LABELS, DIET_LABELS, KOSHER_LABELS } from "../lib/derive.js";
+import { bridgeMessage, checkBridge, normalizeBridgeUrl } from "../lib/cookidoo.js";
 
 const upd = (fn) => store.update((s) => fn(s.settings));
 const toggle = (arr, v, on) => (on ? [...new Set([...arr, v])] : arr.filter((x) => x !== v));
@@ -47,6 +48,7 @@ export function settingsView() {
         h("div.field", h("label", { for: "set-budget" }, "תקציב מצרכים לשבוע (₪)"), h("input.input.num-in", { id: "set-budget", type: "number", min: "0", step: "50", value: String(s.budget), "data-fk": "set-budget", onchange: (e) => upd((x) => void (x.budget = Math.max(0, Number(e.target.value) || 0))) })),
       ),
       h("section.card.stack", h("h2", "שרון"), h("div.field", h("label", { for: "set-phone" }, "מספר וואטסאפ להזמנות"), h("input.input", { id: "set-phone", type: "tel", dir: "ltr", inputmode: "tel", placeholder: "050-1234567", value: s.sharonPhone, "data-fk": "set-phone", onchange: (e) => upd((x) => void (x.sharonPhone = e.target.value.trim())) }))),
+      cookidooCard(s),
       h(
         "section.card.stack",
         h("h2", "תצוגה"),
@@ -71,4 +73,53 @@ function exportData() {
   document.body.append(a);
   a.click();
   setTimeout(() => (URL.revokeObjectURL(a.href), a.remove()), 1000);
+}
+
+/** Optional link to a personal cookidoo-bridge service; see docs/COOKIDOO.md. Nothing here talks to Cookidoo directly. */
+function cookidooCard(s) {
+  const status = h("p.small", { role: "status", "aria-live": "polite" });
+  const say = (text, bad = false) => ((status.textContent = text), status.classList.toggle("bad", bad));
+  const test = async () => {
+    say("בודק...");
+    try {
+      const r = await checkBridge(settings());
+      say(r.configured ? "מחובר: השירות עונה והטוקן תקין" : "השירות עונה אבל לא מוגדר בו חשבון Cookidoo", !r.configured);
+    } catch (e) {
+      say(bridgeMessage(e), true);
+    }
+  };
+  return h(
+    "section.card.stack",
+    h("h2", "Cookidoo (אופציונלי)"),
+    h("p.small.muted", "חיפוש וייבוא מתכונים מהחשבון שלכם דרך שירות אישי שאתם מריצים (תיקיית bridge בפרויקט). האפליקציה לא שומרת את סיסמת Cookidoo; היא רק מכירה את כתובת השירות ואת הטוקן שלו. הטוקן נשמר בדפדפן הזה בלבד ולא נכלל בגיבוי."),
+    h(
+      "div.field",
+      h("label", { for: "set-bridge-url" }, "כתובת השירות"),
+      h("input.input", {
+        id: "set-bridge-url",
+        type: "url",
+        dir: "ltr",
+        inputmode: "url",
+        autocomplete: "off",
+        placeholder: "https://cookidoo-bridge.example.com",
+        value: s.bridgeUrl,
+        "data-fk": "set-bridge-url",
+        onchange: (e) => {
+          const url = normalizeBridgeUrl(e.target.value);
+          if (url === null) {
+            e.target.value = settings().bridgeUrl;
+            return toast("כתובת לא תקינה: https בלבד (או localhost לבדיקה)");
+          }
+          e.target.value = url;
+          upd((x) => void (x.bridgeUrl = url));
+        },
+      }),
+    ),
+    h(
+      "div.field",
+      h("label", { for: "set-bridge-token" }, "טוקן גישה"),
+      h("input.input", { id: "set-bridge-token", type: "password", dir: "ltr", autocomplete: "off", spellcheck: "false", value: s.bridgeToken, "data-fk": "set-bridge-token", onchange: (e) => upd((x) => void (x.bridgeToken = e.target.value.trim())) }),
+    ),
+    h("div.row", h("button.btn.btn-ghost", { type: "button", onclick: test, "data-fk": "bridge-test" }, icon("check", { size: 20 }), "בדיקת חיבור"), status),
+  );
 }

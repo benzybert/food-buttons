@@ -3,16 +3,17 @@
 
 import { h, debounce } from "../dom.js";
 import { icon } from "../icons.js";
-import { catalog, actions } from "../app.js";
+import { catalog, actions, settings } from "../app.js";
 import { pageHead, notice, settingChips, toast } from "../ui.js";
-import { parseRecipeText, parseStep } from "../lib/parse.js";
+import { parseRecipeText, parseJsonLd, parseStep } from "../lib/parse.js";
+import { bridgeConfigured, bridgeMessage, fetchRecipe, searchRecipes } from "../lib/cookidoo.js";
 import { UNIT_LABELS } from "../lib/units.js";
 import { CATEGORY_LABELS, AISLE_LABELS, AISLE_ORDER } from "../lib/catalog.js";
 
 const EMOJIS = ["🍲", "🥣", "🍝", "🍛", "🍗", "🥩", "🐟", "🥗", "🥙", "🧆", "🍕", "🥞", "🍞", "🥘", "🍰", "🍪", "🍨", "🥤", "🍅", "🥕"];
 let draft = null; // { id?, name, emoji, category, servings, prep, cook, order, tags, ingredients[], steps[], warnings[] }
 
-const blankDraft = () => ({ name: "", emoji: "🍲", category: "main", servings: 4, prep: 15, cook: 20, order: "", tags: "", ingredients: [{ qty: 1, unit: "g", id: "", custom: "", note: "" }], steps: [""], warnings: [] });
+const blankDraft = () => ({ description: "", name: "", emoji: "🍲", category: "main", servings: 4, prep: 15, cook: 20, order: "", tags: "", ingredients: [{ qty: 1, unit: "g", id: "", custom: "", note: "" }], steps: [""], warnings: [] });
 
 export function importView({ match }) {
   const c = catalog();
@@ -36,13 +37,71 @@ export function importView({ match }) {
       draft = fromParsed(parseRecipeText(text, c.index), c);
       paint();
     };
+    const linked = bridgeConfigured(settings());
     return h(
       "div.stack",
-      notice("info", "ייבוא הוא לשימוש אישי: המתכון נשמר רק בדפדפן הזה. האפליקציה לא מתחברת ל-Cookidoo ולא מעתיקה ממנו. אתם מעתיקים מתכון שיש לכם גישה אליו, ואנחנו עוזרים לארגן אותו ולחשב עלות.", "info"),
+      linked
+        ? notice("info", "ייבוא הוא לשימוש אישי: המתכון נשמר רק בדפדפן הזה. החיפוש ב-Cookidoo עובר דרך השירות האישי שלכם ועם החשבון שלכם; האפליקציה עצמה לא מתחברת ל-Cookidoo.", "info")
+        : notice("info", "ייבוא הוא לשימוש אישי: המתכון נשמר רק בדפדפן הזה. האפליקציה לא מתחברת ל-Cookidoo ולא מעתיקה ממנו. אתם מעתיקים מתכון שיש לכם גישה אליו, ואנחנו עוזרים לארגן אותו ולחשב עלות.", "info"),
+      linked ? cookidooSearch() : h("p.small.muted", "יש חשבון Cookidoo? אפשר לחפש ולייבא ישירות אחרי חיבור שירות אישי ", h("a", { href: "#/settings" }, "בהגדרות"), "."),
       h("ol", { style: { margin: 0, "padding-inline-start": "1.4rem" } }, h("li", "פתחו את המתכון (ב-", h("a", { href: "https://cookidoo.co.il", target: "_blank", rel: "noopener noreferrer" }, "Cookidoo"), " או בכל אתר)."), h("li", "סמנו את כל הטקסט והעתיקו (Ctrl+A ואז Ctrl+C)."), h("li", "הדביקו כאן ולחצו ״ניתוח המתכון״. נזהה מצרכים, כמויות והגדרות מכשיר כמו ״5 דק׳/100°C/מהירות 2״.")),
       area,
       h("div.row", h("button.btn", { type: "button", onclick: () => analyze(area.value) }, icon("sparkle", { size: 20 }), "ניתוח המתכון"), h("label.btn.btn-ghost", { style: { cursor: "pointer" } }, icon("upload", { size: 20 }), "העלאת קובץ", file), h("button.btn.btn-ghost", { type: "button", onclick: () => ((draft = blankDraft()), paint()) }, icon("plus", { size: 20 }), "מתכון ריק")),
     );
+  }
+
+  /** Search the user's own Cookidoo account through their bridge; picking a result opens the usual editable draft. */
+  function cookidooSearch() {
+    const results = h("div.stack", { "aria-live": "polite" });
+    const input = h("input.input", { type: "search", dir: "auto", placeholder: "חיפוש ב-Cookidoo (באנגלית), למשל: chicken soup", "aria-label": "חיפוש מתכון ב-Cookidoo", "data-fk": "cookidoo-q", onkeydown: (e) => e.key === "Enter" && (e.preventDefault(), run()) });
+    const go = h("button.btn", { type: "button", onclick: () => run(), "data-fk": "cookidoo-search" }, icon("search", { size: 20 }), "חיפוש");
+    const say = (text, bad) => results.replaceChildren(h("p.small", { class: bad ? "bad" : "muted", role: bad ? "alert" : undefined }, text));
+
+    async function run() {
+      if (go.disabled) return;
+      const q = input.value.trim();
+      if (!q) return say("הקלידו מה לחפש");
+      go.disabled = true;
+      say("מחפש...");
+      try {
+        const res = await searchRecipes(settings(), q);
+        if (!res.recipes.length) return say("לא נמצאו מתכונים");
+        results.replaceChildren(
+          h("p.small.muted", `${res.total > res.recipes.length ? `מוצגות ${res.recipes.length} מתוך ${res.total} תוצאות` : `${res.recipes.length} תוצאות`}`),
+          ...res.recipes.map((hit) =>
+            h(
+              "div.row",
+              { style: { "justify-content": "space-between", "border-bottom": "1px dashed var(--line)", padding: "0.4rem 0" } },
+              h("span", { dir: "auto" }, hit.name),
+              h("span.row", /^https:\/\//i.test(hit.url || "") ? h("a.small", { href: hit.url, target: "_blank", rel: "noopener noreferrer" }, "ב-Cookidoo") : null, h("button.btn.btn-ghost.btn-sm", { type: "button", "data-fk": `cookidoo-import-${hit.id}`, "aria-label": `ייבוא ${hit.name}`, onclick: (e) => load(hit, e.currentTarget) }, icon("download", { size: 16 }), "ייבוא")),
+            ),
+          ),
+        );
+      } catch (e) {
+        say(bridgeMessage(e), true);
+      } finally {
+        go.disabled = false;
+      }
+    }
+
+    async function load(hit, btn) {
+      btn.disabled = true;
+      try {
+        const parsed = parseJsonLd(await fetchRecipe(settings(), hit.id), c.index);
+        if (!parsed) throw new Error("unparsable");
+        draft = fromParsed(parsed, c);
+        draft.tags = "Cookidoo";
+        draft.description = `מיובא מ-Cookidoo (${hit.id})`;
+        draft.warnings.unshift("המתכון בא באנגלית: שמות המצרכים והשלבים נשארו כפי שהם. כדאי לעבור על הכמויות וההגדרות לפני השמירה.");
+        paint();
+        window.scrollTo(0, 0);
+      } catch (e) {
+        btn.disabled = false;
+        say(e.kind ? bridgeMessage(e) : "לא הצלחתי לקרוא את המתכון", true);
+      }
+    }
+
+    return h("section.card.stack", h("h2", "חיפוש ב-Cookidoo"), h("div.row", input, go), results);
   }
 
   function editor() {
@@ -117,7 +176,7 @@ export function importView({ match }) {
         return;
       }
       const id = d.id || `my-${Date.now().toString(36)}`;
-      const recipe = { id, name: d.name.trim(), emoji: d.emoji, category: d.category, servings: Number(d.servings), prep: Number(d.prep) || 0, cook: Number(d.cook) || 0, level: 2, order: d.order === "" ? undefined : Number(d.order), tags: d.tags.split(",").map((t) => t.trim()).filter(Boolean), description: "", ingredients: ings, steps, src: "custom" };
+      const recipe = { id, name: d.name.trim(), emoji: d.emoji, category: d.category, servings: Number(d.servings), prep: Number(d.prep) || 0, cook: Number(d.cook) || 0, level: 2, order: d.order === "" ? undefined : Number(d.order), tags: d.tags.split(",").map((t) => t.trim()).filter(Boolean), description: d.description || "", ingredients: ings, steps, src: "custom" };
       draft = null;
       actions.saveCustomRecipe(recipe);
       toast("המתכון נשמר");
@@ -131,6 +190,7 @@ export function importView({ match }) {
 
 function fromParsed(p, c) {
   return {
+    description: "",
     name: p.name,
     emoji: "🍲",
     category: "main",
@@ -148,6 +208,7 @@ function fromParsed(p, c) {
 function fromRecipe(rec) {
   return {
     id: rec.id,
+    description: rec.description || "",
     name: rec.name,
     emoji: rec.emoji,
     category: rec.category,

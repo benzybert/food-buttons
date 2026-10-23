@@ -92,3 +92,30 @@ test("static-host configs carry the same security headers as server.js", async (
   const netlify = fs.readFileSync(new URL("../netlify.toml", import.meta.url), "utf8");
   for (const [k, v] of Object.entries(SECURITY_HEADERS)) assert.ok(netlify.includes(`${k} = ${JSON.stringify(v)}`), `netlify.toml lacks ${k}`);
 });
+
+test("BRIDGE_ORIGIN adds exactly one origin to connect-src, and only a clean https origin", async () => {
+  const { bridgeOrigin, securityHeaders, SECURITY_HEADERS } = await import("../server.js");
+  assert.equal(securityHeaders({}), SECURITY_HEADERS, "unset: the strict default");
+  assert.equal(bridgeOrigin("https://bridge.up.railway.app"), "https://bridge.up.railway.app");
+  assert.equal(bridgeOrigin("https://bridge.up.railway.app/"), "https://bridge.up.railway.app");
+  assert.equal(bridgeOrigin("http://localhost:8081"), "http://localhost:8081");
+  for (const bad of ["", "http://bridge.example.com", "https://a.example/path", "https://a.example?x=1", "https://user:pw@a.example", "javascript:alert(1)", "not a url", "*", "https://a.example; script-src *"]) {
+    assert.equal(bridgeOrigin(bad), "", `rejected: ${bad}`);
+    assert.equal(securityHeaders({ BRIDGE_ORIGIN: bad }), SECURITY_HEADERS);
+  }
+  const csp = securityHeaders({ BRIDGE_ORIGIN: "https://bridge.up.railway.app" })["Content-Security-Policy"];
+  assert.match(csp, /connect-src 'self' https:\/\/bridge\.up\.railway\.app;/);
+  assert.match(csp, /script-src 'self';/);
+  assert.equal(csp.replace(" https://bridge.up.railway.app", ""), SECURITY_HEADERS["Content-Security-Policy"], "nothing else changes");
+});
+
+test("server sends the bridge-aware CSP when BRIDGE_ORIGIN is set", async () => {
+  const server = createServer({ env: { BRIDGE_ORIGIN: "https://bridge.up.railway.app" } });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  try {
+    const res = await fetch(`http://127.0.0.1:${server.address().port}/healthz`);
+    assert.match(res.headers.get("content-security-policy"), /connect-src 'self' https:\/\/bridge\.up\.railway\.app;/);
+  } finally {
+    await new Promise((r) => server.close(r));
+  }
+});

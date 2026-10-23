@@ -44,5 +44,5 @@ docs/                   DATA.md, DEPLOY.md, ROADMAP.md, HANDOFF.md (Hebrew)
 
 ## Notes
 
-- Recipes in `data-src/` were written for this project. The app is not affiliated with Vorwerk/Thermomix/Cookidoo and does not fetch anything from them; the importer works on text you paste.
+- Recipes in `data-src/` were written for this project. The app is not affiliated with Vorwerk/Thermomix/Cookidoo and does not fetch anything from them; the importer works on text you paste. Optionally you can run your own small service (`bridge/`, see [docs/COOKIDOO.md](docs/COOKIDOO.md)) that searches and imports from *your* Cookidoo account through an unofficial library; it is off unless you configure it.
 - Fonts: Alef (SIL OFL 1.1), subset with fonttools, see `public/fonts/README.txt`.

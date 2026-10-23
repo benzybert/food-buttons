@@ -7,6 +7,7 @@ import { catalog, actions, sourcesFor, stores as storeList } from "../app.js";
 import { moneyEl, settingChips, stepText, ingredientText, openDialog, toast } from "../ui.js";
 import { clock, settingParts, spokenStep } from "../fmt.js";
 import { compareDish } from "../lib/calc.js";
+import { textLang } from "../lib/text.js";
 
 // Survives re-renders triggered by state changes; reset when another dish is opened.
 let session = null;
@@ -184,8 +185,9 @@ export function cookView({ match, query }) {
     if (!canSpeak) return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "he-IL";
-    const voice = speechSynthesis.getVoices().find((v) => v.lang?.replace("_", "-").startsWith("he"));
+    const lang = textLang(text);
+    u.lang = lang === "en" ? "en-US" : "he-IL";
+    const voice = speechSynthesis.getVoices().find((v) => v.lang?.replace("_", "-").startsWith(lang));
     if (voice) u.voice = voice;
     speechSynthesis.speak(u);
   }
@@ -209,7 +211,7 @@ export function cookView({ match, query }) {
     const timers = (step.settings || []).map((s, j) => (s.time && s.time >= 30 ? timerCard(i, j, s.time, settingParts(s).join(" / ")) : null));
     return [
       h("p.count", `שלב ${i + 1} מתוך ${rec.steps.length}`),
-      h("p.text", stepText(step.text)),
+      h("p.text", { dir: "auto" }, stepText(step.text)),
       step.settings?.length ? h("div.cook-settings", settingChips(step.settings)) : null,
       ...timers,
       h("button.btn.btn-ghost.btn-sm", { type: "button", style: { "align-self": "flex-start" }, onclick: () => openDialog("מצרכים", ingredientList(false)) }, icon("list", { size: 18 }), "מצרכים"),

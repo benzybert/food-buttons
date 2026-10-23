@@ -11,23 +11,25 @@ const WORD_FRACTIONS = { חצי: 0.5, רבע: 0.25, שליש: 1 / 3 };
 
 const UNIT_WORDS = {
   g: ["גרם", "גרמים", "גר", "ג", "g", "gr", "gram", "grams"],
-  kg: ["קג", "קילו", "קילוגרם", "kg"],
-  ml: ["מל", "מיליליטר", "ml"],
-  l: ["ליטר", "ליטרים", "ל", "l"],
-  tsp: ["כפית", "כפיות", "tsp"],
-  tbsp: ["כף", "כפות", "tbsp"],
+  kg: ["קג", "קילו", "קילוגרם", "kg", "kilo", "kilos", "kilogram", "kilograms"],
+  ml: ["מל", "מיליליטר", "ml", "millilitre", "millilitres", "milliliter", "milliliters"],
+  l: ["ליטר", "ליטרים", "ל", "l", "litre", "litres", "liter", "liters"],
+  tsp: ["כפית", "כפיות", "tsp", "teaspoon", "teaspoons"],
+  tbsp: ["כף", "כפות", "tbsp", "tbs", "tablespoon", "tablespoons"],
   cup: ["כוס", "כוסות", "cup", "cups"],
-  pinch: ["קורט", "צביטה"],
+  pinch: ["קורט", "צביטה", "pinch", "pinches", "dash", "dashes"],
   u: [
     "יחידה", "יחידות", "יח", "שן", "שיני", "שינים", "קופסה", "קופסת", "קופסאות", "חבילה", "חבילת",
     "שקית", "שקיות", "צרור", "צרורות", "ענף", "ענפים", "גבעול", "גבעולי", "גבעולים", "פרוסה", "פרוסות",
     "חופן", "מקל", "מקלות",
+    "clove", "cloves", "piece", "pieces", "pcs", "pc", "slice", "slices", "can", "cans", "tin", "tins", "bunch", "bunches",
+    "stalk", "stalks", "stick", "sticks", "sprig", "sprigs", "handful", "handfuls", "pack", "packet", "packets", "head", "heads",
   ],
 };
 const UNIT_LOOKUP = new Map();
 for (const [unit, words] of Object.entries(UNIT_WORDS)) for (const w of words) UNIT_LOOKUP.set(w, unit);
 
-const UNIT_ADJECTIVES = new Set(["גדושה", "גדושות", "שטוחה", "שטוחות", "מגוהצת", "מגוהצות", "קטנה", "גדולה", "בינונית"]);
+const UNIT_ADJECTIVES = new Set(["גדושה", "גדושות", "שטוחה", "שטוחות", "מגוהצת", "מגוהצות", "קטנה", "גדולה", "בינונית", "heaped", "heaping", "level", "rounded", "large", "medium", "small"]);
 
 /** Parses a leading quantity. Returns { qty, rest } or null. */
 export function parseQuantity(input) {
@@ -39,7 +41,7 @@ export function parseQuantity(input) {
   let m;
   if ((m = s.match(/^(\d+)\s+(\d+)\/(\d+)\s*/))) return { qty: n(m[1]) + n(m[2]) / n(m[3]), rest: s.slice(m[0].length) };
   if ((m = s.match(/^(\d+)\/(\d+)\s*/))) return { qty: n(m[1]) / n(m[2]), rest: s.slice(m[0].length) };
-  if ((m = s.match(/^(\d+(?:[.,]\d+)?)\s*(?:-|–|עד)\s*(\d+(?:[.,]\d+)?)\s*/))) {
+  if ((m = s.match(/^(\d+(?:[.,]\d+)?)(?:\s*(?:-|–|עד)\s*|\s+(?:to|or)\s+)(\d+(?:[.,]\d+)?)\s*/i))) {
     return { qty: Math.max(n(m[1]), n(m[2])), rest: s.slice(m[0].length) };
   }
   if ((m = s.match(/^(\d+(?:[.,]\d+)?)\s*(?:ו(חצי|רבע|שליש))?\s*/))) {
@@ -94,7 +96,7 @@ export function matchIngredient(name, index) {
 // ---------------------------------------------------------------- ingredient lines
 
 const NOTE_SPLIT = /\s*(?:,|\(|\s-\s|–)\s*/;
-const TASTE_RE = /(?:^|\s)(לפי (?:ה)?טעם|לטעם|לקישוט|להגשה|אופציונלי|אם רוצים)(?:\s|$)/;
+const TASTE_RE = /(?:^|\s)(לפי (?:ה)?טעם|לטעם|לקישוט|להגשה|אופציונלי|אם רוצים|to taste|for garnish|for serving|for decoration|optional|as needed|if desired)(?:\s|$)/i;
 
 /**
  * "2 כפות שמן זית, לטיגון" -> { qty: 2, unit: "tbsp", name: "שמן זית", note: "לטיגון", id: "olive-oil" }
@@ -128,7 +130,7 @@ export function parseIngredientLine(line, index) {
     if (unit === "u" && !["יחידה", "יחידות", "יח"].includes(first)) unitWord = first;
     parts.shift();
     if (parts[0] && UNIT_ADJECTIVES.has(norm(parts[0]))) parts.shift();
-    if (parts[0] === "של") parts.shift();
+    if (parts[0] === "של" || parts[0]?.toLowerCase() === "of") parts.shift();
     s = parts.join(" ");
     if (qty === null) qty = 1; // "קורט מלח", "כף שמן"
   } else if (qty !== null) {
@@ -168,21 +170,21 @@ export function parseIngredientLine(line, index) {
 
 // ---------------------------------------------------------------- Thermomix settings
 
-const TIME = String.raw`(?:\d+\s*(?:שעות|שעה|שע['׳’])\s*(?:ו-?)?\s*)?\d+(?:[.,]\d+)?\s*(?:דק['׳’]|דקות|דקה|שנ['׳’]|שניות|שנייה|min|sec)(?:\s*(?:ו-?)?\s*\d+\s*(?:שנ['׳’]|שניות|שנייה|sec))?|\d+\s*(?:שעות|שעה|שע['׳’])`;
+const TIME = String.raw`(?:\d+\s*(?:שעות|שעה|שע['׳’]|hours?|hrs?|h)\s*(?:ו-?)?\s*)?\d+(?:[.,]\d+)?\s*(?:דק['׳’]|דקות|דקה|שנ['׳’]|שניות|שנייה|mins?|minutes?|secs?|seconds?)(?:\s*(?:ו-?)?\s*\d+\s*(?:שנ['׳’]|שניות|שנייה|secs?|seconds?))?|\d+\s*(?:שעות|שעה|שע['׳’]|hours?|hrs?)`;
 const TEMP = String.raw`(?:\d{2,3}\s*°\s*C?|Varoma|וארומה|ורומה)`;
-const SPEED = String.raw`(?:מהירות\s*(?:\d+(?:[.,]5)?(?:\s*(?:עד|-|–)\s*\d+)?|כף|טורבו)|speed\s*\d+)`;
-const MISC = String.raw`(?:↺|⟲|סיבוב הפוך|הפוך|תפקיד לישה)`;
+const SPEED = String.raw`(?:מהירות\s*(?:\d+(?:[.,]5)?(?:\s*(?:עד|-|–)\s*\d+)?|כף|טורבו)|speed\s*(?:\d+(?:[.,]5)?(?:\s*(?:to|-|–)\s*\d+)?|spoon|turbo)|turbo)`;
+const MISC = String.raw`(?:↺|⟲|סיבוב הפוך|הפוך|תפקיד לישה|reverse(?:\s+blade)?|counter-?clockwise|dough mode|kneading(?:\s+function)?)`;
 const TOKEN = `(?:${TIME}|${TEMP}|${SPEED}|${MISC})`;
-const GROUP_RE = new RegExp(`${TOKEN}(?:\\s*\\/\\s*${TOKEN})+`, "gu");
-const TOKEN_RE = new RegExp(TOKEN, "gu");
+const GROUP_RE = new RegExp(`${TOKEN}(?:\\s*\\/\\s*${TOKEN})+`, "giu");
+const TOKEN_RE = new RegExp(TOKEN, "giu");
 
 function parseTimeToken(t) {
   let sec = 0;
-  const re = /(\d+(?:[.,]\d+)?)\s*(שעות|שעה|שע['׳’]|דק['׳’]|דקות|דקה|min|שנ['׳’]|שניות|שנייה|sec)/g;
+  const re = /(\d+(?:[.,]\d+)?)\s*(שעות|שעה|שע['׳’]|hours?|hrs?|h|דק['׳’]|דקות|דקה|mins?|minutes?|שנ['׳’]|שניות|שנייה|secs?|seconds?)/gi;
   let m;
   while ((m = re.exec(t))) {
     const v = Number(m[1].replace(",", "."));
-    sec += /^שע/.test(m[2]) ? v * 3600 : /^(?:דק|min)/.test(m[2]) ? v * 60 : v;
+    sec += /^(?:שע|h)/i.test(m[2]) ? v * 3600 : /^(?:דק|min)/i.test(m[2]) ? v * 60 : v;
   }
   return Math.round(sec);
 }
@@ -193,13 +195,13 @@ export function extractSettings(text) {
   for (const g of text.matchAll(GROUP_RE)) {
     const s = { time: null, temp: null, speed: null, reverse: false, kneading: false };
     for (const t of g[0].match(TOKEN_RE) || []) {
-      if (new RegExp(`^${TIME}$`, "u").test(t)) s.time = parseTimeToken(t);
-      else if (/Varoma|וארומה|ורומה/.test(t)) s.temp = "varoma";
+      if (new RegExp(`^${TIME}$`, "iu").test(t)) s.time = parseTimeToken(t);
+      else if (/Varoma|וארומה|ורומה/i.test(t)) s.temp = "varoma";
       else if (/°/.test(t)) s.temp = Number(t.match(/\d+/)[0]);
-      else if (/כף/.test(t)) s.speed = "spoon";
-      else if (/טורבו/.test(t)) s.speed = "turbo";
-      else if (/(?:מהירות|speed)/.test(t)) s.speed = t.replace(/^(?:מהירות|speed)\s*/, "").replace(/\s*(?:עד|-|–)\s*/, "–").replace(",", ".");
-      else if (/תפקיד לישה/.test(t)) s.kneading = true;
+      else if (/כף|spoon/i.test(t)) s.speed = "spoon";
+      else if (/טורבו|turbo/i.test(t)) s.speed = "turbo";
+      else if (/(?:מהירות|speed)/i.test(t)) s.speed = t.replace(/^(?:מהירות|speed)\s*/i, "").replace(/\s*(?:עד|to|-|–)\s*/i, "–").replace(",", ".");
+      else if (/תפקיד לישה|dough mode|kneading/i.test(t)) s.kneading = true;
       else s.reverse = true;
     }
     out.push({ ...s, text: g[0] });

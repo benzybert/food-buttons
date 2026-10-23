@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseQuantity, parseIngredientLine, buildIndex, matchIngredient, extractSettings, parseStep, parseDuration, parseRecipeText, parseJsonLd } from "../public/js/lib/parse.js";
+import { parseQuantity, parseIngredientLine, buildIndex, matchIngredient, extractSettings, parseStep, parseDuration, parseRecipeText, parseJsonLd, stem } from "../public/js/lib/parse.js";
 import { loadRaw } from "./helpers.js";
 
 const index = buildIndex(loadRaw().ingredients);
@@ -235,4 +235,89 @@ test("parseRecipeText: a page copied from a recipe site (labels on their own lin
 test("settings: hours, temperature without C, reverse words", () => {
   const [a] = extractSettings("בשלו 1 שעה/90°/סיבוב הפוך/מהירות 1");
   assert.deepEqual({ time: a.time, temp: a.temp, reverse: a.reverse }, { time: 3600, temp: 90, reverse: true });
+});
+
+// ---------------------------------------------------------------- English (Cookidoo EN recipes)
+
+test("English ingredient lines: units, plurals, notes, ranges", () => {
+  assert.deepEqual(pick(line("200 g onions, peeled and quartered")), { qty: 200, unit: "g", id: "onion" });
+  assert.equal(line("200 g onions, peeled and quartered").note, "peeled and quartered");
+  assert.deepEqual(pick(line("2 tbsp olive oil")), { qty: 2, unit: "tbsp", id: "olive-oil" });
+  assert.deepEqual(pick(line("1 tablespoon oil")), { qty: 1, unit: "tbsp", id: "oil" });
+  assert.deepEqual(pick(line("1 1/2 tsp salt")), { qty: 1.5, unit: "tsp", id: "salt" });
+  assert.deepEqual(pick(line("500 ml water")), { qty: 500, unit: "ml", id: "water" });
+  assert.deepEqual(pick(line("2 cloves garlic")), { qty: 2, unit: "u", id: "garlic" });
+  assert.deepEqual(pick(line("3 garlic cloves")), { qty: 3, unit: "u", id: "garlic" });
+  assert.deepEqual(pick(line("2 medium carrots")), { qty: 2, unit: "u", id: "carrot" });
+  assert.deepEqual(pick(line("4 large tomatoes")), { qty: 4, unit: "u", id: "tomato" });
+  assert.deepEqual(pick(line("600 g potatoes")), { qty: 600, unit: "g", id: "potato" });
+  assert.deepEqual(pick(line("1 pinch of salt")), { qty: 1, unit: "pinch", id: "salt" });
+  assert.deepEqual(pick(line("2 to 3 eggs")), { qty: 3, unit: "u", id: "eggs" });
+  assert.deepEqual(pick(line("1 cup basmati rice")), { qty: 1, unit: "cup", id: "rice-basmati" });
+});
+
+test("English ingredient lines: longest alias wins, to-taste lines, unknown names", () => {
+  assert.equal(line("100 g red onion").id, "red-onion");
+  assert.equal(line("2 tbsp extra virgin olive oil").id, "olive-oil");
+  assert.equal(line("300 g sweet potatoes").id, "sweet-potato");
+  assert.equal(line("2 tbsp tomato paste").id, "tomato-paste");
+  assert.equal(line("400 g canned chopped tomatoes").id, "crushed-tomatoes");
+  assert.equal(line("1 can coconut milk").id, "coconut-milk");
+  assert.equal(line("1 tsp ground black pepper").id, "pepper");
+  const taste = line("salt, to taste");
+  assert.equal(taste.id, "salt");
+  assert.equal(taste.toTaste, true);
+  assert.equal(line("1 star anise").id, null);
+});
+
+test("English stemming is consistent for plurals the catalog spells either way", () => {
+  assert.equal(stem("tomatoes"), stem("tomato"));
+  assert.equal(stem("potatoes"), stem("potato"));
+  assert.equal(stem("berries"), stem("berry"));
+  assert.equal(stem("onions"), stem("onion"));
+  assert.equal(stem("peaches"), stem("peach"));
+  assert.equal(stem("hummus"), "hummus");
+  assert.equal(stem("couscous"), "couscous");
+  assert.equal(stem("גזרים"), "גזר");
+});
+
+test("English Thermomix settings: time/temp/speed, Varoma, reverse, hours", () => {
+  const [a] = extractSettings("Cook 5 min/100°C/speed 2.");
+  assert.deepEqual({ time: a.time, temp: a.temp, speed: a.speed, reverse: a.reverse }, { time: 300, temp: 100, speed: "2", reverse: false });
+  const [b] = extractSettings("Blend 30 sec/speed 8, then 3 min/Varoma/reverse/Speed 1");
+  assert.equal(b.time, 30);
+  assert.equal(b.speed, "8");
+  const all = extractSettings("Blend 30 sec/speed 8, then 3 min/Varoma/reverse/Speed 1");
+  assert.equal(all.length, 2);
+  assert.deepEqual({ time: all[1].time, temp: all[1].temp, speed: all[1].speed, reverse: all[1].reverse }, { time: 180, temp: "varoma", speed: "1", reverse: true });
+  const [c] = extractSettings("Steam 1 h 20 min/120°C/speed 1");
+  assert.equal(c.time, 4800);
+  const [d] = extractSettings("Chop 5 sec/turbo");
+  assert.deepEqual({ time: d.time, speed: d.speed }, { time: 5, speed: "turbo" });
+  const [e] = extractSettings("Knead 2 min/dough mode");
+  assert.deepEqual({ time: e.time, kneading: e.kneading }, { time: 120, kneading: true });
+  assert.equal(extractSettings("Wait 10 minutes. Add 2 min of salt").length, 0); // a lone time is not a machine setting
+});
+
+test("parseJsonLd: an English Cookidoo-style recipe", () => {
+  const draft = parseJsonLd(
+    {
+      "@type": "Recipe",
+      name: "Tomato soup",
+      recipeYield: "4 servings",
+      prepTime: "PT15M",
+      totalTime: "PT45M",
+      recipeIngredient: ["600 g tomatoes", "1 onion, peeled", "2 tbsp olive oil", "1 star anise", "salt, to taste"],
+      recipeInstructions: ["Place onion into mixing bowl and chop 5 sec/speed 5.", "Add oil and sauté 3 min/120°C/speed 1.", "Add tomatoes and cook 20 min/100°C/speed 2."],
+    },
+    index,
+  );
+  assert.equal(draft.name, "Tomato soup");
+  assert.equal(draft.servings, 4);
+  assert.equal(draft.prep, 15);
+  assert.equal(draft.cook, 30);
+  assert.deepEqual(draft.ingredients.map((i) => i.id || i.custom), ["tomato", "onion", "olive-oil", "star anise", "salt"]);
+  assert.equal(draft.steps.length, 3);
+  assert.equal(draft.steps[1].settings[0].temp, 120);
+  assert.equal(draft.steps[2].settings[0].time, 1200);
 });

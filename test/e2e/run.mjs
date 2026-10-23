@@ -5,6 +5,7 @@
 
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import http from "node:http";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { createRequire } from "node:module";
@@ -196,8 +197,7 @@ await step("Sharon order: cart total, WhatsApp link with number and text", async
   await go(page, "#/order");
   await page.getByRole("button", { name: /הוסף מנות של מרק עוף/ }).click();
   await page.getByRole("button", { name: /הוסף מנות של מרק עוף/ }).click();
-  await page.waitForSelector("#cart-h");
-  assert.match(await text(page, "#cart-h"), /2 מנות/);
+  await page.waitForFunction(() => /2 מנות/.test(document.querySelector("#cart-h")?.textContent || "")); // re-rendering is async
   await page.locator("#order-phone").fill("050-123-4567");
   await page.locator("#order-phone").press("Tab");
   const link = page.getByRole("link", { name: /שליחה לשרון/ });
@@ -270,6 +270,88 @@ await step("import: paste a recipe, fix it, save, price it, cook it", async (pag
   assert.equal(await page.locator('input[type="number"]').first().inputValue(), "4");
 });
 
+// A stand-in for bridge/ (no Cookidoo account needed): same routes, token check and CORS as the real one.
+const BRIDGE_TOKEN = "e2e-token-0123456789abcdef0123";
+const bridgeStub = http.createServer((req, res) => {
+  const url = new URL(req.url, "http://x");
+  const cors = { "Access-Control-Allow-Origin": req.headers.origin || "", "Access-Control-Allow-Headers": "Authorization, Content-Type", Vary: "Origin" };
+  const json = (status, body) => (res.writeHead(status, { ...cors, "Content-Type": "application/json" }), res.end(JSON.stringify(body)));
+  if (req.method === "OPTIONS") return (res.writeHead(204, cors), res.end());
+  if (url.pathname === "/healthz") return json(200, { ok: true, configured: true });
+  if (req.headers.authorization !== `Bearer ${BRIDGE_TOKEN}`) return json(401, { error: "unauthorized" });
+  if (url.pathname === "/api/ping") return json(200, { ok: true });
+  if (url.pathname === "/api/search") return json(200, { total: 1, page: 0, recipes: [{ id: "r1", name: "Tomato soup", thumbnail: null, url: "https://cookidoo.example/r1" }] });
+  if (url.pathname === "/api/recipe/r1") {
+    return json(200, {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      name: "Tomato soup",
+      recipeYield: "4 servings",
+      prepTime: "PT15M",
+      totalTime: "PT45M",
+      recipeIngredient: ["600 g tomatoes", "1 onion, peeled", "2 tbsp olive oil", "1 star anise"],
+      recipeInstructions: [{ "@type": "HowToStep", text: "Chop onion 5 sec/speed 5." }, { "@type": "HowToStep", text: "Cook 20 min/100°C/speed 2." }],
+      cookidoo: { id: "r1" },
+    });
+  }
+  json(404, { error: "not_found" });
+});
+await new Promise((r) => bridgeStub.listen(0, "127.0.0.1", r));
+const BRIDGE_URL = `http://127.0.0.1:${bridgeStub.address().port}`;
+// The app server must be told which origin the page may call (CSP connect-src), as in a real deployment.
+const linkedServer = createServer({ env: { BRIDGE_ORIGIN: BRIDGE_URL } });
+await new Promise((r) => linkedServer.listen(0, "127.0.0.1", r));
+const LINKED = `http://127.0.0.1:${linkedServer.address().port}/`;
+
+await step("cookidoo bridge: connect in settings, search, import an English recipe, save and cook it", async (page) => {
+  const open = async (hash) => (await page.goto(LINKED + hash), page.waitForSelector("#main > *"));
+  await open("#/import");
+  assert.match(await text(page, "main"), /בהגדרות/, "without a bridge the import page points to the settings");
+  assert.equal(await page.locator('[data-fk="cookidoo-q"]').count(), 0);
+
+  await open("#/settings");
+  await page.locator('[data-fk="set-bridge-url"]').fill(BRIDGE_URL + "/");
+  await page.locator('[data-fk="set-bridge-url"]').blur();
+  assert.equal(await page.locator('[data-fk="set-bridge-url"]').inputValue(), BRIDGE_URL, "normalised to a bare origin");
+  await page.locator('[data-fk="set-bridge-token"]').fill("wrong-token");
+  await page.locator('[data-fk="set-bridge-token"]').blur();
+  await page.locator('[data-fk="bridge-test"]').click();
+  await page.waitForFunction(() => /הטוקן שגוי/.test(document.querySelector('[role="status"]')?.textContent || ""));
+  await page.locator('[data-fk="set-bridge-token"]').fill(BRIDGE_TOKEN);
+  await page.locator('[data-fk="set-bridge-token"]').blur();
+  await page.locator('[data-fk="bridge-test"]').click();
+  await page.waitForFunction(() => /מחובר/.test(document.querySelector('[role="status"]')?.textContent || ""));
+
+  const axeFile = findAxe();
+  const axeCheck = async (where) => {
+    if (!axeFile) return;
+    await page.evaluate(fs.readFileSync(axeFile, "utf8"));
+    const res = await page.evaluate(() => axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] } }));
+    assert.deepEqual(res.violations.filter((v) => ["serious", "critical"].includes(v.impact)).map((v) => `${where}: ${v.id} ${v.nodes[0].target.join(" ")}`), []);
+  };
+  await axeCheck("settings with the Cookidoo card");
+
+  await open("#/import");
+  await page.locator('[data-fk="cookidoo-q"]').fill("tomato");
+  await page.locator('[data-fk="cookidoo-search"]').click();
+  await page.waitForSelector('[data-fk="cookidoo-import-r1"]');
+  await axeCheck("import with search results");
+  await page.locator('[data-fk="cookidoo-import-r1"]').click();
+  await page.waitForSelector("form");
+  assert.match(await text(page, ".notice.warn"), /באנגלית/);
+  assert.equal(await page.locator('input[dir="auto"]').first().inputValue(), "Tomato soup");
+  assert.equal(await page.locator('input[aria-label^="שם מצרך"]').count(), 1, "only the star anise is left without a catalog match");
+  await page.getByRole("button", { name: "שמירת המתכון" }).click();
+  await page.waitForURL(/#\/dish\/my-/);
+  assert.match(await text(page, "h1"), /Tomato soup/);
+  assert.equal(await page.locator(".chip-tm").count(), 2);
+  assert.match(await text(page, ".verdict"), /בישול עצמי/);
+  assert.equal(await page.locator("ol p[dir='auto']").count(), 2);
+
+  const backup = await page.evaluate(() => localStorage.getItem("fb:v1"));
+  assert.ok(backup.includes("bridgeToken"), "the token is kept in this browser");
+});
+
 await step("prices: override a price, compare and persistence", async (page) => {
   await go(page, "#/prices");
   const cell = page.locator('[data-fk="cell-onion:ramilevy"]');
@@ -288,10 +370,12 @@ await step("pantry: marking an ingredient removes it from the list", async (page
   await go(page, "#/cook");
   await addDish(page, "shakshuka");
   await go(page, "#/list");
-  const before = await page.locator(".shop-item").count();
+  await page.waitForSelector("section.card .shop-item"); // `go` returns on the first child of #main, which can still be a placeholder
+  const before = await page.locator("section.card .shop-item").count();
   await go(page, "#/pantry");
   await page.locator('[data-fk="p-eggs"]').click();
   await go(page, "#/list");
+  await page.waitForSelector("section.card .shop-item");
   assert.equal(await page.locator("section.card .shop-item .what", { hasText: /^ביצים$/ }).count(), 0);
   assert.ok((await page.locator("section.card .shop-item").count()) < before);
 });
@@ -323,8 +407,8 @@ await step("tonight: suggestion respects the time limit, shuffle gives another",
   let different = false;
   for (let i = 0; i < 6 && !different; i++) {
     await page.getByRole("button", { name: "עוד הצעה" }).click();
-    await page.waitForTimeout(80);
-    different = (await text(page, ".card h2")) !== first;
+    // the re-render is async and the pick is random: wait briefly for a different dish rather than a fixed time
+    different = await page.waitForFunction((f) => document.querySelector(".card h2")?.textContent !== f, first, { timeout: 500 }).then(() => true, () => false);
     assert.ok((await mins()) <= 40);
   }
   assert.ok(different, "a new suggestion appears");
@@ -407,6 +491,8 @@ else {
 
 await browser.close();
 server.close();
+linkedServer.close();
+bridgeStub.close();
 console.log(`\n${passed} passed, ${failures.length} failed`);
 process.exit(failures.length ? 1 : 0);
 

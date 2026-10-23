@@ -5,7 +5,11 @@
   "aliases": [
    "בצלים",
    "בצל יבש",
-   "בצל קצוץ"
+   "בצל קצוץ",
+   "onion",
+   "onions",
+   "yellow onion",
+   "brown onion"
   ],
   "aisle": "produce",
   "base": "g",
@@ -24,7 +28,9 @@
   "id": "red-onion",
   "name": "בצל סגול",
   "aliases": [
-   "בצלים סגולים"
+   "בצלים סגולים",
+   "red onion",
+   "red onions"
   ],
   "aisle": "produce",
   "base": "g",
@@ -44,7 +50,13 @@
   "name": "בצל ירוק",
   "aliases": [
    "בצלצלים",
-   "בצל ירוק קצוץ"
+   "בצל ירוק קצוץ",
+   "spring onion",
+   "spring onions",
+   "green onion",
+   "green onions",
+   "scallion",
+   "scallions"
   ],
   "aisle": "produce",
   "base": "g",
@@ -67,7 +79,12 @@
    "שיני שום",
    "שן שום",
    "שום טרי",
-   "שום כתוש"
+   "שום כתוש",
+   "garlic",
+   "garlic clove",
+   "garlic cloves",
+   "clove garlic",
+   "cloves garlic"
   ],
   "aisle": "produce",
   "base": "g",
@@ -89,7 +106,9 @@
    "גינגר",
    "ג׳ינג׳ר",
    "זנגביל",
-   "ג'ינג'ר טרי"
+   "ג'ינג'ר טרי",
+   "ginger",
+   "fresh ginger"
   ],
   "aisle": "produce",
   "base": "g",
@@ -108,7 +127,9 @@
   "id": "carrot",
   "name": "גזר",
   "aliases": [
-   "גזרים"
+   "גזרים",
+   "carrot",
+   "carrots"
   ],
   "aisle": "produce",
   "base": "g",
@@ -129,7 +150,9 @@
   "aliases": [
    "תפוחי אדמה",
    "תפו\"א",
-   "תפוד"
+   "תפוד",
+   "potato",
+   "potatoes"
   ],
   "aisle": "produce",
   "base": "g",
@@ -148,7 +171,9 @@
   "id": "sweet-potato",
   "name": "בטטה",
   "aliases": [
-   "בטטות"
+   "בטטות",
+   "sweet potato",
+   "sweet potatoes"
   ],
   "aisle": "produce",
   "base": "g",
@@ -169,7 +194,11 @@
   "aliases": [
    "עגבניות",
    "עגבנית",
-   "עגבניות בשלות"
+   "עגבניות בשלות",
+   "tomato",
+   "tomatoes",
+   "ripe tomato",
+   "ripe tomatoes"
   ],
   "aisle": "produce",
   "base": "g",
@@ -188,7 +217,9 @@
   "id": "cherry-tomato",
   "name": "עגבניות שרי",
   "aliases": [
-   "שרי"
+   "שרי",
+   "cherry tomato",
+   "cherry tomatoes"
   ],
   "aisle": "produce",
   "base": "g",
@@ -207,7 +238,9 @@
   "id": "cucumber",
   "name": "מלפפון",
   "aliases": [
-   "מלפפונים"
+   "מלפפונים",
+   "cucumber",
+   "cucumbers"
   ],
   "aisle": "produce",
   "base": "g",
@@ -226,7 +259,13 @@
   "id": "red-pepper",
   "name": "פלפל אדום",
   "aliases": [
-   "פלפלים אדומים"
+   "פלפלים אדומים",
+   "red pepper",
+   "red bell pepper",
+   "bell pepper",
+   "red capsicum",
+   "capsicum",
+   "sweet pepper"
   ],
   "aisle": "produce",
   "base": "g",
@@ -245,7 +284,10 @@
   "id": "green-pepper",
   "name": "פלפל ירוק",
   "aliases": [
-   "פלפלים ירוקים"
+   "פלפלים ירוקים",
+   "green pepper",
+   "green bell pepper",
+   "green capsicum"
   ],
   "aisle": "produce",
   "base": "g",
@@ -266,7 +308,15 @@
   "aliases": [
    "צ'ילי",
    "פלפל חריף ירוק",
-   "צילי"
+   "צילי",
+   "chili",
+   "chilli",
+   "chili pepper",
+   "chilli pepper",
+   "red chili",
+   "green chili",
+   "red chilli",
+   "green chilli"
   ],
   "aisle": "produce",
   "base": "g",
@@ -286,7 +336,9 @@
   "id": "eggplant",
   "name": "חציל",
   "aliases": [
-   "חצילים"
+   "חצילים",
+   "eggplant",
+   "aubergine"
   ],
   "aisle": "produce",
   "base": "g",
@@ -305,7 +357,10 @@
   "id": "zucchini",
   "name": "קישוא",
   "aliases": [
-   "קישואים"
+   "קישואים",
+   "zucchini",
+   "courgette",
+   "courgettes"
   ],
   "aisle": "produce",
   "base": "g",
@@ -324,7 +379,9 @@
   "id": "broccoli",
   "name": "ברוקולי",
   "aliases": [
-   "ברוקולי טרי"
+   "ברוקולי טרי",
+   "broccoli",
+   "broccoli florets"
   ],
   "aisle": "produce",
   "base": "g",
@@ -342,7 +399,10 @@
  {
   "id": "cauliflower",
   "name": "כרובית",
-  "aliases": [],
+  "aliases": [
+   "cauliflower",
+   "cauliflower florets"
+  ],
   "aisle": "produce",
   "base": "g",
   "pack": {
@@ -360,7 +420,9 @@
   "id": "cabbage",
   "name": "כרוב לבן",
   "aliases": [
-   "כרוב"
+   "כרוב",
+   "cabbage",
+   "white cabbage"
   ],
   "aisle": "produce",
   "base": "g",
@@ -380,7 +442,12 @@
   "name": "סלרי",
   "aliases": [
    "גבעולי סלרי",
-   "גבעול סלרי"
+   "גבעול סלרי",
+   "celery",
+   "celery stalk",
+   "celery stalks",
+   "celery stick",
+   "celery sticks"
   ],
   "aisle": "produce",
   "base": "g",
@@ -398,7 +465,10 @@
  {
   "id": "celeriac",
   "name": "שורש סלרי",
-  "aliases": [],
+  "aliases": [
+   "celeriac",
+   "celery root"
+  ],
   "aisle": "produce",
   "base": "g",
   "pack": {
@@ -416,7 +486,9 @@
   "id": "leek",
   "name": "כרישה",
   "aliases": [
-   "כרישות"
+   "כרישות",
+   "leek",
+   "leeks"
   ],
   "aisle": "produce",
   "base": "g",
@@ -437,7 +509,12 @@
   "aliases": [
    "פטריות",
    "שמפיניון",
-   "פטריות שמפניון"
+   "פטריות שמפניון",
+   "mushroom",
+   "mushrooms",
+   "button mushrooms",
+   "champignons",
+   "champignon"
   ],
   "aisle": "produce",
   "base": "g",
@@ -457,7 +534,10 @@
   "name": "תרד",
   "aliases": [
    "עלי תרד",
-   "תרד טרי"
+   "תרד טרי",
+   "spinach",
+   "baby spinach",
+   "fresh spinach"
   ],
   "aisle": "produce",
   "base": "g",
@@ -476,7 +556,10 @@
   "id": "lemon",
   "name": "לימון",
   "aliases": [
-   "לימונים"
+   "לימונים",
+   "lemon",
+   "lemons",
+   "lemon juice"
   ],
   "aisle": "produce",
   "base": "g",
@@ -497,7 +580,11 @@
   "name": "פטרוזיליה",
   "aliases": [
    "פטרוזיליה קצוצה",
-   "צרור פטרוזיליה"
+   "צרור פטרוזיליה",
+   "parsley",
+   "fresh parsley",
+   "flat leaf parsley",
+   "flat-leaf parsley"
   ],
   "aisle": "produce",
   "base": "g",
@@ -517,7 +604,12 @@
   "id": "cilantro",
   "name": "כוסברה",
   "aliases": [
-   "כוסברה קצוצה"
+   "כוסברה קצוצה",
+   "cilantro",
+   "fresh cilantro",
+   "coriander",
+   "fresh coriander",
+   "coriander leaves"
   ],
   "aisle": "produce",
   "base": "g",
@@ -536,7 +628,10 @@
  {
   "id": "dill",
   "name": "שמיר",
-  "aliases": [],
+  "aliases": [
+   "dill",
+   "fresh dill"
+  ],
   "aisle": "produce",
   "base": "g",
   "pack": {
@@ -555,7 +650,10 @@
   "id": "mint",
   "name": "נענע",
   "aliases": [
-   "עלי נענע"
+   "עלי נענע",
+   "mint",
+   "fresh mint",
+   "mint leaves"
   ],
   "aisle": "produce",
   "base": "g",
@@ -574,7 +672,10 @@
   "id": "basil",
   "name": "בזיליקום",
   "aliases": [
-   "עלי בזיליקום"
+   "עלי בזיליקום",
+   "basil",
+   "fresh basil",
+   "basil leaves"
   ],
   "aisle": "produce",
   "base": "g",
@@ -594,7 +695,9 @@
   "id": "banana",
   "name": "בננה",
   "aliases": [
-   "בננות"
+   "בננות",
+   "banana",
+   "bananas"
   ],
   "aisle": "produce",
   "base": "g",
@@ -615,7 +718,9 @@
   "aliases": [
    "תפוחי עץ",
    "תפוחים",
-   "תפוח"
+   "תפוח",
+   "apple",
+   "apples"
   ],
   "aisle": "produce",
   "base": "g",
@@ -635,7 +740,9 @@
   "name": "תות שדה",
   "aliases": [
    "תותים",
-   "תות"
+   "תות",
+   "strawberry",
+   "strawberries"
   ],
   "aisle": "produce",
   "base": "g",
@@ -654,7 +761,10 @@
   "id": "orange",
   "name": "תפוז",
   "aliases": [
-   "תפוזים"
+   "תפוזים",
+   "orange",
+   "oranges",
+   "orange juice"
   ],
   "aisle": "produce",
   "base": "g",
@@ -672,7 +782,10 @@
  {
   "id": "avocado",
   "name": "אבוקדו",
-  "aliases": [],
+  "aliases": [
+   "avocado",
+   "avocados"
+  ],
   "aisle": "produce",
   "base": "g",
   "pack": {
@@ -690,7 +803,11 @@
   "id": "pumpkin",
   "name": "דלעת",
   "aliases": [
-   "דלעת קלופה"
+   "דלעת קלופה",
+   "pumpkin",
+   "butternut squash",
+   "butternut pumpkin",
+   "squash"
   ],
   "aisle": "produce",
   "base": "g",
@@ -711,7 +828,12 @@
   "aliases": [
    "פילה חזה עוף",
    "חזה עוף טרי",
-   "שניצל גולמי"
+   "שניצל גולמי",
+   "chicken breast",
+   "chicken breasts",
+   "chicken breast fillet",
+   "chicken breast fillets",
+   "boneless chicken breast"
   ],
   "aisle": "meat",
   "base": "g",
@@ -736,7 +858,10 @@
    "שוקיים",
    "ירכיים",
    "ירכי עוף",
-   "שוקי עוף טריים"
+   "שוקי עוף טריים",
+   "chicken thigh",
+   "chicken thighs",
+   "chicken drumsticks"
   ],
   "aisle": "meat",
   "base": "g",
@@ -759,7 +884,12 @@
   "aliases": [
    "בשר טחון",
    "בקר טחון",
-   "בשר בקר"
+   "בשר בקר",
+   "ground beef",
+   "minced beef",
+   "beef mince",
+   "minced meat",
+   "mince"
   ],
   "aisle": "meat",
   "base": "g",
@@ -783,7 +913,10 @@
   "aliases": [
    "אמנון",
    "פילה דג",
-   "פילה דג לבן"
+   "פילה דג לבן",
+   "tilapia",
+   "tilapia fillet",
+   "white fish fillet"
   ],
   "aisle": "meat",
   "base": "g",
@@ -807,7 +940,13 @@
   "aliases": [
    "ביצה",
    "ביצים L",
-   "ביצה L"
+   "ביצה L",
+   "egg",
+   "eggs",
+   "large egg",
+   "large eggs",
+   "medium egg",
+   "medium eggs"
   ],
   "aisle": "dairy",
   "base": "u",
@@ -829,7 +968,10 @@
   "name": "חלב",
   "aliases": [
    "חלב 3%",
-   "חלב טרי"
+   "חלב טרי",
+   "milk",
+   "whole milk",
+   "semi-skimmed milk"
   ],
   "aisle": "dairy",
   "base": "ml",
@@ -849,7 +991,10 @@
   "name": "חמאה",
   "aliases": [
    "חמאה רכה",
-   "חמאה קרה"
+   "חמאה קרה",
+   "butter",
+   "unsalted butter",
+   "salted butter"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -870,7 +1015,12 @@
   "name": "שמנת מתוקה",
   "aliases": [
    "שמנת להקצפה",
-   "שמנת לקצפת"
+   "שמנת לקצפת",
+   "cream",
+   "whipping cream",
+   "heavy cream",
+   "double cream",
+   "whipped cream"
   ],
   "aisle": "dairy",
   "base": "ml",
@@ -890,7 +1040,9 @@
   "id": "cooking-cream",
   "name": "שמנת לבישול",
   "aliases": [
-   "שמנת לבישול 15%"
+   "שמנת לבישול 15%",
+   "cooking cream",
+   "single cream"
   ],
   "aisle": "dairy",
   "base": "ml",
@@ -910,7 +1062,10 @@
   "id": "white-cheese",
   "name": "גבינה לבנה",
   "aliases": [
-   "גבינה לבנה 5%"
+   "גבינה לבנה 5%",
+   "cottage cheese",
+   "white cheese",
+   "quark"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -931,7 +1086,9 @@
   "name": "גבינת מוצרלה",
   "aliases": [
    "מוצרלה",
-   "מוצרלה מגורדת"
+   "מוצרלה מגורדת",
+   "mozzarella",
+   "mozzarella cheese"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -952,7 +1109,13 @@
   "name": "גבינה צהובה",
   "aliases": [
    "גבינה צהובה מגורדת",
-   "גבינה צהובה בפרוסות"
+   "גבינה צהובה בפרוסות",
+   "cheddar",
+   "cheddar cheese",
+   "yellow cheese",
+   "gouda",
+   "grated cheese",
+   "hard cheese"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -973,7 +1136,10 @@
   "name": "פרמזן",
   "aliases": [
    "פרמזן מגורד",
-   "גבינת פרמזן"
+   "גבינת פרמזן",
+   "parmesan",
+   "parmesan cheese",
+   "parmigiano"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -993,7 +1159,12 @@
   "id": "yogurt",
   "name": "יוגורט טבעי",
   "aliases": [
-   "יוגורט"
+   "יוגורט",
+   "yogurt",
+   "yoghurt",
+   "natural yogurt",
+   "plain yogurt",
+   "greek yogurt"
   ],
   "aisle": "dairy",
   "base": "g",
@@ -1016,7 +1187,14 @@
    "קמח",
    "קמח רגיל",
    "קמח חיטה",
-   "קמח לכל מטרה"
+   "קמח לכל מטרה",
+   "flour",
+   "plain flour",
+   "all-purpose flour",
+   "all purpose flour",
+   "white flour",
+   "wheat flour",
+   "bread flour"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1035,7 +1213,11 @@
   "id": "whole-flour",
   "name": "קמח מלא",
   "aliases": [
-   "קמח מלא חיטה"
+   "קמח מלא חיטה",
+   "whole wheat flour",
+   "wholemeal flour",
+   "whole-wheat flour",
+   "wholegrain flour"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1054,7 +1236,11 @@
   "id": "sugar",
   "name": "סוכר",
   "aliases": [
-   "סוכר לבן"
+   "סוכר לבן",
+   "sugar",
+   "white sugar",
+   "caster sugar",
+   "granulated sugar"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1072,7 +1258,12 @@
  {
   "id": "brown-sugar",
   "name": "סוכר חום",
-  "aliases": [],
+  "aliases": [
+   "brown sugar",
+   "light brown sugar",
+   "dark brown sugar",
+   "muscovado sugar"
+  ],
   "aisle": "baking",
   "base": "g",
   "pack": {
@@ -1088,7 +1279,11 @@
   "id": "powdered-sugar",
   "name": "אבקת סוכר",
   "aliases": [
-   "סוכר אבקה"
+   "סוכר אבקה",
+   "powdered sugar",
+   "icing sugar",
+   "confectioners sugar",
+   "confectioner's sugar"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1107,7 +1302,11 @@
   "aliases": [
    "מלח שולחן",
    "מלח ים",
-   "מלח גס"
+   "מלח גס",
+   "salt",
+   "sea salt",
+   "table salt",
+   "kosher salt"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1124,7 +1323,10 @@
  {
   "id": "rice-basmati",
   "name": "אורז בסמטי",
-  "aliases": [],
+  "aliases": [
+   "basmati rice",
+   "basmati"
+  ],
   "aisle": "dry",
   "base": "g",
   "pack": {
@@ -1142,7 +1344,12 @@
   "aliases": [
    "אורז",
    "אורז עגול",
-   "אורז פרסי"
+   "אורז פרסי",
+   "rice",
+   "white rice",
+   "long grain rice",
+   "long-grain rice",
+   "jasmine rice"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1164,7 +1371,13 @@
    "פנה",
    "פסטה יבשה",
    "מקרוני",
-   "פוסילי"
+   "פוסילי",
+   "pasta",
+   "spaghetti",
+   "penne",
+   "macaroni",
+   "fusilli",
+   "tagliatelle"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1183,7 +1396,9 @@
  {
   "id": "couscous",
   "name": "קוסקוס",
-  "aliases": [],
+  "aliases": [
+   "couscous"
+  ],
   "aisle": "dry",
   "base": "g",
   "pack": {
@@ -1202,7 +1417,9 @@
   "id": "lentils-red",
   "name": "עדשים כתומות",
   "aliases": [
-   "עדשים אדומות"
+   "עדשים אדומות",
+   "red lentils",
+   "red lentil"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1221,7 +1438,11 @@
   "name": "עדשים ירוקות",
   "aliases": [
    "עדשים חומות",
-   "עדשים"
+   "עדשים",
+   "green lentils",
+   "brown lentils",
+   "lentils",
+   "puy lentils"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1240,7 +1461,9 @@
   "aliases": [
    "חומוס גרגירים",
    "גרגירי חומוס יבשים",
-   "חומוס יבש"
+   "חומוס יבש",
+   "dried chickpeas",
+   "dry chickpeas"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1259,7 +1482,11 @@
   "aliases": [
    "קוואקר",
    "שיבולת שועל מלאה",
-   "פתיתי שיבולת שועל"
+   "פתיתי שיבולת שועל",
+   "oats",
+   "rolled oats",
+   "oatmeal",
+   "porridge oats"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1278,7 +1505,10 @@
   "id": "breadcrumbs",
   "name": "פירורי לחם",
   "aliases": [
-   "פירורי לחם"
+   "פירורי לחם",
+   "breadcrumbs",
+   "bread crumbs",
+   "panko"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1298,7 +1528,11 @@
   "id": "cornstarch",
   "name": "עמילן תירס",
   "aliases": [
-   "קורנפלור"
+   "קורנפלור",
+   "cornstarch",
+   "corn starch",
+   "cornflour",
+   "corn flour"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1315,7 +1549,9 @@
  {
   "id": "honey",
   "name": "דבש",
-  "aliases": [],
+  "aliases": [
+   "honey"
+  ],
   "aisle": "baking",
   "base": "g",
   "pack": {
@@ -1334,7 +1570,10 @@
   "id": "cocoa",
   "name": "אבקת קקאו",
   "aliases": [
-   "קקאו"
+   "קקאו",
+   "cocoa",
+   "cocoa powder",
+   "unsweetened cocoa"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1353,7 +1592,11 @@
   "aliases": [
    "שוקולד מריר",
    "שוקולד פרווה",
-   "שוקולד"
+   "שוקולד",
+   "dark chocolate",
+   "chocolate",
+   "bittersweet chocolate",
+   "chocolate chips"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1370,7 +1613,8 @@
   "id": "baking-powder",
   "name": "אבקת אפייה",
   "aliases": [
-   "אבקת אפיה"
+   "אבקת אפיה",
+   "baking powder"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1389,7 +1633,10 @@
   "name": "סודה לשתייה",
   "aliases": [
    "סודה לשתיה",
-   "סודה לשתייה"
+   "סודה לשתייה",
+   "baking soda",
+   "bicarbonate of soda",
+   "bicarbonate"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1407,7 +1654,12 @@
   "name": "שמרים יבשים",
   "aliases": [
    "שמרים",
-   "שמרים יבשים מיידיים"
+   "שמרים יבשים מיידיים",
+   "yeast",
+   "dry yeast",
+   "dried yeast",
+   "fresh yeast",
+   "instant yeast"
   ],
   "aisle": "baking",
   "base": "g",
@@ -1425,7 +1677,11 @@
   "name": "תמצית וניל",
   "aliases": [
    "וניל",
-   "תמצית וניל טבעית"
+   "תמצית וניל טבעית",
+   "vanilla",
+   "vanilla extract",
+   "vanilla essence",
+   "vanilla sugar"
   ],
   "aisle": "baking",
   "base": "ml",
@@ -1444,7 +1700,13 @@
   "aliases": [
    "שמן קנולה",
    "שמן צמחי",
-   "שמן לטיגון"
+   "שמן לטיגון",
+   "oil",
+   "vegetable oil",
+   "sunflower oil",
+   "canola oil",
+   "rapeseed oil",
+   "cooking oil"
   ],
   "aisle": "oils",
   "base": "ml",
@@ -1463,7 +1725,11 @@
   "name": "שמן זית",
   "aliases": [
    "שמן זית כתית",
-   "שמן זית כתית מעולה"
+   "שמן זית כתית מעולה",
+   "olive oil",
+   "extra virgin olive oil",
+   "extra-virgin olive oil",
+   "evoo"
   ],
   "aisle": "oils",
   "base": "ml",
@@ -1483,7 +1749,12 @@
   "aliases": [
    "חומץ יין",
    "חומץ תפוחים",
-   "חומץ לבן"
+   "חומץ לבן",
+   "vinegar",
+   "white vinegar",
+   "apple cider vinegar",
+   "white wine vinegar",
+   "rice vinegar"
   ],
   "aisle": "oils",
   "base": "ml",
@@ -1501,7 +1772,10 @@
   "id": "soy-sauce",
   "name": "רוטב סויה",
   "aliases": [
-   "סויה"
+   "סויה",
+   "soy sauce",
+   "soya sauce",
+   "tamari"
   ],
   "aisle": "canned",
   "base": "ml",
@@ -1521,7 +1795,10 @@
  {
   "id": "mayo",
   "name": "מיונז",
-  "aliases": [],
+  "aliases": [
+   "mayo",
+   "mayonnaise"
+  ],
   "aisle": "canned",
   "base": "g",
   "pack": {
@@ -1541,7 +1818,9 @@
   "name": "חרדל",
   "aliases": [
    "חרדל דיז'ון",
-   "חרדל צהוב"
+   "חרדל צהוב",
+   "mustard",
+   "dijon mustard"
   ],
   "aisle": "canned",
   "base": "g",
@@ -1561,7 +1840,14 @@
   "aliases": [
    "עגבניות משומרות",
    "רוטב עגבניות",
-   "עגבניות מרוסקות משומרות"
+   "עגבניות מרוסקות משומרות",
+   "crushed tomatoes",
+   "canned tomatoes",
+   "tinned tomatoes",
+   "chopped tomatoes",
+   "canned chopped tomatoes",
+   "passata",
+   "peeled tomatoes"
   ],
   "aisle": "canned",
   "base": "g",
@@ -1578,7 +1864,12 @@
  {
   "id": "tomato-paste",
   "name": "רסק עגבניות",
-  "aliases": [],
+  "aliases": [
+   "tomato paste",
+   "tomato puree",
+   "tomato purée",
+   "tomato concentrate"
+  ],
   "aisle": "canned",
   "base": "g",
   "pack": {
@@ -1596,7 +1887,12 @@
   "name": "חומוס מבושל",
   "aliases": [
    "חומוס משומר",
-   "גרגירי חומוס מבושלים"
+   "גרגירי חומוס מבושלים",
+   "chickpeas",
+   "canned chickpeas",
+   "tinned chickpeas",
+   "cooked chickpeas",
+   "garbanzo beans"
   ],
   "aisle": "canned",
   "base": "g",
@@ -1613,7 +1909,10 @@
  {
   "id": "coconut-milk",
   "name": "חלב קוקוס",
-  "aliases": [],
+  "aliases": [
+   "coconut milk",
+   "coconut cream"
+  ],
   "aisle": "canned",
   "base": "ml",
   "pack": {
@@ -1630,7 +1929,10 @@
   "id": "peas-frozen",
   "name": "אפונה קפואה",
   "aliases": [
-   "אפונה"
+   "אפונה",
+   "peas",
+   "frozen peas",
+   "green peas"
   ],
   "aisle": "frozen",
   "base": "g",
@@ -1648,7 +1950,12 @@
   "name": "אבקת מרק ירקות",
   "aliases": [
    "תבלין מרק ירקות",
-   "אבקת מרק"
+   "אבקת מרק",
+   "vegetable stock",
+   "vegetable broth",
+   "veg stock",
+   "vegetable stock paste",
+   "vegetable bouillon"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1667,7 +1974,11 @@
   "name": "אבקת מרק עוף",
   "aliases": [
    "תבלין מרק עוף",
-   "אבקת מרק עוף"
+   "אבקת מרק עוף",
+   "chicken stock",
+   "chicken broth",
+   "chicken stock paste",
+   "chicken bouillon"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1688,7 +1999,12 @@
   "aliases": [
    "פלפל שחור גרוס",
    "פלפל",
-   "פלפל שחור טחון"
+   "פלפל שחור טחון",
+   "pepper",
+   "black pepper",
+   "ground pepper",
+   "ground black pepper",
+   "white pepper"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1706,7 +2022,10 @@
   "id": "cumin",
   "name": "כמון",
   "aliases": [
-   "כמון טחון"
+   "כמון טחון",
+   "cumin",
+   "ground cumin",
+   "cumin powder"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1725,7 +2044,10 @@
   "name": "פפריקה",
   "aliases": [
    "פפריקה מתוקה",
-   "פפריקה חריפה"
+   "פפריקה חריפה",
+   "paprika",
+   "sweet paprika",
+   "smoked paprika"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1741,7 +2063,11 @@
  {
   "id": "turmeric",
   "name": "כורכום",
-  "aliases": [],
+  "aliases": [
+   "turmeric",
+   "ground turmeric",
+   "turmeric powder"
+  ],
   "aisle": "spices",
   "base": "g",
   "pack": {
@@ -1757,7 +2083,9 @@
   "id": "cinnamon",
   "name": "קינמון",
   "aliases": [
-   "קינמון טחון"
+   "קינמון טחון",
+   "cinnamon",
+   "ground cinnamon"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1774,7 +2102,9 @@
   "id": "oregano",
   "name": "אורגנו",
   "aliases": [
-   "אורגנו יבש"
+   "אורגנו יבש",
+   "oregano",
+   "dried oregano"
   ],
   "aisle": "spices",
   "base": "g",
@@ -1791,7 +2121,10 @@
   "id": "peanuts",
   "name": "בוטנים קלויים",
   "aliases": [
-   "בוטנים"
+   "בוטנים",
+   "peanuts",
+   "peanut",
+   "roasted peanuts"
   ],
   "aisle": "nuts",
   "base": "g",
@@ -1812,7 +2145,11 @@
   "name": "שקדים",
   "aliases": [
    "שקדים קלופים",
-   "שקדים טחונים"
+   "שקדים טחונים",
+   "almonds",
+   "almond",
+   "ground almonds",
+   "flaked almonds"
   ],
   "aisle": "nuts",
   "base": "g",
@@ -1831,7 +2168,10 @@
  {
   "id": "walnuts",
   "name": "אגוזי מלך",
-  "aliases": [],
+  "aliases": [
+   "walnuts",
+   "walnut"
+  ],
   "aisle": "nuts",
   "base": "g",
   "pack": {
@@ -1851,7 +2191,10 @@
   "name": "שומשום",
   "aliases": [
    "שומשום קלוי",
-   "שומשום לבן"
+   "שומשום לבן",
+   "sesame",
+   "sesame seeds",
+   "sesame seed"
   ],
   "aisle": "nuts",
   "base": "g",
@@ -1871,7 +2214,9 @@
   "name": "טחינה גולמית",
   "aliases": [
    "טחינה",
-   "טחינה גולמית משומשום מלא"
+   "טחינה גולמית משומשום מלא",
+   "tahini",
+   "tahina"
   ],
   "aisle": "dry",
   "base": "g",
@@ -1890,7 +2235,10 @@
  {
   "id": "raisins",
   "name": "צימוקים",
-  "aliases": [],
+  "aliases": [
+   "raisins",
+   "sultanas"
+  ],
   "aisle": "nuts",
   "base": "g",
   "pack": {
@@ -1909,7 +2257,15 @@
    "מים קרים",
    "מים חמים",
    "קוביות קרח",
-   "קרח"
+   "קרח",
+   "water",
+   "hot water",
+   "cold water",
+   "warm water",
+   "lukewarm water",
+   "boiling water",
+   "ice water",
+   "tap water"
   ],
   "aisle": "free",
   "base": "ml",

@@ -48,9 +48,20 @@ export function emptyState(art, title, text, ...btns) {
 }
 
 export function stepper({ value, min = 1, max = 99, onChange, label, size = "" }) {
+  // Re-rendering is asynchronous, so a quick second tap can land on this same element before it is replaced:
+  // count from our own latest value instead of the one captured at render time.
+  let current = value;
   const out = h("output", { "aria-live": "polite" }, String(value));
-  const dec = h("button", { type: "button", "aria-label": `הפחת ${label || ""}`.trim(), disabled: value <= min, onclick: () => onChange(value - 1) }, icon("minus", { size: 20 }));
-  const inc = h("button", { type: "button", "aria-label": `הוסף ${label || ""}`.trim(), disabled: value >= max, onclick: () => onChange(value + 1) }, icon("plus", { size: 20 }));
+  const set = (n) => {
+    if (n < min || n > max) return;
+    current = n;
+    out.textContent = String(n);
+    dec.disabled = n <= min;
+    inc.disabled = n >= max;
+    onChange(n);
+  };
+  const dec = h("button", { type: "button", "aria-label": `הפחת ${label || ""}`.trim(), disabled: value <= min, onclick: () => set(current - 1) }, icon("minus", { size: 20 }));
+  const inc = h("button", { type: "button", "aria-label": `הוסף ${label || ""}`.trim(), disabled: value >= max, onclick: () => set(current + 1) }, icon("plus", { size: 20 }));
   return h("div.stepper", { class: size, role: "group", "aria-label": label || "כמות" }, inc, out, dec);
 }
 
