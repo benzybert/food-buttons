@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import asyncio
+import json
+import logging
 import math
 import os
 import sys
@@ -29,6 +31,8 @@ from models import IngredientIntent, IngredientMatch, StoreProduct, UserPreferen
 from stores import build_registry  # noqa: E402
 
 from hebrew import PACKAGE_UNITS, PIECE_UNITS, WEIGHT_UNITS, parse_ingredient_lines  # noqa: E402
+
+log = logging.getLogger("grocery-api")
 
 MAX_INGREDIENTS = 30
 PER_INGREDIENT_TIMEOUT = 25.0
@@ -67,6 +71,14 @@ class CachedStore:
                 self._cache.pop(min(self._cache, key=lambda k: self._cache[k][0]))
             self._cache[key] = (now, products)
         return products
+
+
+    async def probe(self, query: str) -> dict:
+        """One live search with the status code and a body snippet, for the deploy log."""
+        try:
+            return await self._inner.raw_search(query)
+        except Exception as exc:  # the probe must never take the service down
+            return {"store": self.store_id, "error": repr(exc)}
 
 
 _stores: Optional[list[CachedStore]] = None
@@ -194,6 +206,13 @@ def _summarise(rows: list[dict], stores: list[CachedStore]) -> dict:
     }
 
 
+async def probe_stores(query: str = "חלב") -> None:
+    """Search each store once and log what came back, so a blocked store shows in the logs."""
+    for store in get_stores():
+        result = await store.probe(query)
+        log.warning("store probe %s", json.dumps(result, ensure_ascii=False, default=str)[:700])
+
+
 async def _match(ingredient: IngredientIntent, stores: list[CachedStore],
                  prefs: UserPreferences) -> IngredientMatch:
     global _slots
@@ -222,9 +241,13 @@ async def compare(text: str, title: str = "", include_pantry: bool = False,
     matches = await asyncio.gather(*(_match(i, stores, prefs) for i in ingredients))
 
     rows = [_ingredient_row(m, [s.store_id for s in stores]) for m in matches]
+    summary = _summarise(rows, stores)
+    for sid, totals in summary["stores"].items():
+        if not totals["available"]:
+            log.warning("store %s found nothing for %d ingredients", sid, len(rows))
     return {
         "title": title.strip(),
         "ingredients": rows,
         "note": ESTIMATE_NOTE,
-        **_summarise(rows, stores),
+        **summary,
     }

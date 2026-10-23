@@ -7,9 +7,12 @@ Set API_TOKEN to require an `x-api-key` header (the Node proxy sends GROCERY_API
 """
 from __future__ import annotations
 
+import asyncio
 import hmac
 import json
+import logging
 import os
+from contextlib import asynccontextmanager
 
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -17,6 +20,8 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 
 import service
+
+logging.basicConfig(level=logging.INFO)
 
 MAX_BODY_BYTES = 32 * 1024
 MAX_TEXT_CHARS = 6000
@@ -57,7 +62,18 @@ async def compare(request: Request) -> JSONResponse:
     return JSONResponse(result)
 
 
-app = Starlette(routes=[
-    Route("/health", health),
-    Route("/compare", compare, methods=["POST"]),
-])
+@asynccontextmanager
+async def lifespan(app: Starlette):
+    # Fire and forget: the answer goes to the deploy log, startup doesn't wait for the stores.
+    probe = asyncio.create_task(service.probe_stores())
+    yield
+    probe.cancel()
+
+
+app = Starlette(
+    routes=[
+        Route("/health", health),
+        Route("/compare", compare, methods=["POST"]),
+    ],
+    lifespan=lifespan,
+)
