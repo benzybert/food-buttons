@@ -11,7 +11,7 @@ The app is static. Pick one; all three configs are in the repo and the tests che
 
 ## Railway (Node server)
 
-`railway.json` sets `npm start` and the `/healthz` health check. `prestart` regenerates `public/sw.js` so the cache version always matches the files. Port comes from `PORT`.
+`railway.json` sets the `/healthz` health check and the restart policy; the start command is Railpack's default for Node (`npm run start`, which also runs `prestart`). It deliberately sets no `startCommand`: Railway reads this one file for every service of the repo (the config file path does not follow a service's Root Directory), so a start command here would also be forced onto the Python bridge service. `prestart` regenerates `public/sw.js` so the cache version always matches the files. Port comes from `PORT`.
 
 ```sh
 railway up        # or connect the GitHub repo in the dashboard

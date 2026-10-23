@@ -65,7 +65,7 @@ In another terminal, from the repo root: `BRIDGE_ORIGIN=http://localhost:8081 np
 
 The web app is one Railway service; the bridge is a second service in the same project.
 
-1. New service from this repo, branch as for the web app, **Root Directory: `/bridge`** (Railpack picks Python from `requirements.txt` and `.python-version`; `bridge/railway.json` sets the start command and health check).
+1. New service from this repo, branch as for the web app, **Root Directory: `/bridge`** (Railpack picks Python from `requirements.txt` and `.python-version`). Set the start command to `python -m cookidoo_bridge` in the service's Settings (the repo-root `railway.json` already provides the `/healthz` health check; `bridge/railway.json` is only used if you point the service's config file path at `/bridge/railway.json`).
 2. Variables on the bridge service: `BRIDGE_TOKEN`, `BRIDGE_SECRET` (both random, different from each other), `COOKIDOO_COUNTRY=il`, `COOKIDOO_LANGUAGE=en`, `BRIDGE_ALLOWED_ORIGINS=https://<your web app domain>`. With app login there is no Cookidoo password on the server at all.
 3. Generate a domain for the bridge service.
 4. On the **web app** service add `BRIDGE_ORIGIN=https://<bridge domain>` and redeploy (it changes the CSP).
