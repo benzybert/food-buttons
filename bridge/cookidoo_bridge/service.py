@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import time
 from collections import OrderedDict
 from typing import Any, Awaitable, Callable
@@ -24,22 +25,29 @@ except ImportError:  # pragma: no cover
 
 RECIPE_TTL_SECONDS = 3600
 RECIPE_CACHE_SIZE = 64
+POOL_SIZE = 8
+POOL_IDLE_SECONDS = 3600
 
 
 class CookidooService:
-    """Search recipes and load recipe details. Recipes are cached in memory for an hour and never written to disk."""
+    """One Cookidoo account: search recipes and load recipe details.
 
-    def __init__(self, settings: Settings, client_factory: Callable[[], Awaitable[Any]] | None = None) -> None:
+    Recipes are cached in memory for an hour and never written to disk.
+    """
+
+    def __init__(self, settings: Settings, email: str, password: str, client_factory: Callable[[], Awaitable[Any]] | None = None) -> None:
         self._settings = settings
+        self._email = email
+        self._password = password
         self._client_factory = client_factory or self._login
         self._client: Any = None
         self._session: ClientSession | None = None
         self._lock = asyncio.Lock()
         self._recipes: OrderedDict[str, tuple[float, Any]] = OrderedDict()
 
-    @property
-    def configured(self) -> bool:
-        return bool(self._settings.email and self._settings.password)
+    async def verify(self) -> None:
+        """Log in now (a wrong email or password raises CookidooAuthException here, not on the first search)."""
+        await self._get_client()
 
     async def _login(self) -> Any:
         if Cookidoo is None:
@@ -50,7 +58,7 @@ class CookidooService:
             options = await get_localization_options(country=self._settings.country, language=self._settings.language)
             if not options:
                 raise ValueError(f"Cookidoo has no {self._settings.country}/{self._settings.language} localization")
-            config = CookidooConfig(localization=options[0], email=self._settings.email, password=self._settings.password)
+            config = CookidooConfig(localization=options[0], email=self._email, password=self._password)
             client = Cookidoo(self._session, config)
             await client.login()
             return client
@@ -107,3 +115,41 @@ class CookidooService:
             self._session = None
         self._client = None
         self._recipes.clear()
+
+
+class ServicePool:
+    """Cookidoo clients for the accounts currently in use: logged in once, reused, dropped when idle."""
+
+    def __init__(self, settings: Settings, factory: Callable[[str, str], CookidooService] | None = None) -> None:
+        self._settings = settings
+        self._factory = factory or (lambda email, password: CookidooService(settings, email, password))
+        self._entries: OrderedDict[str, tuple[float, CookidooService]] = OrderedDict()
+
+    @staticmethod
+    def _key(email: str, password: str) -> str:
+        return hashlib.sha256(f"{email}\0{password}".encode()).hexdigest()
+
+    async def get(self, email: str, password: str) -> CookidooService:
+        now = time.monotonic()
+        stale = [k for k, (used, _) in self._entries.items() if now - used > POOL_IDLE_SECONDS]
+        for k in stale:
+            await self._entries.pop(k)[1].close()
+        key = self._key(email, password)
+        if key in self._entries:
+            self._entries[key] = (now, self._entries[key][1])
+            self._entries.move_to_end(key)
+            return self._entries[key][1]
+        service = self._factory(email, password)
+        self._entries[key] = (now, service)
+        while len(self._entries) > POOL_SIZE:
+            await self._entries.popitem(last=False)[1][1].close()
+        return service
+
+    async def drop(self, email: str, password: str) -> None:
+        entry = self._entries.pop(self._key(email, password), None)
+        if entry:
+            await entry[1].close()
+
+    async def close(self, *_: Any) -> None:
+        while self._entries:
+            await self._entries.popitem(last=False)[1][1].close()

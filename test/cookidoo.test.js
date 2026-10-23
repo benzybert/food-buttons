@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BridgeError, bridgeConfigured, bridgeMessage, checkBridge, fetchRecipe, normalizeBridgeUrl, searchRecipes } from "../public/js/lib/cookidoo.js";
+import { BridgeError, bridgeConfigured, bridgeMessage, checkBridge, fetchRecipe, loginBridge, needsLogin, normalizeBridgeUrl, searchRecipes } from "../public/js/lib/cookidoo.js";
 import { parseJsonLd, buildIndex } from "../public/js/lib/parse.js";
 import { textLang } from "../public/js/lib/text.js";
 import { store } from "../public/js/store.js";
@@ -67,15 +67,66 @@ test("errors are classified for the UI", async () => {
   for (const k of ["config", "network", "timeout", "token", "rate", "cookidoo_auth", "cookidoo", "bad_response"]) assert.ok(bridgeMessage({ kind: k }).length > 10);
 });
 
-test("checkBridge: health first (no token), then the token check", async () => {
+test("checkBridge: health first (no token), then the token and login check", async () => {
   const calls = [];
   const fetchImpl = async (url, init) => {
-    calls.push([new URL(url).pathname, init.headers.Authorization]);
-    return reply(200, new URL(url).pathname === "/healthz" ? { ok: true, configured: true } : { ok: true })();
+    const p = new URL(url).pathname;
+    calls.push([p, init.headers.Authorization, init.headers["X-Cookidoo-Session"]]);
+    return reply(200, p === "/healthz" ? { ok: true, configured: false, sessions: true } : { ok: true, loggedIn: false, canLogin: true, fixedAccount: false })();
   };
-  assert.deepEqual(await checkBridge(S, fetchImpl), { configured: true });
-  assert.deepEqual(calls, [["/healthz", undefined], ["/api/ping", "Bearer tok-123"]]);
-  await assert.rejects(() => checkBridge(S, async (url) => (new URL(url).pathname === "/healthz" ? reply(200, { ok: true, configured: true })() : reply(401, {})())), { kind: "token" });
+  assert.deepEqual(await checkBridge(S, fetchImpl), { loggedIn: false, canLogin: true, fixedAccount: false });
+  assert.deepEqual(calls, [["/healthz", undefined, undefined], ["/api/ping", "Bearer tok-123", undefined]]);
+  await assert.rejects(() => checkBridge(S, async (url) => (new URL(url).pathname === "/healthz" ? reply(200, { ok: true })() : reply(401, { error: "unauthorized" })())), { kind: "token" });
+  await assert.rejects(() => checkBridge({ ...S, bridgeSession: "old" }, async (url) => (new URL(url).pathname === "/healthz" ? reply(200, { ok: true })() : reply(401, { error: "session_invalid" })())), { kind: "login_expired" });
+});
+
+test("loginBridge posts the password once in a JSON body (never in the URL) and returns only the session", async () => {
+  let seen;
+  const fetchImpl = async (url, init) => ((seen = { url: String(url), init }), reply(200, { session: "sealed.abc", email: "me@example.com", days: 30 })());
+  const r = await loginBridge({ ...S, bridgeSession: "stale" }, " me@example.com ", "pässword?&=1", fetchImpl);
+  assert.deepEqual(r, { session: "sealed.abc", email: "me@example.com", days: 30 });
+  assert.equal(seen.url, "https://bridge.example.com/api/login");
+  assert.equal(seen.init.method, "POST");
+  assert.deepEqual(JSON.parse(seen.init.body), { email: "me@example.com", password: "pässword?&=1" });
+  assert.equal(seen.init.headers.Authorization, "Bearer tok-123");
+  assert.equal(seen.init.headers["Content-Type"], "application/json");
+  assert.equal(seen.init.headers["X-Cookidoo-Session"], undefined, "a stale session is not sent along with a new login");
+  assert.ok(!seen.url.includes("ss") && !JSON.stringify(seen.init.headers).includes("pässword"));
+  await assert.rejects(() => loginBridge(S, "a@b.c", "x", reply(200, { email: "a@b.c" })), { kind: "bad_response" });
+});
+
+test("login errors are told apart from token errors", async () => {
+  const kind = async (status, error) => {
+    try {
+      await loginBridge(S, "a@b.c", "x", reply(status, { error }));
+    } catch (e) {
+      return e.kind;
+    }
+    return "none";
+  };
+  assert.equal(await kind(401, "login_failed"), "login_failed");
+  assert.equal(await kind(401, "unauthorized"), "token");
+  assert.equal(await kind(429, "login_locked"), "login_locked");
+  assert.equal(await kind(429, "rate_limited"), "rate");
+  assert.equal(await kind(404, "sessions_disabled"), "login_unsupported");
+  assert.equal(await kind(502, "cookidoo_unavailable"), "cookidoo");
+  for (const k of ["login_required", "login_expired", "login_failed", "login_locked", "login_unsupported"]) assert.ok(bridgeMessage({ kind: k }).length > 10, k);
+});
+
+test("the Cookidoo session rides along as a header on search and recipe calls, and its loss means 'log in again'", async () => {
+  const withSession = { ...S, bridgeSession: "sealed.abc" };
+  const headers = [];
+  const spy = (body) => async (url, init) => (headers.push(init.headers["X-Cookidoo-Session"]), reply(200, body)());
+  await searchRecipes(withSession, "soup", { fetchImpl: spy({ recipes: [] }) });
+  await fetchRecipe(withSession, "r1", spy({ "@type": "Recipe" }));
+  assert.deepEqual(headers, ["sealed.abc", "sealed.abc"]);
+  for (const [error, kind] of [["session_invalid", "login_expired"], ["login_required", "login_required"]]) {
+    const e = await searchRecipes(withSession, "soup", { fetchImpl: reply(401, { error }) }).catch((x) => x);
+    assert.equal(e.kind, kind);
+    assert.equal(needsLogin(e), true);
+  }
+  assert.equal(needsLogin({ kind: "token" }), false);
+  assert.equal(needsLogin(undefined), false);
 });
 
 test("what the bridge returns imports cleanly through parseJsonLd", () => {
@@ -109,17 +160,20 @@ test("textLang picks the voice by script", () => {
   assert.equal(textLang("Add oil ושמן"), "en");
 });
 
-test("backups never contain the bridge token, and restoring keeps this browser's token for the same address", () => {
+test("backups never contain the bridge token or login, and restoring keeps this browser's for the same address", () => {
   store.init();
-  store.update((s) => void Object.assign(s.settings, { bridgeUrl: "https://bridge.example.com", bridgeToken: "tok-123" }));
+  store.update((s) => void Object.assign(s.settings, { bridgeUrl: "https://bridge.example.com", bridgeToken: "tok-123", bridgeSession: "sealed.abc", bridgeAccount: "me@example.com" }));
   const backup = store.exportJSON();
-  assert.ok(!backup.includes("tok-123"));
+  assert.ok(!backup.includes("tok-123") && !backup.includes("sealed.abc") && !backup.includes("me@example.com"));
   assert.equal(JSON.parse(backup).data.settings.bridgeUrl, "https://bridge.example.com");
   assert.equal(store.importJSON(backup).ok, true);
-  assert.equal(store.get().settings.bridgeToken, "tok-123");
-  // a backup that points somewhere else does not inherit the old token
+  assert.deepEqual(
+    [store.get().settings.bridgeToken, store.get().settings.bridgeSession, store.get().settings.bridgeAccount],
+    ["tok-123", "sealed.abc", "me@example.com"],
+  );
+  // a backup that points somewhere else does not inherit the old token or login
   const other = JSON.parse(backup);
   other.data.settings.bridgeUrl = "https://other.example.com";
   assert.equal(store.importJSON(JSON.stringify(other)).ok, true);
-  assert.equal(store.get().settings.bridgeToken, "");
+  assert.deepEqual([store.get().settings.bridgeToken, store.get().settings.bridgeSession, store.get().settings.bridgeAccount], ["", "", ""]);
 });

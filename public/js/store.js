@@ -23,6 +23,8 @@ export function defaults() {
       primaryStore: "", // store used for the shopping list; "" = cheapest
       bridgeUrl: "", // optional cookidoo-bridge service (docs/COOKIDOO.md)
       bridgeToken: "", // its access token: a secret, kept only in this browser and left out of backups
+      bridgeSession: "", // the sealed Cookidoo login the bridge gave us (never the password); also a secret, also left out of backups
+      bridgeAccount: "", // the Cookidoo email that session belongs to, shown in settings
     },
     basket: [], // { id, dishId, servings, day?, slot? }
     pantry: null, // array of ingredient ids at home; null until initialised from the catalog
@@ -105,7 +107,7 @@ export const store = {
     for (const f of subs) f(state);
   },
   exportJSON() {
-    const data = { ...state, settings: { ...state.settings, bridgeToken: "" } };
+    const data = { ...state, settings: { ...state.settings, bridgeToken: "", bridgeSession: "", bridgeAccount: "" } };
     return JSON.stringify({ app: "food-buttons", exportedAt: new Date().toISOString(), data }, null, 1);
   },
   /** Returns { ok, error? }. Replaces the current data. */
@@ -118,10 +120,13 @@ export const store = {
     }
     const data = parsed?.app === "food-buttons" ? parsed.data : null;
     if (!data || typeof data !== "object" || !data.settings) return { ok: false, error: "הקובץ אינו גיבוי של האפליקציה" };
-    const { bridgeUrl, bridgeToken } = state.settings;
+    const { bridgeUrl, bridgeToken, bridgeSession, bridgeAccount } = state.settings;
     state = merge(defaults(), data);
-    // Backups never carry the token; keep the one this browser has when the bridge address is unchanged.
-    if (!state.settings.bridgeToken && state.settings.bridgeUrl === bridgeUrl) state.settings.bridgeToken = bridgeToken;
+    // Backups never carry the token or the login; keep the ones this browser has when the bridge address is unchanged.
+    if (state.settings.bridgeUrl === bridgeUrl) {
+      if (!state.settings.bridgeToken) state.settings.bridgeToken = bridgeToken;
+      if (!state.settings.bridgeSession) Object.assign(state.settings, { bridgeSession, bridgeAccount });
+    }
     persist();
     for (const f of subs) f(state);
     return { ok: true };

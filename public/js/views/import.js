@@ -6,7 +6,7 @@ import { icon } from "../icons.js";
 import { catalog, actions, settings } from "../app.js";
 import { pageHead, notice, settingChips, toast } from "../ui.js";
 import { parseRecipeText, parseJsonLd, parseStep } from "../lib/parse.js";
-import { bridgeConfigured, bridgeMessage, fetchRecipe, searchRecipes } from "../lib/cookidoo.js";
+import { bridgeConfigured, bridgeMessage, fetchRecipe, needsLogin, searchRecipes } from "../lib/cookidoo.js";
 import { UNIT_LABELS } from "../lib/units.js";
 import { CATEGORY_LABELS, AISLE_LABELS, AISLE_ORDER } from "../lib/catalog.js";
 
@@ -55,7 +55,7 @@ export function importView({ match }) {
     const results = h("div.stack", { "aria-live": "polite" });
     const input = h("input.input", { type: "search", dir: "auto", placeholder: "חיפוש ב-Cookidoo (באנגלית), למשל: chicken soup", "aria-label": "חיפוש מתכון ב-Cookidoo", "data-fk": "cookidoo-q", onkeydown: (e) => e.key === "Enter" && (e.preventDefault(), run()) });
     const go = h("button.btn", { type: "button", onclick: () => run(), "data-fk": "cookidoo-search" }, icon("search", { size: 20 }), "חיפוש");
-    const say = (text, bad) => results.replaceChildren(h("p.small", { class: bad ? "bad" : "muted", role: bad ? "alert" : undefined }, text));
+    const say = (text, bad, error) => results.replaceChildren(h("p.small", { class: bad ? "bad" : "muted", role: bad ? "alert" : undefined }, text, needsLogin(error) ? [" ", h("a", { href: "#/settings" }, "להגדרות")] : null));
 
     async function run() {
       if (go.disabled) return;
@@ -78,7 +78,7 @@ export function importView({ match }) {
           ),
         );
       } catch (e) {
-        say(bridgeMessage(e), true);
+        say(bridgeMessage(e), true, e);
       } finally {
         go.disabled = false;
       }
@@ -97,7 +97,7 @@ export function importView({ match }) {
         window.scrollTo(0, 0);
       } catch (e) {
         btn.disabled = false;
-        say(e.kind ? bridgeMessage(e) : "לא הצלחתי לקרוא את המתכון", true);
+        say(e.kind ? bridgeMessage(e) : "לא הצלחתי לקרוא את המתכון", true, e);
       }
     }
 

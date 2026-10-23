@@ -4,7 +4,7 @@ import { store } from "../store.js";
 import { catalog, settings } from "../app.js";
 import { pageHead, stepper, toast } from "../ui.js";
 import { ALLERGEN_LABELS, DIET_LABELS, KOSHER_LABELS } from "../lib/derive.js";
-import { bridgeMessage, checkBridge, normalizeBridgeUrl } from "../lib/cookidoo.js";
+import { bridgeConfigured, bridgeMessage, checkBridge, loginBridge, normalizeBridgeUrl } from "../lib/cookidoo.js";
 
 const upd = (fn) => store.update((s) => fn(s.settings));
 const toggle = (arr, v, on) => (on ? [...new Set([...arr, v])] : arr.filter((x) => x !== v));
@@ -79,19 +79,60 @@ function exportData() {
 function cookidooCard(s) {
   const status = h("p.small", { role: "status", "aria-live": "polite" });
   const say = (text, bad = false) => ((status.textContent = text), status.classList.toggle("bad", bad));
+
   const test = async () => {
     say("בודק...");
     try {
       const r = await checkBridge(settings());
-      say(r.configured ? "מחובר: השירות עונה והטוקן תקין" : "השירות עונה אבל לא מוגדר בו חשבון Cookidoo", !r.configured);
+      if (r.fixedAccount) say("מחובר: השירות עובד עם חשבון קבוע, אין צורך להתחבר");
+      else if (r.loggedIn) say(`מחובר לחשבון ${settings().bridgeAccount || "Cookidoo"}`);
+      else if (r.canLogin) say("השירות עונה והטוקן תקין. התחברו לחשבון Cookidoo למטה");
+      else say("השירות עונה, אבל אין בו חשבון Cookidoo ואי אפשר להתחבר", true);
     } catch (e) {
       say(bridgeMessage(e), true);
     }
   };
+
+  const loginStatus = h("p.small", { role: "status", "aria-live": "polite" });
+  const email = h("input.input", { id: "set-ck-email", type: "email", dir: "ltr", autocomplete: "username", inputmode: "email", "data-fk": "ck-email", placeholder: "name@example.com" });
+  const password = h("input.input", { id: "set-ck-pass", type: "password", dir: "ltr", autocomplete: "current-password", "data-fk": "ck-pass" });
+  const loginBtn = h("button.btn", { type: "submit", "data-fk": "ck-login" }, icon("check", { size: 20 }), "התחברות");
+  const login = async (e) => {
+    e.preventDefault();
+    if (!email.value.trim() || !password.value) return void ((loginStatus.textContent = "הזינו אימייל וסיסמה"), loginStatus.classList.add("bad"));
+    loginBtn.disabled = true;
+    loginStatus.classList.remove("bad");
+    loginStatus.textContent = "מתחבר...";
+    try {
+      const r = await loginBridge(settings(), email.value, password.value);
+      password.value = ""; // the password is not kept anywhere: only the sealed session the bridge returned
+      toast("התחברתם ל-Cookidoo");
+      upd((x) => void Object.assign(x, { bridgeSession: r.session, bridgeAccount: r.email }));
+    } catch (err) {
+      loginBtn.disabled = false;
+      loginStatus.textContent = bridgeMessage(err);
+      loginStatus.classList.add("bad");
+    }
+  };
+  const logout = () => upd((x) => void Object.assign(x, { bridgeSession: "", bridgeAccount: "" }));
+
+  const account = !bridgeConfigured(s)
+    ? h("p.small.muted", "אחרי שמזינים כתובת וטוקן אפשר להתחבר לחשבון Cookidoo.")
+    : s.bridgeSession
+      ? h("div.row", h("span", ["מחובר כ-", h("bdi", { dir: "ltr" }, s.bridgeAccount || "Cookidoo")]), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: logout, "data-fk": "ck-logout" }, "התנתקות"))
+      : h(
+          "form.stack",
+          { onsubmit: login },
+          h("p.small.muted", "אם בשירות מוגדר חשבון קבוע, אין צורך בשלב הזה. אחרת: הסיסמה נשלחת פעם אחת, נבדקת מול Cookidoo, והדפדפן שומר רק אישור כניסה מוצפן שהשירות הנפיק (לא את הסיסמה). הוא תקף כחודש."),
+          h("div.field", h("label", { for: "set-ck-email" }, "אימייל ב-Cookidoo"), email),
+          h("div.field", h("label", { for: "set-ck-pass" }, "סיסמה"), password),
+          h("div.row", loginBtn, loginStatus),
+        );
+
   return h(
     "section.card.stack",
     h("h2", "Cookidoo (אופציונלי)"),
-    h("p.small.muted", "חיפוש וייבוא מתכונים מהחשבון שלכם דרך שירות אישי שאתם מריצים (תיקיית bridge בפרויקט). האפליקציה לא שומרת את סיסמת Cookidoo; היא רק מכירה את כתובת השירות ואת הטוקן שלו. הטוקן נשמר בדפדפן הזה בלבד ולא נכלל בגיבוי."),
+    h("p.small.muted", "חיפוש וייבוא מתכונים מהחשבון שלכם דרך שירות אישי שאתם מריצים (תיקיית bridge בפרויקט). האפליקציה לא שומרת את סיסמת Cookidoo; היא מכירה את כתובת השירות, את הטוקן שלו ואת אישור הכניסה שהוא הנפיק. אלה נשמרים בדפדפן הזה בלבד ולא נכללים בגיבוי."),
     h(
       "div.field",
       h("label", { for: "set-bridge-url" }, "כתובת השירות"),
@@ -111,15 +152,17 @@ function cookidooCard(s) {
             return toast("כתובת לא תקינה: https בלבד (או localhost לבדיקה)");
           }
           e.target.value = url;
-          upd((x) => void (x.bridgeUrl = url));
+          // another service means another login
+          upd((x) => void (url !== x.bridgeUrl && Object.assign(x, { bridgeUrl: url, bridgeSession: "", bridgeAccount: "" })));
         },
       }),
     ),
     h(
       "div.field",
-      h("label", { for: "set-bridge-token" }, "טוקן גישה"),
+      h("label", { for: "set-bridge-token" }, "טוקן גישה לשירות"),
       h("input.input", { id: "set-bridge-token", type: "password", dir: "ltr", autocomplete: "off", spellcheck: "false", value: s.bridgeToken, "data-fk": "set-bridge-token", onchange: (e) => upd((x) => void (x.bridgeToken = e.target.value.trim())) }),
     ),
     h("div.row", h("button.btn.btn-ghost", { type: "button", onclick: test, "data-fk": "bridge-test" }, icon("check", { size: 20 }), "בדיקת חיבור"), status),
+    account,
   );
 }

@@ -270,16 +270,27 @@ await step("import: paste a recipe, fix it, save, price it, cook it", async (pag
   assert.equal(await page.locator('input[type="number"]').first().inputValue(), "4");
 });
 
-// A stand-in for bridge/ (no Cookidoo account needed): same routes, token check and CORS as the real one.
+// A stand-in for bridge/ (no Cookidoo account needed): same routes, token check, login/session and CORS as the real one.
 const BRIDGE_TOKEN = "e2e-token-0123456789abcdef0123";
-const bridgeStub = http.createServer((req, res) => {
+const E2E_LOGIN = { email: "me@example.com", password: "correct horse" };
+const E2E_SESSION = "sealed-e2e-session";
+const bridgeStub = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
-  const cors = { "Access-Control-Allow-Origin": req.headers.origin || "", "Access-Control-Allow-Headers": "Authorization, Content-Type", Vary: "Origin" };
+  const cors = { "Access-Control-Allow-Origin": req.headers.origin || "", "Access-Control-Allow-Headers": "Authorization, Content-Type, X-Cookidoo-Session", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", Vary: "Origin" };
   const json = (status, body) => (res.writeHead(status, { ...cors, "Content-Type": "application/json" }), res.end(JSON.stringify(body)));
   if (req.method === "OPTIONS") return (res.writeHead(204, cors), res.end());
-  if (url.pathname === "/healthz") return json(200, { ok: true, configured: true });
+  if (url.pathname === "/healthz") return json(200, { ok: true, configured: false, sessions: true });
   if (req.headers.authorization !== `Bearer ${BRIDGE_TOKEN}`) return json(401, { error: "unauthorized" });
-  if (url.pathname === "/api/ping") return json(200, { ok: true });
+  const hasSession = req.headers["x-cookidoo-session"] === E2E_SESSION;
+  if (req.headers["x-cookidoo-session"] && !hasSession) return json(401, { error: "session_invalid" });
+  if (url.pathname === "/api/ping") return json(200, { ok: true, loggedIn: hasSession, canLogin: true, fixedAccount: false });
+  if (url.pathname === "/api/login" && req.method === "POST") {
+    let raw = "";
+    for await (const chunk of req) raw += chunk;
+    const body = JSON.parse(raw || "{}");
+    return body.email === E2E_LOGIN.email && body.password === E2E_LOGIN.password ? json(200, { session: E2E_SESSION, email: body.email, days: 30 }) : json(401, { error: "login_failed" });
+  }
+  if (!hasSession) return json(401, { error: "login_required" });
   if (url.pathname === "/api/search") return json(200, { total: 1, page: 0, recipes: [{ id: "r1", name: "Tomato soup", thumbnail: null, url: "https://cookidoo.example/r1" }] });
   if (url.pathname === "/api/recipe/r1") {
     return json(200, {
@@ -309,19 +320,6 @@ await step("cookidoo bridge: connect in settings, search, import an English reci
   assert.match(await text(page, "main"), /בהגדרות/, "without a bridge the import page points to the settings");
   assert.equal(await page.locator('[data-fk="cookidoo-q"]').count(), 0);
 
-  await open("#/settings");
-  await page.locator('[data-fk="set-bridge-url"]').fill(BRIDGE_URL + "/");
-  await page.locator('[data-fk="set-bridge-url"]').blur();
-  assert.equal(await page.locator('[data-fk="set-bridge-url"]').inputValue(), BRIDGE_URL, "normalised to a bare origin");
-  await page.locator('[data-fk="set-bridge-token"]').fill("wrong-token");
-  await page.locator('[data-fk="set-bridge-token"]').blur();
-  await page.locator('[data-fk="bridge-test"]').click();
-  await page.waitForFunction(() => /הטוקן שגוי/.test(document.querySelector('[role="status"]')?.textContent || ""));
-  await page.locator('[data-fk="set-bridge-token"]').fill(BRIDGE_TOKEN);
-  await page.locator('[data-fk="set-bridge-token"]').blur();
-  await page.locator('[data-fk="bridge-test"]').click();
-  await page.waitForFunction(() => /מחובר/.test(document.querySelector('[role="status"]')?.textContent || ""));
-
   const axeFile = findAxe();
   const axeCheck = async (where) => {
     if (!axeFile) return;
@@ -329,7 +327,45 @@ await step("cookidoo bridge: connect in settings, search, import an English reci
     const res = await page.evaluate(() => axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] } }));
     assert.deepEqual(res.violations.filter((v) => ["serious", "critical"].includes(v.impact)).map((v) => `${where}: ${v.id} ${v.nodes[0].target.join(" ")}`), []);
   };
-  await axeCheck("settings with the Cookidoo card");
+  await open("#/settings");
+  await page.locator('[data-fk="set-bridge-url"]').fill(BRIDGE_URL + "/");
+  await page.locator('[data-fk="set-bridge-url"]').blur();
+  assert.equal(await page.locator('[data-fk="set-bridge-url"]').inputValue(), BRIDGE_URL, "normalised to a bare origin");
+  assert.equal(await page.locator('[data-fk="ck-login"]').count(), 0, "no login form until the address and token are in");
+  await page.locator('[data-fk="set-bridge-token"]').fill("wrong-token");
+  await page.locator('[data-fk="set-bridge-token"]').blur();
+  await page.locator('[data-fk="bridge-test"]').click();
+  await page.waitForFunction(() => /הטוקן שגוי/.test(document.querySelector('[role="status"]')?.textContent || ""));
+  await page.locator('[data-fk="set-bridge-token"]').fill(BRIDGE_TOKEN);
+  await page.locator('[data-fk="set-bridge-token"]').blur();
+  await page.locator('[data-fk="bridge-test"]').click();
+  await page.waitForFunction(() => /התחברו לחשבון Cookidoo/.test(document.body.textContent));
+
+  // search before logging in points to the settings
+  await open("#/import");
+  await page.locator('[data-fk="cookidoo-q"]').fill("tomato");
+  await page.locator('[data-fk="cookidoo-search"]').click();
+  await page.waitForFunction(() => /צריך להתחבר/.test(document.querySelector('[role="alert"]')?.textContent || ""));
+  await page.getByRole("link", { name: "להגדרות" }).click();
+
+  await axeCheck("settings with the Cookidoo login form");
+  // log in: a wrong password is refused, the right one leaves only the session behind
+  await page.locator('[data-fk="ck-email"]').fill(E2E_LOGIN.email);
+  await page.locator('[data-fk="ck-pass"]').fill("wrong");
+  await page.locator('[data-fk="ck-login"]').click();
+  await page.waitForFunction(() => /Cookidoo לא קיבלה/.test(document.body.textContent));
+  await page.locator('[data-fk="ck-pass"]').fill(E2E_LOGIN.password);
+  await page.locator('[data-fk="ck-login"]').click();
+  await page.waitForSelector('[data-fk="ck-logout"]');
+  assert.match(await text(page, "main"), /מחובר כ-\s*me@example\.com/);
+  const stored = await page.evaluate(() => localStorage.getItem("fb:v1"));
+  assert.ok(!stored.includes(E2E_LOGIN.password), "the password is not kept in this browser");
+  assert.ok(stored.includes(E2E_SESSION));
+  await page.locator('[data-fk="bridge-test"]').click();
+  await page.waitForFunction(() => /מחובר לחשבון me@example\.com/.test(document.querySelector('[role="status"]')?.textContent || ""));
+  assert.ok(!(await page.evaluate(() => JSON.stringify(Object.entries(localStorage)))).includes(E2E_LOGIN.password));
+
+  await axeCheck("settings, logged in to Cookidoo");
 
   await open("#/import");
   await page.locator('[data-fk="cookidoo-q"]').fill("tomato");
@@ -348,8 +384,19 @@ await step("cookidoo bridge: connect in settings, search, import an English reci
   assert.match(await text(page, ".verdict"), /בישול עצמי/);
   assert.equal(await page.locator("ol p[dir='auto']").count(), 2);
 
-  const backup = await page.evaluate(() => localStorage.getItem("fb:v1"));
-  assert.ok(backup.includes("bridgeToken"), "the token is kept in this browser");
+  const kept = await page.evaluate(() => localStorage.getItem("fb:v1"));
+  assert.ok(kept.includes(BRIDGE_TOKEN) && kept.includes(E2E_SESSION), "token and login session are kept in this browser");
+  assert.ok(!kept.includes(E2E_LOGIN.password), "the password never is");
+
+  // the backup file leaves out the token and the login; logging out forgets the session
+  await open("#/settings");
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "גיבוי לקובץ" }).click();
+  const file = fs.readFileSync(await (await download).path(), "utf8");
+  assert.ok(!file.includes(BRIDGE_TOKEN) && !file.includes(E2E_SESSION) && !file.includes(E2E_LOGIN.email), "backup is free of secrets");
+  await page.locator('[data-fk="ck-logout"]').click();
+  await page.waitForSelector('[data-fk="ck-login"]');
+  assert.ok(!(await page.evaluate(() => localStorage.getItem("fb:v1"))).includes(E2E_SESSION));
 });
 
 await step("prices: override a price, compare and persistence", async (page) => {
