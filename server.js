@@ -1,6 +1,6 @@
 // Small server, no dependencies: static files from public/, the cart API under
 // /api (needs ACCESS_KEY), and /api/compare + /api/health proxied to the grocery
-// API (grocery-api/) when GROCERY_API_URL is set. Railway sets PORT.
+// API (grocery-api/, see lib/grocery.js) when GROCERY_API_URL is set. Railway sets PORT.
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -9,15 +9,13 @@ const crypto = require("node:crypto");
 const cart = require("./lib/cart");
 const instinct = require("./lib/instinct");
 const agentDocs = require("./lib/agent-docs");
+const grocery = require("./lib/grocery");
 const { state } = require("./lib/state");
 const { fail } = require("./lib/util");
 
 const ROOT = path.join(__dirname, "public");
 const PORT = Number(process.env.PORT) || 3000;
 const MAX_BODY = 64 * 1024;
-const API_URL = (process.env.GROCERY_API_URL || "").replace(/\/+$/, "");
-const API_TOKEN = process.env.GROCERY_API_TOKEN || "";
-const API_TIMEOUT_MS = 60_000;
 const PROXY_MAX_BODY = 32 * 1024;
 
 // method + path -> path on the grocery API. These stay public, as before the cart existed.
@@ -113,7 +111,9 @@ const routes = [
   ["PATCH", "/api/cart/items/:id", ({ params, body, actor }) => cart.updateItem(params.id, body, actor)],
   ["DELETE", "/api/cart/items/:id", ({ params, actor }) => void cart.removeItem(params.id, actor)],
   ["DELETE", "/api/cart/ordered", ({ actor }) => ({ removed: cart.clearOrdered(actor) })],
+  ["POST", "/api/cart/import", ({ body, actor }) => cart.importRecipe(body, actor)],
   ["POST", "/api/thermomix/import", ({ body, actor }) => cart.importRecipe(body, actor)],
+  ["POST", "/api/cart/fill-prices", ({ actor }) => cart.fillPrices(actor)],
   ["POST", "/api/orders", ({ body, actor }) => cart.placeOrder(body.provider, actor)],
   ["GET", "/api/events", ({ query }) => listEvents(query), { read: true }],
   ["GET", "/api/instinct", () => instinct.getStatus(), { read: true }],
@@ -156,7 +156,7 @@ function send(res, status, data) {
 }
 
 async function proxyApi(req, res, target) {
-  if (!API_URL) {
+  if (!grocery.enabled) {
     send(res, 503, { error: "שירות המצרכים עוד לא מחובר לאתר" });
     return;
   }
@@ -172,15 +172,7 @@ async function proxyApi(req, res, target) {
   }
 
   try {
-    const upstream = await fetch(API_URL + target, {
-      method: req.method,
-      headers: {
-        ...(body && { "Content-Type": "application/json" }),
-        ...(API_TOKEN && { "x-api-key": API_TOKEN }),
-      },
-      body,
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
+    const upstream = await grocery.request(req.method, target, body);
     res.writeHead(upstream.status, {
       "Content-Type": upstream.headers.get("content-type") || "application/json; charset=utf-8",
       "Cache-Control": "no-store",
@@ -266,7 +258,10 @@ function createServer() {
 }
 
 if (require.main === module) {
-  createServer().listen(PORT, "0.0.0.0", () => console.log(`listening on ${PORT}`));
+  createServer().listen(PORT, "0.0.0.0", () => {
+    console.log(`listening on ${PORT}`);
+    grocery.probe();
+  });
 }
 
 module.exports = { createServer };

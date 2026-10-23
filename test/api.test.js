@@ -91,7 +91,7 @@ test("a recipe import and an order both reach Instinct", async () => {
   await until(() => received.length >= 2);
   assert.deepEqual(
     received.map((r) => r.body.event.type),
-    ["thermomix.recipe_imported", "order.placed"],
+    ["cart.recipe_imported", "order.placed"],
   );
 });
 

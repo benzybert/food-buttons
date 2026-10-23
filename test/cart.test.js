@@ -43,7 +43,8 @@ test("recipe import adds every ingredient as one event", () => {
   const before = state.events.length;
   cart.importRecipe({ recipe: "חומוס", lines: "200 גרם גרגרי חומוס\n2 שיני שום\n\n1/2 כפית כמון" }, "שבן");
   assert.equal(state.events.length, before + 1);
-  assert.equal(state.events.at(-1).type, "thermomix.recipe_imported");
+  assert.equal(state.events.at(-1).type, "cart.recipe_imported");
+  assert.deepEqual(state.items.find((i) => i.name === "כמון").sources, ["thermomix"]);
   assert.ok(state.items.some((i) => i.name === "כמון" && i.qty === 0.5));
   assert.throws(() => cart.importRecipe({ lines: "  \n " }, "x"), { status: 400 });
 });

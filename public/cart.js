@@ -209,6 +209,7 @@ function renderItems() {
 function renderCompare() {
   const active = cart.items.filter((i) => !i.orderId);
   $("copy").disabled = !active.length;
+  $("fill-prices").disabled = !active.length;
   $("compare").replaceChildren(
     ...cart.compare.map((row) => {
       const provider = cart.providers.find((p) => p.id === row.id);
@@ -349,7 +350,7 @@ $("import-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const form = new FormData(e.target);
   act(async () => {
-    const added = await api("POST", "/api/thermomix/import", { recipe: form.get("recipe"), lines: form.get("lines") });
+    const added = await api("POST", "/api/cart/import", { recipe: form.get("recipe"), lines: form.get("lines"), source: "thermomix" });
     toast(`נוספו ${count(added.length)} לעגלה`);
     e.target.reset();
     $("import").open = false;
@@ -365,6 +366,23 @@ $("copy").addEventListener("click", async () => {
   } catch {
     prompt("העתיקו את הרשימה:", lines.join("\n"));
   }
+});
+
+$("fill-prices").addEventListener("click", () => {
+  const button = $("fill-prices");
+  button.disabled = true;
+  button.textContent = "מחפש מחירים בשופרסל ובטיב טעם…";
+  act(async () => {
+    try {
+      const { filled, total } = await api("POST", "/api/cart/fill-prices");
+      toast(filled ? `נמצאו מחירים ל-${filled} מתוך ${total} פריטים` : "לא נמצאו מחירים לפריטים בעגלה", !filled);
+      rev = -1;
+      await refresh();
+    } finally {
+      button.disabled = !cart?.items.some((i) => !i.orderId);
+      button.textContent = "מלא מחירים משופרסל וטיב טעם";
+    }
+  });
 });
 
 $("clear-ordered").addEventListener("click", () => act(() => api("DELETE", "/api/cart/ordered").then(refresh)));

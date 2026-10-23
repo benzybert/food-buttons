@@ -388,6 +388,20 @@ main.page {
   outline-offset: 0.2rem;
 }
 
+.shop.secondary {
+  margin-top: 0.75rem;
+  min-height: 3.5rem;
+  border: 2px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.3rem;
+  box-shadow: none;
+}
+
+.status a {
+  color: inherit;
+}
+
 /* Results */
 .status {
   min-height: 1.5em;
