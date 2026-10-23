@@ -12,6 +12,9 @@ class FakeStore:
         self.store_id, self.store_name = store_id, store_id.title()
         self.catalog, self.calls = catalog, []
 
+    async def raw_search(self, query):
+        return {"store": self.store_id, "status": 403, "sample": "Access Denied"}
+
     async def search(self, query, max_results=8):
         self.calls.append(query)
         return [p.model_copy() for key, p in self.catalog.items() if key in query]
@@ -183,3 +186,43 @@ def test_http_token_required_when_configured(client, monkeypatch):
     assert c.post("/compare", json={"text": "קמח"}, headers={"x-api-key": "wrong"}).status_code == 401
     assert c.post("/compare", json={"text": "קמח"}, headers={"x-api-key": "s3cret"}).status_code == 200
     assert c.get("/health").status_code == 200
+
+
+async def test_probe_logs_what_each_store_returned(stores, monkeypatch, caplog):
+    cached, _, _ = stores
+    monkeypatch.setattr(service, "_stores", cached)
+    with caplog.at_level("WARNING", logger="grocery-api"):
+        await service.probe_stores()
+    probes = [r.getMessage() for r in caplog.records if "store probe" in r.getMessage()]
+    assert len(probes) == 2 and all('"status": 403' in p and "Access Denied" in p for p in probes)
+
+
+async def test_probe_survives_a_store_that_raises(stores, monkeypatch, caplog):
+    cached, shufersal, _ = stores
+
+    async def boom(query):
+        raise RuntimeError("tunnel closed")
+
+    shufersal.raw_search = boom
+    monkeypatch.setattr(service, "_stores", cached)
+    with caplog.at_level("WARNING", logger="grocery-api"):
+        await service.probe_stores()
+    assert any("tunnel closed" in r.getMessage() for r in caplog.records)
+
+
+async def test_unavailable_store_is_logged(stores, caplog):
+    cached, _, tivtaam = stores
+    tivtaam.catalog.clear()
+    with caplog.at_level("WARNING", logger="grocery-api"):
+        await service.compare("2 כוסות קמח", stores=cached)
+    assert any("store tivtaam found nothing" in r.getMessage() for r in caplog.records)
+
+
+def test_service_starts_even_if_probing_fails(client, monkeypatch):
+    async def explode():
+        raise RuntimeError("no network")
+
+    c, app = client
+    monkeypatch.setattr(service, "probe_stores", explode)
+    with TestClient(app.app) as fresh:
+        assert fresh.get("/health").status_code == 200
