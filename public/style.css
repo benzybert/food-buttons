@@ -132,3 +132,392 @@ main {
     transition: none;
   }
 }
+
+/* ---- inner pages: Sharon, Thermomix, groceries ---- */
+
+:root {
+  --card: #ffffff;
+  --line: #e6d3bc;
+  --muted: #6b5848;
+  --good: #14633f;
+  --warn: #8a4b00;
+  --error: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card: #2a1c11;
+    --line: #4a3626;
+    --muted: #cdbba6;
+    --good: #5fd39b;
+    --warn: #ffb866;
+    --error: #ff8a80;
+  }
+}
+
+main.page {
+  display: block;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 40px) var(--gap) 4rem;
+}
+
+.page h1 {
+  margin: 0.25em 0 0;
+  font-size: clamp(2.5rem, 10vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.page h2 {
+  margin: 1.5em 0 0.5em;
+  font-size: 1.6rem;
+}
+
+.page .lead {
+  margin: 0.25em 0 1.25em;
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.back {
+  display: inline-block;
+  padding: 0.4em 0;
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+.back:focus-visible,
+.page a:focus-visible {
+  outline: 0.25rem solid var(--focus);
+  outline-offset: 0.15rem;
+}
+
+.page :is(input[type="text"], textarea) {
+  width: 100%;
+  padding: 0.6em 0.75em;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  font: 400 1.1rem/1.5 "Alef", system-ui, sans-serif;
+}
+
+.page :is(input[type="text"], textarea):focus-visible {
+  outline: 0.25rem solid var(--focus);
+  outline-offset: 0.1rem;
+}
+
+.field {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.field > span {
+  display: block;
+  margin-bottom: 0.3em;
+}
+
+/* Two big radio buttons */
+.choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  padding: 0;
+  margin-bottom: 0.4em;
+  font-size: 1.1rem;
+}
+
+.choice legend {
+  grid-column: 1 / -1;
+}
+
+.choice label {
+  display: block;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.5rem;
+  padding: 0.5em 0.75em;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  text-align: center;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.choice input:checked + span {
+  border-color: var(--btn-2);
+  background: var(--btn-2);
+  color: var(--btn-text);
+}
+
+.choice input:focus-visible + span {
+  outline: 0.3rem solid var(--focus);
+  outline-offset: 0.15rem;
+}
+
+/* Sharon's menu */
+.dishes {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.dish {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.8em 1em;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.dish input {
+  width: 1.5rem;
+  height: 1.5rem;
+  accent-color: var(--btn-2);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.check input {
+  width: 1.3rem;
+  height: 1.3rem;
+  accent-color: var(--btn-2);
+}
+
+/* The shopping button, in both workflows */
+.shop {
+  display: block;
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 0.5em 1em;
+  border: 0;
+  border-radius: 22px;
+  background: var(--btn-2);
+  color: var(--btn-text);
+  font: 700 1.6rem/1.1 "Alef", system-ui, sans-serif;
+  box-shadow: 0 0.3rem 0 rgb(0 0 0 / 0.28);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shop:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.shop:active:not(:disabled) {
+  transform: translateY(0.25rem);
+  box-shadow: 0 0.05rem 0 rgb(0 0 0 / 0.28);
+}
+
+.shop:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.shop:focus-visible {
+  outline: 0.35rem solid var(--focus);
+  outline-offset: 0.2rem;
+}
+
+/* Results */
+.status {
+  min-height: 1.5em;
+  margin: 1rem 0 0;
+  font-weight: 400;
+  font-size: 1.15rem;
+}
+
+.status.error {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.store {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.9em 1em;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+}
+
+.store.best {
+  border-color: var(--good);
+}
+
+.store-name {
+  font-size: 1.2rem;
+}
+
+.store-total {
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.store-detail {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.split {
+  margin: 0.9rem 0 0;
+  font-size: 1.15rem;
+}
+
+.items {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: 0.8em 1em;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.item.skipped {
+  opacity: 0.75;
+}
+
+.item h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.25rem;
+}
+
+.item p {
+  margin: 0;
+}
+
+.offer {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  align-items: baseline;
+  gap: 0.2em 0.75em;
+  padding: 0.5em 0;
+  border-top: 1px solid var(--line);
+  font-weight: 400;
+}
+
+.offer.best .offer-price strong {
+  color: var(--good);
+}
+
+.offer-store {
+  font-weight: 700;
+}
+
+.offer-none {
+  grid-column: 2 / -1;
+  color: var(--muted);
+}
+
+.offer-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: end;
+}
+
+.offer-price strong {
+  font-size: 1.3rem;
+}
+
+.offer-price small {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.offer .tag.good {
+  grid-column: 2 / -1;
+  justify-self: start;
+}
+
+.offer-product a {
+  color: inherit;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.05em 0.55em;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tag.good {
+  color: var(--good);
+}
+
+.tag.warn {
+  color: var(--warn);
+}
+
+@media (max-width: 480px) {
+  .offer {
+    grid-template-columns: 1fr auto;
+  }
+  .offer-store {
+    grid-column: 1 / -1;
+  }
+  .offer-none {
+    grid-column: 1 / -1;
+  }
+  .offer .tag.good {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop {
+    transition: none;
+  }
+}

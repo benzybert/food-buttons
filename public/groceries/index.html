@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>קניית מצרכים</title>
+    <meta name="description" content="השוואת מחירים בין שופרסל וטיב טעם לרשימת מצרכים" />
+    <meta name="robots" content="noindex" />
+    <link rel="preload" href="/fonts/alef-he-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body data-page="groceries">
+    <main class="page">
+      <a class="back" id="back" href="/">→ חזרה</a>
+      <h1>קניית מצרכים</h1>
+      <p class="lead" id="source-label">שופרסל מול טיב טעם: איפה זול יותר.</p>
+
+      <form id="form" novalidate>
+        <label class="field">
+          <span>רשימת המצרכים, מצרך בכל שורה</span>
+          <textarea id="text" rows="7" maxlength="6000"></textarea>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="pantry" />
+          <span>לכלול גם מצרכי יסוד (מלח, שמן, תבלינים)</span>
+        </label>
+        <button class="shop" id="go" type="submit">השווה מחירים</button>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <section id="results" hidden>
+        <h2 id="results-title"></h2>
+        <div id="summary" class="summary"></div>
+        <p id="split" class="split"></p>
+        <ul id="items" class="items"></ul>
+        <p id="note" class="muted"></p>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
