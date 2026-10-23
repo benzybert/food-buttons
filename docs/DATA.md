@@ -4,18 +4,18 @@
 
 | File | Source of truth? | Purpose |
 |---|---|---|
-| `data-src/ingredients.txt` | yes | Ingredient catalog: names/aliases, aisle, base unit, pack size, reference price, unit weight, density, dietary flags |
+| `data-src/ingredients.txt` | yes | Ingredient catalog: names/aliases, aisle, base unit, pack size, unit weight, density, dietary flags (no prices) |
 | `data-src/recipes/*.txt` | yes | Recipes (compact Hebrew format, parsed with the same parser the in-app importer uses) |
 | `public/data/ingredients.json`, `recipes.json` | generated | `npm run build:data` |
-| `public/data/prices.json` | **yes** (hand/ingest-managed) | Prices per ingredient per store; currently *sample* data |
-| `public/data/stores.json` | yes | Stores, index (sample), delivery fee / free-over / minimum |
+| `public/data/prices.json` | **yes** (hand/ingest-managed) | Prices per ingredient per store; **empty**, there is no sample data (see Prices below) |
+| `public/data/stores.json` | yes | Stores: id and name only. Delivery fee / free-over / minimum may be added later, from a real source |
 | `public/data/sources.json` | yes | Order sources: `sharon` (menu) and `delivery` (app, markup + fee) |
 
 ## Ingredient line (`ingredients.txt`)
 
 ```
-id | name | aliases | aisle | base | pack | ref price | unit weight (g) | density (g/ml) | flags
-onion | בצל | בצלים,בצל יבש | produce | g | kg | 6 | 150 | 1 |
+id | name | aliases | aisle | base | pack | unit weight (g) | density (g/ml) | flags
+onion | בצל | בצלים,בצל יבש | produce | g | kg | 150 | 1 |
 ```
 
 - `base`: `g`, `ml` or `u` (units, e.g. eggs). Everything is converted to this.
@@ -35,7 +35,7 @@ servings: 6
 prep: 15                  # active minutes
 cook: 40                  # passive minutes
 level: 1                  # 1-3
-order: 32                 # typical price of ONE serving when ordered (shekel)
+order: 32                 # optional: price of ONE ordered serving. Only from a real source; none ship with the app
 tags: שישי, קלאסי
 desc: One sentence.
 ingredients:
@@ -50,15 +50,15 @@ Machine settings are written as `time/temperature/speed` groups: `5 דק'/100°C
 
 `prices.json`: `{ meta: { kind, updated, note }, table: { ingredientId: { storeId: price | null } } }`
 
-- The price is **per pack** (or per kg for loose items). `null` means "this store does not carry it" (the app then estimates and flags it).
-- `meta.kind: "sample"` makes every price screen show the "sample data" banner. Set it to anything else (e.g. `"real"`) once the data is real.
-- Regenerate sample data with `npm run prices:sample` (deterministic). **That overwrites `prices.json`.**
+- The price is **per pack** (or per kg for loose items). `null` means "this store does not carry it" (the app treats it as unpriced: it never estimates).
+- `meta.kind` is `"none"` while the file has no prices and `"real"` once it holds real ones (written by the ingest tool). The shipped file is `{ meta: { kind: "none" }, table: {} }`.
+- **No invented prices, anywhere.** An unknown price is `null` and it spreads: a store total, a dish cost or a basket verdict that needs one is `null` too, never a partial sum and never an estimate. A test (`test/data.test.js`) fails if prices, reference prices, order prices, store fees or markups ship with `kind` other than `"real"`.
 - Users can override any price in the app (`#/prices`); overrides live in their browser and win over the file.
 
 ### Getting real prices
 
-Israeli supermarket chains are required to publish price files (XML/GZ, the "price transparency" files). `tools/ingest-prices.js` turns a folder of such files into `prices.json`; see its header for usage. It matches products to the catalog by name and uses the **median unit price** of the matches to avoid brand outliers. Always run it with `--report` first and read the matches: product names in these files are messy, and the tool was written against the documented file format and fixtures, not against live files.
+Israeli supermarket chains are required to publish price files (XML/GZ, the "price transparency" files). `tools/ingest-prices.js` turns a folder of such files into `prices.json`; see its header for usage. It matches products to the catalog by name and uses the **median unit price** of the matches to avoid brand outliers (matches more than 4x away from the median of their own group are dropped; there is no reference price to compare against). Always run it with `--report` first and read the matches: product names in these files are messy, and the tool was written against the documented file format and fixtures, not against live files.
 
 ### Order prices
 
-Each recipe has `order:` (typical price per serving). Sharon's price = `order` x `sources.sharon.markup` (0); the delivery app = `order` x (1 + markup) plus a flat fee per order. Both can be edited per dish in the app (`#/order` -> "עריכת מחירון").
+Order prices are entered per dish and source in the app (`#/order` -> "עריכת מחירון") and live in the browser only. A recipe may carry an optional `order:` (price per serving) and a source an optional `markup` and `fee`, but only from a real source: none ship with the app, and without a price the dish simply has no order price (ordering from Sharon still works, with quantities only). Sources: `public/data/sources.json`.

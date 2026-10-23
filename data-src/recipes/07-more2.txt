@@ -6,7 +6,6 @@ servings: 10
 prep: 15
 cook: 55
 level: 1
-order: 12
 tags: פרווה, אפייה, ילדים
 desc: לחם בננה לח עם אגוזי מלך, שימוש מצוין לבננות שהכהו.
 ingredients:
@@ -33,7 +32,6 @@ servings: 12
 prep: 15
 cook: 25
 level: 1
-order: 18
 tags: פרווה, אפייה, שוקולד
 desc: בראוניז פרווה עם פנים רך ושוקולד אמיתי.
 ingredients:
@@ -59,7 +57,6 @@ servings: 12
 prep: 20
 cook: 50
 level: 1
-order: 22
 tags: פרווה, אפייה, ראש השנה
 desc: עוגת תפוחים רכה עם קינמון, מערבבים הכול בקערה.
 ingredients:
@@ -86,7 +83,6 @@ servings: 4
 prep: 10
 cook: 15
 level: 1
-order: 48
 tags: חלבי, מהיר, ילדים
 desc: פסטו טרי שמוכן בדקה, בזמן שהפסטה מתבשלת.
 ingredients:
@@ -111,7 +107,6 @@ servings: 4
 prep: 15
 cook: 20
 level: 1
-order: 32
 tags: פרווה, צמחוני, מטוגן
 desc: לביבות ירוקות ופריכות עם פטרוזיליה.
 ingredients:

@@ -1,10 +1,10 @@
 import { h } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, settings, stores as storeList, pantrySet, actions, sourcesFor } from "../app.js";
+import { anyPrices, catalog, settings, stores as storeList, pantrySet, actions, sourcesFor } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { moneyEl, notice, openDialog, stepper, kosherChip, settingChips, stepText, sampleBanner, addWithToast, ingredientText, toast } from "../ui.js";
-import { duration, percent } from "../fmt.js";
+import { moneyEl, notice, openDialog, stepper, kosherChip, settingChips, stepText, noPricesBanner, addWithToast, ingredientText, toast } from "../ui.js";
+import { countOf, duration, percent } from "../fmt.js";
 import { compareDish, dishLines, hourlyGain } from "../lib/calc.js";
 import { ALLERGEN_LABELS, DIET_LABELS, EQUIPMENT_LABELS, fillWarning, BOWL_SAFE_ML, kcalPerServing } from "../lib/derive.js";
 import { CATEGORY_LABELS } from "../lib/catalog.js";
@@ -60,14 +60,17 @@ export function dishView({ match, query }) {
   );
 
   // ---- compare card
-  const cookSide = h(
-    "div.side",
-    { class: cmp.winner === "cook" && cmp.order ? "win" : "" },
-    h("span.label", "בישול עצמי"),
-    h("span.big-num", moneyEl(cmp.cook.total)),
-    h("span.sub", moneyEl(cmp.cook.perServing), " למנה · ", cheapestStore.name),
-    cmp.cook.time ? h("span.sub", "כולל ", moneyEl(cmp.cook.time), " שווי זמן") : null,
-  );
+  const cookSide =
+    cmp.cook.total != null
+      ? h(
+          "div.side",
+          { class: cmp.winner === "cook" && cmp.order ? "win" : "" },
+          h("span.label", "בישול עצמי"),
+          h("span.big-num", moneyEl(cmp.cook.total)),
+          h("span.sub", moneyEl(cmp.cook.perServing), " למנה · ", cheapestStore.name),
+          cmp.cook.time ? h("span.sub", "כולל ", moneyEl(cmp.cook.time), " שווי זמן") : null,
+        )
+      : h("div.side", h("span.label", "בישול עצמי"), h("span.big-num", "-"), h("span.sub", `חסר מחיר ל-${countOf(cmp.cook.missing, "מצרך", "מצרכים")} ב${cheapestStore.name}. `, h("a", { href: "#/prices" }, "הזנת מחירים")));
   const orderSide = cmp.order
     ? h(
         "div.side",
@@ -79,7 +82,7 @@ export function dishView({ match, query }) {
     : h("div.side", h("span.label", "הזמנה"), h("span.big-num", "-"), h("span.sub", "אין מחיר הזמנה למנה הזו"));
 
   let message = null;
-  if (cmp.order) {
+  if (cmp.order && cmp.saving != null) {
     const abs = Math.abs(cmp.saving);
     message =
       cmp.winner === "cook"
@@ -129,7 +132,7 @@ export function dishView({ match, query }) {
       { class: home ? "have" : "" },
       h("span.q", q),
       h("span.n", n, line.note ? h("span.muted", ` · ${line.note}`) : null),
-      cost != null && !ing.free ? h("span.c", { title: kind === "user" ? "מחיר שהוזן ידנית" : kind === "data" ? "" : "אומדן" }, moneyEl(cost)) : null,
+      cost != null && !ing.free ? h("span.c", { title: kind === "user" ? "מחיר שהוזן ידנית" : "" }, moneyEl(cost)) : null,
       ing?.sub ? h("button.btn-link.small", { type: "button", "aria-label": `תחליף ל${ing.name}`, onclick: () => openDialog(`תחליף ל${ing.name}`, h("div.stack", h("p", ing.sub), h("p.small.muted", "הצעות כלליות, ייתכן שהתוצאה תשתנה מעט."))) }, "תחליף") : null,
       ing && !ing.free
         ? h("label.check", { title: "מסמן שהמצרך כבר קיים בבית (לא ייכנס לרשימת הקניות)" }, h("input", { type: "checkbox", checked: home, "data-fk": `have-${ing.id}`, "aria-label": `${ing.name} יש בבית`, onchange: (e) => actions.togglePantry(ing.id, e.target.checked) }), h("span.small", "בבית"))
@@ -173,12 +176,12 @@ export function dishView({ match, query }) {
       h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => shareRecipe(rec, factor, c) }, icon("share", { size: 16 }), "שיתוף המתכון"),
       h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => window.print() }, icon("printer", { size: 16 }), "הדפסה"),
     ),
-    sampleBanner(),
+    noPricesBanner(),
     fill ? h("div", { style: { "margin-top": "0.75rem" } }, notice("warn", fill.level === "over" ? `בכמות הזו הנפח המשוער בקערה הוא כ-${(fill.ml / 1000).toFixed(1)} ליטר, מעל המקסימום של המכשיר (2.2 ליטר). אפשר להכין בשני סבבים או להקטין את מספר המנות.` : `בכמות הזו הקערה כמעט מלאה (כ-${(fill.ml / 1000).toFixed(1)} ליטר, מעל ${BOWL_SAFE_ML / 1000} ליטר מומלצים לבישול). שימו לב לקו המילוי המקסימלי.`, "alert")) : null,
     h(
       "div.dish-cols",
       { style: { "margin-top": "1rem" } },
-      h("div.stack.sticky", comparePanel, equipment, allergens, rec.src === "custom" ? h("div.row", h("a.btn.btn-ghost.btn-sm", { href: `#/import/${rec.id}` }, icon("pencil", { size: 16 }), "עריכה"), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => confirmDelete(rec) }, icon("trash", { size: 16 }), "מחיקה")) : null),
+      h("div.stack.sticky", anyPrices() ? comparePanel : null, equipment, allergens, rec.src === "custom" ? h("div.row", h("a.btn.btn-ghost.btn-sm", { href: `#/import/${rec.id}` }, icon("pencil", { size: 16 }), "עריכה"), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => confirmDelete(rec) }, icon("trash", { size: 16 }), "מחיקה")) : null),
       h(
         "div.stack",
         h("section.card", { "aria-labelledby": "ing-h" }, h("h2", { id: "ing-h" }, "מצרכים"), h("ul.ing-list", ingItems), h("p.small.muted", "המחיר ליד כל מצרך הוא על הכמות הנצרכת ב", cheapestStore.name, ".")),

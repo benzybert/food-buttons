@@ -1,5 +1,6 @@
-// The order side ("שרון" and any other place you can order from). A priced menu, a cart, and a message to send.
-// Menu prices are editable (and a dish can be switched off) because the bundled prices are samples.
+// The order side ("שרון" and any other place you can order from). A menu, a cart, and a message to send.
+// Ordering works without any price. Menu prices are optional and entered by the person (nothing is bundled);
+// a total is shown only when every dish in the cart has one. A dish can also be switched off.
 // Extra order sources (a restaurant, a delivery app) can be added and are compared everywhere.
 
 import { h, debounce } from "../dom.js";
@@ -47,7 +48,7 @@ export function orderView({ query }) {
       return h(
         "li.shop-item.wrap",
         h("span", { "aria-hidden": "true", style: { "font-size": "1.5rem" } }, rec.emoji),
-        h("div.info", h("span.what", rec.name), h("span.qty", custom ? "מחיר מותאם" : price != null ? "מחיר לדוגמה" : "אין מחיר")),
+        h("div.info", h("span.what", rec.name), h("span.qty", price != null ? "מחיר שהוזן" : "אין מחיר")),
         input,
         h("label.check", h("input", { type: "checkbox", checked: !isOff, "aria-label": `${rec.name} מוצע ב${src.name}`, onchange: (e) => actions.setOrderOff(srcId, rec.id, !e.target.checked) }), h("span.small", "מוצע")),
         custom ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => actions.setOrderPrice(rec.id, srcId, 0) }, "איפוס") : null,
@@ -59,9 +60,9 @@ export function orderView({ query }) {
       h(
         "div.info",
         h("a.what", { href: `#/dish/${rec.id}`, style: { "text-decoration": "none" } }, rec.name),
-        h("span.qty", info.savePct != null && info.savePct > 0.03 ? `בישול ביתי ${money(info.perServing)} למנה (חיסכון ${percent(info.savePct)})` : `בישול ביתי ${money(info.perServing)} למנה`),
+        info.perServing == null ? null : h("span.qty", info.savePct != null && info.savePct > 0.03 ? `בישול ביתי ${money(info.perServing)} למנה (חיסכון ${percent(info.savePct)})` : `בישול ביתי ${money(info.perServing)} למנה`),
       ),
-      price != null ? h("span.price", moneyEl(price)) : h("span.muted", "-"),
+      price != null ? h("span.price", moneyEl(price)) : null,
       stepper({ value: qty, min: 0, max: 30, label: `מנות של ${rec.name}`, size: "sm", onChange: (n) => setCart(rec.id, n) }),
     );
   };
@@ -70,8 +71,8 @@ export function orderView({ query }) {
     .sort((a, b) => Object.keys(CATEGORY_LABELS).indexOf(a[0]) - Object.keys(CATEGORY_LABELS).indexOf(b[0]))
     .map(([cat, recs]) => h("section.card", { style: { "margin-top": "1rem" } }, h("h2", { style: { "font-size": "1.15rem", "margin-block-end": "0.25rem" } }, CATEGORY_LABELS[cat]), h("ul.list-plain", recs.map(row))));
 
-  const entries = Object.entries(cart).filter(([id]) => c.recById.has(id) && !off.has(id) && unit(id) != null);
-  const total = round2(entries.reduce((a, [id, n]) => a + unit(id) * n, 0));
+  const entries = Object.entries(cart).filter(([id]) => c.recById.has(id) && !off.has(id));
+  const total = entries.every(([id]) => unit(id) != null) ? round2(entries.reduce((a, [id, n]) => a + unit(id) * n, 0)) : null;
   const count = entries.reduce((a, [, n]) => a + n, 0);
   const summary = entries.length ? orderSummary(entries, total, count, c, src) : null;
 
@@ -91,7 +92,7 @@ export function orderView({ query }) {
     pageHead(`הזמנה דרך ${src.name}`, "בוחרים מנות, רואים כמה זה עולה מול בישול בבית, ושולחים", h("button.btn.btn-ghost.btn-sm", { type: "button", "aria-pressed": String(editing), onclick: () => ((editing = !editing), render(true)) }, icon("pencil", { size: 16 }), editing ? "סיום עריכה" : "עריכת מחירון"), src.kind === "custom" ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => sourceDialog(src) }, "הגדרות המקור") : null),
     sourceChips,
     feeNote,
-    notice("warn", "מחירי התפריט הם הערכות לדוגמה. אפשר לעדכן כל מחיר ב״עריכת מחירון״ כדי שההשוואות יהיו מדויקות.", "alert"),
+    c.recipes.some((r) => unit(r.id) != null) ? null : notice("info", "אין כאן מחירון: אפשר להזמין גם בלי מחירים (הכמויות נשלחות בהודעה). כדי לראות כמה זה עולה ולהשוות לבישול, אפשר להזין מחיר למנה ב״עריכת מחירון״."),
     h("div.search", { style: { margin: "1rem 0" } }, icon("search", { size: 22 }), search),
     editing ? notice("info", "מצב עריכה: שנו מחיר למנה, או בטלו מנה שלא מוצעת. השינויים נשמרים בדפדפן הזה.") : null,
     list.length ? groups : emptyState("🔍", "לא נמצאו מנות", "נסו חיפוש אחר."),
@@ -103,12 +104,11 @@ export function orderView({ query }) {
 function orderSummary(entries, total, count, c, src) {
   const set = settings();
   const st = storeList();
-  let cook = 0;
-  for (const [id, n] of entries) cook += dishCostByStore(c.recById.get(id), n, c, st)[0].total;
-  cook = round2(cook);
+  const cookParts = entries.map(([id, n]) => dishCostByStore(c.recById.get(id), n, c, st)[0].total);
+  const cook = cookParts.every((x) => x != null) ? round2(cookParts.reduce((a, x) => a + x, 0)) : null;
   const fee = src.fee || 0;
-  const grand = round2(total + fee);
-  const saving = round2(grand - cook);
+  const grand = total != null ? round2(total + fee) : null;
+  const saving = grand != null && cook != null ? round2(grand - cook) : null;
 
   const text = orderText(entries, grand, c, src);
   const phone = normalizePhone(src.id === SHARON ? set.sharonPhone : src.phone);
@@ -118,7 +118,7 @@ function orderSummary(entries, total, count, c, src) {
   const others = c.sources
     .filter((o) => o.id !== src.id)
     .map((o) => ({ o, total: round2(entries.reduce((a, [id, n]) => a + (c.orderPrice(id, o.id) || 0) * n, 0) + (o.fee || 0)), complete: entries.every(([id]) => c.orderPrice(id, o.id) != null) }))
-    .filter((x) => x.complete)
+    .filter((x) => x.complete && grand != null)
     .sort((a, b) => a.total - b.total)[0];
 
   const phoneInput = h("input.input", { type: "tel", inputmode: "tel", dir: "ltr", placeholder: "050-1234567", value: "", "aria-label": `מספר וואטסאפ של ${src.name}`, "data-fk": "order-phone", style: { "max-inline-size": "14rem" }, onchange: (e) => savePhone(src, e.target.value.trim()) });
@@ -126,14 +126,16 @@ function orderSummary(entries, total, count, c, src) {
   return h(
     "section.card",
     { style: { "margin-top": "1.25rem", position: "sticky", "inset-block-end": "4.5rem", "box-shadow": "0 0.5rem 2rem rgb(0 0 0 / 0.25)" }, "aria-labelledby": "cart-h" },
-    h("div.spread", h("h2", { id: "cart-h" }, `ההזמנה שלכם: ${servingsWord(count)}`), h("span.strong", { style: { "font-size": "1.5rem" } }, moneyEl(grand))),
-    fee ? h("p.small.muted", { style: { margin: 0 } }, "כולל ", moneyEl(fee), " משלוח") : null,
-    h(
-      "p.small.muted",
-      { style: { margin: "0.25rem 0 0.5rem" } },
-      saving > 0 ? ["בישול אותן מנות בבית יעלה ", moneyEl(cook), " ", h("span.chip.good", "חיסכון ", moneyEl(saving))] : ["בישול אותן מנות בבית יעלה ", moneyEl(cook), " (ההזמנה זולה יותר)"],
-      others ? [" · ", `ב${others.o.name}: `, moneyEl(others.total)] : null,
-    ),
+    h("div.spread", h("h2", { id: "cart-h" }, `ההזמנה שלכם: ${servingsWord(count)}`), grand != null ? h("span.strong", { style: { "font-size": "1.5rem" } }, moneyEl(grand)) : null),
+    fee && grand != null ? h("p.small.muted", { style: { margin: 0 } }, "כולל ", moneyEl(fee), " משלוח") : null,
+    saving == null
+      ? null
+      : h(
+          "p.small.muted",
+          { style: { margin: "0.25rem 0 0.5rem" } },
+          saving > 0 ? ["בישול אותן מנות בבית יעלה ", moneyEl(cook), " ", h("span.chip.good", "חיסכון ", moneyEl(saving))] : ["בישול אותן מנות בבית יעלה ", moneyEl(cook), " (ההזמנה זולה יותר)"],
+          others ? [" · ", `ב${others.o.name}: `, moneyEl(others.total)] : null,
+        ),
     h(
       "div.row",
       canWhatsApp ? h("a.btn.btn-green", { href: phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`, target: "_blank", rel: "noopener" }, icon("whatsapp", { size: 20 }), phone ? `שליחה ל${src.name} בוואטסאפ` : "שליחה בוואטסאפ") : null,
@@ -183,7 +185,7 @@ function sourceDialog(existing) {
 
 export function orderText(entries, total, c, src) {
   const lines = entries.map(([id, n]) => `${n} × ${c.recById.get(id).name}`);
-  return [`שלום${src ? " " + src.name : ""}, אשמח להזמין:`, ...lines, `סה״כ לפי המחירון: ${plainMoney(total)}`, "תודה!"].join("\n");
+  return [`שלום${src ? " " + src.name : ""}, אשמח להזמין:`, ...lines, ...(total != null ? [`סה״כ לפי המחירון: ${plainMoney(total)}`] : []), "תודה!"].join("\n");
 }
 
 /** Israeli mobile numbers to wa.me format: 050-1234567 -> 972501234567 */

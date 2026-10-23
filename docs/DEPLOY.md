@@ -4,7 +4,7 @@ The app itself is static, but the site also has a shop (shared cart, real superm
 
 ## Before going public
 
-- [ ] Replace sample prices (or keep the banner on: it is automatic while `prices.json` has `meta.kind: "sample"`).
+- [ ] Prices: the site ships with none. Decide how real ones arrive: people type them in ("מחירים"), or import real price files (`tools/ingest-prices.js`, see `docs/DATA.md`). Until then the cost screens say "no prices yet".
 - [ ] Fill in the accessibility contact in `public/js/views/about.js` ("פרטי קשר לפניות נגישות"). The statement text was drafted automatically; have an accessibility specialist review it if this becomes a public business service.
 - [ ] Decide what "שרון" is (a person, a restaurant, a service?) and set realistic menu prices/availability in `#/order` -> edit mode, or change `data-src/recipes/*.txt` `order:` values.
 - [ ] `npm run check` and `npm run e2e` are green.

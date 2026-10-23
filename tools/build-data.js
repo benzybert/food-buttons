@@ -29,8 +29,8 @@ export function parseIngredientsFile(text) {
     if (!line.trim() || line.trim().startsWith("#")) return;
     const f = line.split("|").map((x) => x.trim());
     const where = `ingredients.txt:${i + 1}`;
-    if (f.length !== 10) return fail(`${where}: expected 10 columns, got ${f.length}: ${line}`);
-    const [id, name, aliases, aisle, base, pack, ref, uw, density, flags] = f;
+    if (f.length !== 9) return fail(`${where}: expected 9 columns, got ${f.length}: ${line}`);
+    const [id, name, aliases, aisle, base, pack, uw, density, flags] = f;
     if (!AISLES.has(aisle)) fail(`${where}: unknown aisle ${aisle}`);
     if (!["g", "ml", "u"].includes(base)) fail(`${where}: unknown base unit ${base}`);
     const flagList = flags ? flags.split(/\s+/).filter(Boolean) : [];
@@ -49,14 +49,12 @@ export function parseIngredientsFile(text) {
       aisle,
       base,
       pack: packObj,
-      ref: Number(ref),
       flags: flagList.filter((x) => x !== "home" && x !== "free"),
     };
     if (uw) ing.unitWeight = Number(uw);
     if (density) ing.density = Number(density);
     if (flagList.includes("home")) ing.home = true;
     if (flagList.includes("free")) ing.free = true;
-    if (!Number.isFinite(ing.ref)) fail(`${where}: bad price ${ref}`);
     out.push(ing);
   });
   const seen = new Set();
@@ -152,7 +150,8 @@ export function parseRecipeSource(text, file, index) {
 
 function validateRecipe(r, ingById) {
   const w = `recipe ${r.id}`;
-  for (const k of ["name", "emoji", "category", "servings", "prep", "cook", "level", "order"]) {
+  // `order` (typical price of one ordered serving) is optional and, when present, must be a real price.
+  for (const k of ["name", "emoji", "category", "servings", "prep", "cook", "level"]) {
     if (r[k] === undefined || r[k] === "" || Number.isNaN(r[k])) fail(`${w}: missing ${k}`);
   }
   if (!CATEGORIES.has(r.category)) fail(`${w}: unknown category ${r.category}`);

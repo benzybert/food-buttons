@@ -1,9 +1,9 @@
 import { h, debounce } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, settings } from "../app.js";
+import { anyPrices, catalog, settings } from "../app.js";
 import { replaceQuery } from "../router.js";
-import { pageHead, dishCard, dishInfo, emptyState, sampleBanner, CATEGORY_LABELS } from "../ui.js";
+import { pageHead, dishCard, dishInfo, emptyState, CATEGORY_LABELS } from "../ui.js";
 import { ALLERGEN_LABELS, DIET_LABELS, KOSHER_LABELS } from "../lib/derive.js";
 import { norm } from "../lib/text.js";
 
@@ -16,6 +16,9 @@ const SORTS = [
   ["kcal", "הכי קל בקלוריות"],
 ];
 const csv = (s) => (s ? s.split(",").filter(Boolean) : []);
+const PRICE_SORTS = new Set(["saving", "cheap"]);
+/** numeric compare with unknown (null) last, so dishes without a price never sort as "free" */
+const byNum = (a, b) => (a ?? Infinity) === (b ?? Infinity) ? 0 : (a ?? Infinity) - (b ?? Infinity);
 
 export function browseView({ query }) {
   const c = catalog();
@@ -47,7 +50,7 @@ export function browseView({ query }) {
     if (f.d.some((d) => !rec.diet.includes(d))) return false;
     if (f.a.some((a) => rec.allergens.includes(a))) return false;
     if (f.t && rec.time.total > f.t) return false;
-    if (f.p && dishInfo(rec.id).perServing > f.p) return false;
+    if (f.p && anyPrices() && !(dishInfo(rec.id).perServing <= f.p)) return false; // an unknown price is not "up to" anything
     if (f.e && (rec.kcal ?? 0) > f.e) return false;
     if (f.fav && !store.get().favorites.includes(rec.id)) return false;
     if (f.q) {
@@ -66,7 +69,7 @@ export function browseView({ query }) {
     const by = {
       default: (a, b) => order.indexOf(a.category) - order.indexOf(b.category) || a.name.localeCompare(b.name, "he"),
       saving: (a, b) => (dishInfo(b.id).savePct ?? -9) - (dishInfo(a.id).savePct ?? -9),
-      cheap: (a, b) => dishInfo(a.id).perServing - dishInfo(b.id).perServing,
+      cheap: (a, b) => byNum(dishInfo(a.id).perServing, dishInfo(b.id).perServing),
       fast: (a, b) => a.time.total - b.time.total,
       name: (a, b) => a.name.localeCompare(b.name, "he"),
       kcal: (a, b) => (a.kcal ?? 9999) - (b.kcal ?? 9999),
@@ -129,11 +132,13 @@ export function browseView({ query }) {
           h("span.label", "קלוריות למנה (משוער)"),
           h("div.chips", ...[[0, "הכול"], [250, "עד 250"], [400, "עד 400"], [550, "עד 550"]].map(([v, l]) => pill(l, f.e === v, () => ((f.e = v), refresh()), `e-${v}`))),
         ),
-        h(
-          "div.filter-group",
-          h("span.label", "עלות למנה (בישול)"),
-          h("div.chips", ...[[0, "הכול"], [5, "עד ₪5"], [8, "עד ₪8"], [12, "עד ₪12"]].map(([v, l]) => pill(l, f.p === v, () => ((f.p = v), refresh()), `p-${v}`))),
-        ),
+        anyPrices()
+          ? h(
+              "div.filter-group",
+              h("span.label", "עלות למנה (בישול)"),
+              h("div.chips", ...[[0, "הכול"], [5, "עד ₪5"], [8, "עד ₪8"], [12, "עד ₪12"]].map(([v, l]) => pill(l, f.p === v, () => ((f.p = v), refresh()), `p-${v}`))),
+            )
+          : null,
       ),
     );
   }
@@ -155,17 +160,16 @@ export function browseView({ query }) {
   const sortSel = h(
     "select.select",
     { "aria-label": "מיון", style: { "inline-size": "auto" }, onchange: (e) => ((f.sort = e.target.value), refresh()) },
-    SORTS.map(([v, l]) => h("option", { value: v, selected: f.sort === v }, l)),
+    SORTS.filter(([v]) => anyPrices() || !PRICE_SORTS.has(v)).map(([v, l]) => h("option", { value: v, selected: f.sort === v }, l)),
   );
 
   const el = h(
     "div.page.wide",
     pageHead(
       "מתכונים",
-      "מנות מוכנות להכנה עם Thermomix, כולל עלות למנה לעומת הזמנה",
+      anyPrices() ? "מנות מוכנות להכנה עם Thermomix, כולל עלות למנה לעומת הזמנה" : "מנות מוכנות להכנה עם Thermomix",
       h("a.btn.btn-ghost", { href: "#/import" }, icon("download", { size: 20 }), "ייבוא מתכון"),
     ),
-    sampleBanner(),
     h("div.stack", { style: { margin: "1rem 0" } }, h("div.search", icon("search", { size: 22 }), search)),
     filtersHost,
     h(

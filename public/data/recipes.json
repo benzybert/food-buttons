@@ -111,7 +111,6 @@
   "prep": 15,
   "cook": 40,
   "level": 1,
-  "order": 32,
   "description": "מרק עוף צלול עם ירקות שורש, כמו אצל סבתא, בלי לעמוד ליד הסיר.",
   "kosher": "meat",
   "diet": [
@@ -246,7 +245,6 @@
   "prep": 15,
   "cook": 30,
   "level": 1,
-  "order": 26,
   "description": "מרק ירקות חם ופשוט, אפשר להשאיר בגושים או לטחון לקרמי.",
   "kosher": "parve",
   "diet": [
@@ -393,7 +391,6 @@
   "prep": 10,
   "cook": 30,
   "level": 1,
-  "order": 26,
   "description": "מרק עדשים מתובל בכמון וכורכום, עשיר ומשביע.",
   "kosher": "parve",
   "diet": [
@@ -526,7 +523,6 @@
   "prep": 10,
   "cook": 30,
   "level": 1,
-  "order": 30,
   "description": "מרק בטטה כתום וקטיפתי עם חלב קוקוס ונגיעת ג'ינג'ר.",
   "kosher": "parve",
   "diet": [
@@ -654,7 +650,6 @@
   "prep": 10,
   "cook": 25,
   "level": 1,
-  "order": 28,
   "description": "מרק ברוקולי חלק עם קצת שמנת לבישול.",
   "kosher": "dairy",
   "diet": [
@@ -779,7 +774,6 @@
   "prep": 5,
   "cook": 25,
   "level": 1,
-  "order": 26,
   "description": "מרק עגבניות חמצמץ-מתוק עם בזיליקום טרי, מוכן בחצי שעה.",
   "kosher": "parve",
   "diet": [
@@ -928,7 +922,6 @@
   "prep": 25,
   "cook": 30,
   "level": 2,
-  "order": 52,
   "description": "קציצות רכות שמתבשלות באדים מעל רוטב עגבניות אדום.",
   "kosher": "meat",
   "diet": [],
@@ -1076,7 +1069,6 @@
   "prep": 15,
   "cook": 25,
   "level": 1,
-  "order": 56,
   "description": "קוביות חזה עוף רכות ברוטב חרדל, דבש ופפריקה.",
   "kosher": "meat",
   "diet": [
@@ -1183,7 +1175,6 @@
   "prep": 15,
   "cook": 25,
   "level": 1,
-  "order": 68,
   "description": "פילה אמנון מאודה בוארומה על מצע ירקות, בלי טיפת טיגון.",
   "kosher": "parve",
   "diet": [
@@ -1302,7 +1293,6 @@
   "prep": 10,
   "cook": 40,
   "level": 1,
-  "order": 38,
   "description": "אורז ועדשים עם בצל מטוגן כהה ומתוק.",
   "kosher": "parve",
   "diet": [
@@ -1402,7 +1392,6 @@
   "prep": 15,
   "cook": 55,
   "level": 1,
-  "order": 54,
   "description": "רוטב תיבול קצר במכשיר, ואת העבודה עושה התנור.",
   "kosher": "meat",
   "diet": [
@@ -1540,7 +1529,6 @@
   "prep": 10,
   "cook": 25,
   "level": 1,
-  "order": 46,
   "description": "רוטב עגבניות ופלפלים מתובל מהמכשיר, וביצים במחבת.",
   "kosher": "parve",
   "diet": [
@@ -1685,7 +1673,6 @@
   "prep": 15,
   "cook": 30,
   "level": 2,
-  "order": 42,
   "description": "קוסקוס רך עם מרק ירקות ריחני וגרגירי חומוס.",
   "kosher": "parve",
   "diet": [
@@ -1781,7 +1768,6 @@
   "prep": 5,
   "cook": 25,
   "level": 1,
-  "order": 22,
   "description": "אורז רך וחגיגי עם שקדים קלויים.",
   "kosher": "parve",
   "diet": [
@@ -1913,7 +1899,6 @@
   "prep": 5,
   "cook": 25,
   "level": 1,
-  "order": 46,
   "description": "רוטב פומודורו ביתי שמוכן בזמן שהפסטה מתבשלת.",
   "kosher": "parve",
   "diet": [
@@ -2060,7 +2045,6 @@
   "prep": 10,
   "cook": 20,
   "level": 1,
-  "order": 54,
   "description": "רוטב שמנת ופטריות עם פרמזן, מוכן תוך 15 דקות.",
   "kosher": "dairy",
   "diet": [
@@ -2208,7 +2192,6 @@
   "prep": 10,
   "cook": 25,
   "level": 2,
-  "order": 58,
   "description": "ריזוטו קרמי שלא צריך לערבב בלי הפסקה.",
   "kosher": "dairy",
   "diet": [
@@ -2350,7 +2333,6 @@
   "prep": 25,
   "cook": 70,
   "level": 2,
-  "order": 40,
   "description": "בצק פיצה שמתפח לבד ורוטב עגבניות מהיר, בלי עגלת משלוחים.",
   "kosher": "dairy",
   "diet": [
@@ -2468,7 +2450,6 @@
   "prep": 15,
   "cook": 70,
   "level": 2,
-  "order": 24,
   "description": "חומוס חלק ופלאפי כמו בחומוסיות, מגרגירים שהושרו בלילה.",
   "kosher": "parve",
   "diet": [
@@ -2585,7 +2566,6 @@
   "prep": 10,
   "cook": 0,
   "level": 1,
-  "order": 24,
   "description": "חומוס חלק תוך 5 דקות מגרגירים משומרים.",
   "kosher": "parve",
   "diet": [
@@ -2690,7 +2670,6 @@
   "prep": 5,
   "cook": 0,
   "level": 1,
-  "order": 12,
   "description": "רוטב טחינה לבן ואוורירי לשווארמה, פלאפל וסלטים.",
   "kosher": "parve",
   "diet": [
@@ -2791,7 +2770,6 @@
   "prep": 10,
   "cook": 40,
   "level": 1,
-  "order": 18,
   "description": "חצילים צלויים על האש עם טחינה ולימון.",
   "kosher": "parve",
   "diet": [
@@ -2891,7 +2869,6 @@
   "prep": 10,
   "cook": 0,
   "level": 1,
-  "order": 14,
   "description": "סלסה חמצמצה וחריפה בחמש דקות.",
   "kosher": "parve",
   "diet": [
@@ -2993,7 +2970,6 @@
   "prep": 10,
   "cook": 0,
   "level": 1,
-  "order": 22,
   "description": "פסטו ירוק ופריך עם אגוזי מלך ופרמזן.",
   "kosher": "dairy",
   "diet": [
@@ -3113,7 +3089,6 @@
   "prep": 10,
   "cook": 45,
   "level": 1,
-  "order": 16,
   "description": "סלט עגבניות מבושל לאט, עם פלפלים ושום.",
   "kosher": "parve",
   "diet": [
@@ -3216,7 +3191,6 @@
   "prep": 10,
   "cook": 0,
   "level": 1,
-  "order": 16,
   "description": "סלט צונן ומרענן עם שמיר ושום.",
   "kosher": "dairy",
   "diet": [
@@ -3310,7 +3284,6 @@
   "prep": 10,
   "cook": 30,
   "level": 1,
-  "order": 24,
   "description": "פירה חלק ואוורירי שמתבשל באדים.",
   "kosher": "dairy",
   "diet": [
@@ -3403,7 +3376,6 @@
   "prep": 10,
   "cook": 0,
   "level": 1,
-  "order": 16,
   "description": "קולסלו פריך ומתקתק שנחתך בשניות.",
   "kosher": "parve",
   "diet": [
@@ -3526,7 +3498,6 @@
   "prep": 10,
   "cook": 15,
   "level": 1,
-  "order": 38,
   "description": "ערימה של פנקייקים אוורירים מבלילה שמתערבבת בחצי דקה.",
   "kosher": "dairy",
   "diet": [
@@ -3634,7 +3605,6 @@
   "prep": 20,
   "cook": 120,
   "level": 2,
-  "order": 8,
   "description": "כיכר לחם פשוטה עם קרום פריך ופנים רך.",
   "kosher": "parve",
   "diet": [
@@ -3740,7 +3710,6 @@
   "prep": 10,
   "cook": 35,
   "level": 1,
-  "order": 14,
   "description": "גרנולה פריכה עם דבש, שקדים ואגוזים, אפויה בתנור.",
   "kosher": "parve",
   "diet": [
@@ -3863,7 +3832,6 @@
   "prep": 15,
   "cook": 40,
   "level": 1,
-  "order": 26,
   "description": "עוגת שוקולד לחה במיוחד, מערבבים הכול בקערה אחת.",
   "kosher": "parve",
   "diet": [
@@ -3971,7 +3939,6 @@
   "prep": 20,
   "cook": 15,
   "level": 1,
-  "order": 12,
   "description": "עוגיות חמאה פריכות עם שלושה מרכיבים עיקריים.",
   "kosher": "dairy",
   "diet": [
@@ -4060,7 +4027,6 @@
   "prep": 15,
   "cook": 5,
   "level": 2,
-  "order": 32,
   "description": "מוס שוקולד אוורירי ללא ביצים נאות.",
   "kosher": "dairy",
   "diet": [
@@ -4141,7 +4107,6 @@
   "prep": 5,
   "cook": 0,
   "level": 1,
-  "order": 22,
   "description": "גלידה קרמית ממשהו שיש בכל בית: בננות קפואות.",
   "kosher": "dairy",
   "diet": [
@@ -4225,7 +4190,6 @@
   "prep": 5,
   "cook": 0,
   "level": 1,
-  "order": 6,
   "description": "חמאת בוטנים ביתית בלי תוספות מיותרות.",
   "kosher": "parve",
   "diet": [
@@ -4316,7 +4280,6 @@
   "prep": 5,
   "cook": 0,
   "level": 1,
-  "order": 28,
   "description": "שייק קר וסמיך שמוכן ב-30 שניות.",
   "kosher": "dairy",
   "diet": [
@@ -4405,7 +4368,6 @@
   "prep": 5,
   "cook": 0,
   "level": 1,
-  "order": 18,
   "description": "לימונדה ביתית שלמה, עם קליפה ונענע טרייה.",
   "kosher": "parve",
   "diet": [
@@ -4523,7 +4485,6 @@
   "prep": 30,
   "cook": 120,
   "level": 2,
-  "order": 2,
   "description": "חלה קלועה ורכה, הבצק נלוש במכשיר.",
   "kosher": "parve",
   "diet": [
@@ -4657,7 +4618,6 @@
   "prep": 30,
   "cook": 25,
   "level": 2,
-  "order": 32,
   "description": "כדורי פלאפל פריכים ממש מגרגירי חומוס לא מבושלים.",
   "kosher": "parve",
   "diet": [
@@ -4769,7 +4729,6 @@
   "prep": 15,
   "cook": 20,
   "level": 1,
-  "order": 30,
   "description": "לביבות פריכות מבחוץ ורכות מבפנים, ובלי לקצוץ ידנית.",
   "kosher": "parve",
   "diet": [
@@ -4897,7 +4856,6 @@
   "prep": 15,
   "cook": 45,
   "level": 1,
-  "order": 36,
   "description": "פשטידה גבוהה ורכה, בלי בצק, מוכנה לפני שהתנור מתחמם.",
   "kosher": "dairy",
   "diet": [
@@ -5026,7 +4984,6 @@
   "prep": 10,
   "cook": 25,
   "level": 1,
-  "order": 26,
   "description": "מרק קישואים ירוק וקליל עם שמיר.",
   "kosher": "parve",
   "diet": [
@@ -5131,7 +5088,6 @@
   "prep": 5,
   "cook": 25,
   "level": 1,
-  "order": 20,
   "description": "אורז צהוב ורך עם כורכום ובצל מטוגן.",
   "kosher": "parve",
   "diet": [
@@ -5267,7 +5223,6 @@
   "prep": 15,
   "cook": 55,
   "level": 1,
-  "order": 12,
   "description": "לחם בננה לח עם אגוזי מלך, שימוש מצוין לבננות שהכהו.",
   "kosher": "parve",
   "diet": [
@@ -5393,7 +5348,6 @@
   "prep": 15,
   "cook": 25,
   "level": 1,
-  "order": 18,
   "description": "בראוניז פרווה עם פנים רך ושוקולד אמיתי.",
   "kosher": "parve",
   "diet": [
@@ -5525,7 +5479,6 @@
   "prep": 20,
   "cook": 50,
   "level": 1,
-  "order": 22,
   "description": "עוגת תפוחים רכה עם קינמון, מערבבים הכול בקערה.",
   "kosher": "parve",
   "diet": [
@@ -5637,7 +5590,6 @@
   "prep": 10,
   "cook": 15,
   "level": 1,
-  "order": 48,
   "description": "פסטו טרי שמוכן בדקה, בזמן שהפסטה מתבשלת.",
   "kosher": "dairy",
   "diet": [
@@ -5746,7 +5698,6 @@
   "prep": 15,
   "cook": 20,
   "level": 1,
-  "order": 32,
   "description": "לביבות ירוקות ופריכות עם פטרוזיליה.",
   "kosher": "parve",
   "diet": [

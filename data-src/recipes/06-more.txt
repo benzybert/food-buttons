@@ -6,7 +6,6 @@ servings: 16
 prep: 30
 cook: 120
 level: 2
-order: 2
 tags: פרווה, שישי, אפייה
 desc: חלה קלועה ורכה, הבצק נלוש במכשיר.
 ingredients:
@@ -33,7 +32,6 @@ servings: 5
 prep: 30
 cook: 25
 level: 2
-order: 32
 tags: טבעוני, צריך להשרות מראש, מטוגן
 desc: כדורי פלאפל פריכים ממש מגרגירי חומוס לא מבושלים.
 ingredients:
@@ -62,7 +60,6 @@ servings: 4
 prep: 15
 cook: 20
 level: 1
-order: 30
 tags: פרווה, חנוכה, מטוגן
 desc: לביבות פריכות מבחוץ ורכות מבפנים, ובלי לקצוץ ידנית.
 ingredients:
@@ -87,7 +84,6 @@ servings: 6
 prep: 15
 cook: 45
 level: 1
-order: 36
 tags: חלבי, צמחוני, תנור
 desc: פשטידה גבוהה ורכה, בלי בצק, מוכנה לפני שהתנור מתחמם.
 ingredients:
@@ -114,7 +110,6 @@ servings: 5
 prep: 10
 cook: 25
 level: 1
-order: 26
 tags: טבעוני, קל, קיץ
 desc: מרק קישואים ירוק וקליל עם שמיר.
 ingredients:
@@ -140,7 +135,6 @@ servings: 6
 prep: 5
 cook: 25
 level: 1
-order: 20
 tags: טבעוני, תוספת, ילדים
 desc: אורז צהוב ורך עם כורכום ובצל מטוגן.
 ingredients:

@@ -17,7 +17,7 @@ const MEALS = new Set(["main", "soup"]);
 /**
  * Pick `count` distinct dishes for the week.
  * recipes: candidate recipes (already filtered by the user's preferences)
- * costOf(rec) -> cost of cooking the dish for the household
+ * costOf(rec) -> cost of cooking the dish for the household, or null when its ingredients have no price
  * Tries many random combinations and prefers: within budget > more categories > cheaper.
  */
 export function suggestWeek(recipes, costOf, { count = 5, budget = 0, seed = 1, tries = 400 } = {}) {
@@ -36,9 +36,11 @@ export function suggestWeek(recipes, costOf, { count = 5, budget = 0, seed = 1, 
       used.add(i);
       pick.push(source[i]);
     }
-    const cost = pick.reduce((a, r) => a + costOf(r), 0);
+    const costs = pick.map(costOf);
+    const known = costs.every((c) => c != null); // unknown prices count as 0 for ranking, but never "break" a budget
+    const cost = costs.reduce((a, c) => a + (c ?? 0), 0);
     const variety = new Set(pick.map((r) => r.category)).size + new Set(pick.map((r) => r.kosher)).size * 0.5;
-    const within = !budget || cost <= budget;
+    const within = !budget || !known || cost <= budget;
     const score = (within ? 1000 : 0) + variety * 10 - cost / 10 - (within ? 0 : cost - budget);
     if (!best || score > best.score) best = { pick, cost, score };
   }

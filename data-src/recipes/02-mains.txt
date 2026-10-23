@@ -6,7 +6,6 @@ servings: 5
 prep: 25
 cook: 30
 level: 2
-order: 52
 tags: ילדים, שישי, בשרי
 desc: קציצות רכות שמתבשלות באדים מעל רוטב עגבניות אדום.
 ingredients:
@@ -39,7 +38,6 @@ servings: 5
 prep: 15
 cook: 25
 level: 1
-order: 56
 tags: עוף, מתוק-חריף, בשרי
 desc: קוביות חזה עוף רכות ברוטב חרדל, דבש ופפריקה.
 ingredients:
@@ -68,7 +66,6 @@ servings: 4
 prep: 15
 cook: 25
 level: 1
-order: 68
 tags: דג, בריא, מאודה, פרווה
 desc: פילה אמנון מאודה בוארומה על מצע ירקות, בלי טיפת טיגון.
 ingredients:
@@ -96,7 +93,6 @@ servings: 5
 prep: 10
 cook: 40
 level: 1
-order: 38
 tags: טבעוני, זול, קלאסי
 desc: אורז ועדשים עם בצל מטוגן כהה ומתוק.
 ingredients:
@@ -121,7 +117,6 @@ servings: 6
 prep: 15
 cook: 55
 level: 1
-order: 54
 tags: שישי, תנור, בשרי
 desc: רוטב תיבול קצר במכשיר, ואת העבודה עושה התנור.
 ingredients:
@@ -147,7 +142,6 @@ servings: 4
 prep: 10
 cook: 25
 level: 1
-order: 46
 tags: בוקר, צמחוני, פרווה
 desc: רוטב עגבניות ופלפלים מתובל מהמכשיר, וביצים במחבת.
 ingredients:
@@ -176,7 +170,6 @@ servings: 5
 prep: 15
 cook: 30
 level: 2
-order: 42
 tags: טבעוני, צבעוני
 desc: קוסקוס רך עם מרק ירקות ריחני וגרגירי חומוס.
 ingredients:
@@ -207,7 +200,6 @@ servings: 6
 prep: 5
 cook: 25
 level: 1
-order: 22
 tags: תוספת, טבעוני
 desc: אורז רך וחגיגי עם שקדים קלויים.
 ingredients:

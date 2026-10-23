@@ -1,9 +1,9 @@
 import { h } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, settings, report, actions, pantrySet, stores as storeList } from "../app.js";
+import { anyPrices, catalog, settings, report, actions, pantrySet, stores as storeList } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { pageHead, moneyEl, emptyState, sampleBanner, toast } from "../ui.js";
+import { pageHead, moneyEl, emptyState, noPricesBanner, toast } from "../ui.js";
 import { priceAtStore } from "../lib/calc.js";
 import { AISLE_LABELS, AISLE_ORDER } from "../lib/catalog.js";
 import { money, plainMoney } from "../fmt.js";
@@ -17,19 +17,21 @@ export function listView({ query }) {
   if (!s.basket.length) {
     return {
       title: "רשימת קניות",
-      el: h("div.page", pageHead("רשימת קניות", "נבנית אוטומטית מהמנות שבסל"), emptyState("📝", "אין מה לקנות עדיין", "הוסיפו מתכונים לסל והרשימה תיבנה כאן, עם כמויות ומחירים.", h("a.btn", { href: "#/cook" }, "לבחירת מתכונים"))),
+      el: h("div.page", pageHead("רשימת קניות", "נבנית אוטומטית מהמנות שבסל"), emptyState("📝", "אין מה לקנות עדיין", "הוסיפו מתכונים לסל והרשימה תיבנה כאן, עם הכמויות לקנייה.", h("a.btn", { href: "#/cook" }, "לבחירת מתכונים"))),
     };
   }
   const rep = report();
   const pantry = pantrySet();
   const st = storeList();
-  const split = query.get("split") === "pair" && rep.pair ? "pair" : query.get("split") === "item" ? "item" : "";
+  const withPrices = anyPrices();
+  // A split is only offered when it has a real total (every item priced somewhere).
+  const split = query.get("split") === "pair" && rep.pair?.total != null ? "pair" : query.get("split") === "item" && rep.perItem.total != null ? "item" : "";
 
-  let primary = st.find((x) => x.id === set.primaryStore) || rep.bestStore.store;
+  let primary = st.find((x) => x.id === set.primaryStore) || rep.bestStore?.store || st[0];
   const priced = priceAtStore(rep.needs, primary, c, pantry);
 
   // ---- which lines to show, grouped
-  /** @type {{ title: string, subtitle?: string, lines: any[], total: number }[]} */
+  /** @type {{ title: string, subtitle?: string, lines: any[], total: number | null }[]} */
   let groups;
   if (split) {
     const lines = split === "pair" ? rep.pair.lines : rep.perItem.lines;
@@ -39,7 +41,8 @@ export function listView({ query }) {
       .sort((a, b) => b[1].length - a[1].length)
       .map(([sid, ls]) => ({ title: c.storeById.get(sid).name, lines: ls, total: ls.reduce((a, l) => a + l.cost, 0), aisleGroups: true }));
   } else {
-    groups = [{ title: primary.name, lines: priced.lines, total: priced.subtotal, aisleGroups: true }];
+    // With no prices at all the store means nothing: it is just "what to buy".
+    groups = [{ title: withPrices ? primary.name : "מה לקנות", lines: priced.lines, total: priced.subtotal, aisleGroups: true }];
   }
   const cheaperElsewhere = (l) => {
     if (split) return null;
@@ -47,7 +50,7 @@ export function listView({ query }) {
     for (const r of rep.ranked) {
       if (r.storeId === primary.id) continue;
       const o = r.lines.find((x) => x.ingId === l.ingId);
-      if (o && o.kind !== "missing" && o.cost < l.cost - 1 && (!best || o.cost < best.cost)) best = { store: r.store.name, cost: o.cost };
+      if (o && o.cost != null && l.cost != null && o.cost < l.cost - 1 && (!best || o.cost < best.cost)) best = { store: r.store.name, cost: o.cost };
     }
     return best;
   };
@@ -70,10 +73,10 @@ export function listView({ query }) {
       h(
         "div.info",
         h("span.what", ing.name),
-        h("span.qty", buyText(ing, l), l.kind === "missing" ? " · לא נמצא בחנות (אומדן)" : "", [...new Set(uses)].length ? ` · ${[...new Set(uses)].slice(0, 2).join(", ")}${new Set(uses).size > 2 ? "…" : ""}` : ""),
+        h("span.qty", buyText(ing, l), [...new Set(uses)].length ? ` · ${[...new Set(uses)].slice(0, 2).join(", ")}${new Set(uses).size > 2 ? "…" : ""}` : ""),
         cheaper ? h("span.small", { style: { color: "var(--good)" } }, `זול יותר ב${cheaper.store}: `, moneyEl(cheaper.cost)) : null,
       ),
-      h("span.price", moneyEl(l.cost)),
+      l.cost != null ? h("span.price", moneyEl(l.cost)) : withPrices ? h("span.small.muted", "אין מחיר") : null,
     );
   };
 
@@ -86,7 +89,7 @@ export function listView({ query }) {
     return h(
       "section.card",
       { style: { "margin-top": "1rem" }, "aria-label": `רשימה ל${g.title}` },
-      h("div.spread", h("h2", g.title), h("span.strong", "סה״כ ", moneyEl(g.total))),
+      h("div.spread", h("h2", g.title), g.total != null ? h("span.strong", "סה״כ ", moneyEl(g.total)) : null),
       AISLE_ORDER.filter((a) => byAisle.has(a)).map((a) => h("div.aisle", h("h3", AISLE_LABELS[a]), h("ul.list-plain", byAisle.get(a).sort((x, y) => c.ingById.get(x.ingId).name.localeCompare(c.ingById.get(y.ingId).name, "he")).map(renderLine)))),
     );
   });
@@ -107,12 +110,14 @@ export function listView({ query }) {
     : null;
 
   // ---- store switcher
-  const switcher = split
+  const switcher = !withPrices
+    ? null
+    : split
     ? h("div.row", h("span.chip.info", split === "pair" ? "שתי חנויות" : "הכי זול לכל פריט"), h("button.btn-link", { type: "button", onclick: () => (replaceQuery({}), render(true)) }, "חזרה לחנות אחת"))
     : h(
         "div.scroll-x",
         { role: "group", "aria-label": "בחירת חנות" },
-        ...rep.ranked.map((r) => h("button.chip", { type: "button", "aria-pressed": String(r.storeId === primary.id), "data-fk": `st-${r.storeId}`, onclick: () => store.update((x) => void (x.settings.primaryStore = r.storeId)) }, r.store.name, " ", moneyEl(r.subtotal))),
+        ...rep.ranked.map((r) => h("button.chip", { type: "button", "aria-pressed": String(r.storeId === primary.id), "data-fk": `st-${r.storeId}`, onclick: () => store.update((x) => void (x.settings.primaryStore = r.storeId)) }, r.store.name, r.subtotal != null ? [" ", moneyEl(r.subtotal)] : null)),
       );
 
   const text = listText(groups, c, s.checked, split);
@@ -122,8 +127,8 @@ export function listView({ query }) {
   const el = h(
     "div.page",
     pageHead("רשימת קניות", `${doneCount} מתוך ${totalCount} סומנו`, h("button.btn.btn-ghost.btn-sm.no-print", { type: "button", onclick: () => window.print() }, icon("printer", { size: 18 }), "הדפסה")),
-    sampleBanner(),
-    h("div.stack.no-print", { style: { margin: "0.75rem 0" } }, switcher),
+    noPricesBanner(),
+    switcher ? h("div.stack.no-print", { style: { margin: "0.75rem 0" } }, switcher) : null,
     ...groupEls,
     pantrySection,
     customSection,
@@ -143,7 +148,7 @@ export function listView({ query }) {
 function listText(groups, c, checked, split) {
   const out = [];
   for (const g of groups) {
-    out.push(`🛒 ${split ? g.title : `רשימת קניות - ${g.title}`}`);
+    out.push(`🛒 ${split ? g.title : g.title === "מה לקנות" ? "רשימת קניות" : `רשימת קניות - ${g.title}`}`);
     const byAisle = new Map();
     for (const l of g.lines) {
       const a = c.ingById.get(l.ingId).aisle;
@@ -157,7 +162,7 @@ function listText(groups, c, checked, split) {
         out.push(`${checked[l.ingId] ? "✅" : "▫️"} ${ing.name} - ${buyText(ing, l)}`);
       }
     }
-    out.push("", `סה״כ משוער: ${plainMoney(g.total)}`, "");
+    out.push("", ...(g.total != null ? [`סה״כ משוער: ${plainMoney(g.total)}`, ""] : []));
   }
   return out.join("\n").trim();
 }

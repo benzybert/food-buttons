@@ -5,7 +5,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildAll } from "../tools/build-data.js";
 import { toBase } from "../public/js/lib/units.js";
-import { loadRaw, loadCatalog } from "./helpers.js";
+import { loadRaw, loadCatalog, loadPricedCatalog } from "./helpers.js";
+import { seeded } from "../public/js/lib/plan.js";
 import { basketReport, dishCostByStore } from "../public/js/lib/calc.js";
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
@@ -24,11 +25,11 @@ test("generated JSON on disk matches data-src (run `npm run build:data` if this 
   assert.deepEqual(JSON.parse(JSON.stringify(ingredients)), disk.ingredients);
 });
 
-test("every recipe is well-formed and priced", () => {
+test("every recipe is well-formed", () => {
   const cat = loadCatalog();
   for (const r of cat.recipes) {
     assert.ok(r.name && r.emoji, `${r.id} name/emoji`);
-    assert.ok(r.servings > 0 && r.order > 0, `${r.id} servings/order`);
+    assert.ok(r.servings > 0, `${r.id} servings`);
     assert.ok(r.steps.length >= 2, `${r.id} steps`);
     assert.notEqual(r.kosher, "mixed", `${r.id} mixes meat and dairy`);
     for (const l of r.ingredients) {
@@ -36,10 +37,6 @@ test("every recipe is well-formed and priced", () => {
       assert.ok(ing, `${r.id}: unknown ${l.id}`);
       assert.ok(toBase(ing, l.qty, l.unit) >= 0, `${r.id}: ${l.id} ${l.qty}${l.unit}`);
     }
-    // Cooking must be cheaper per serving than ordering for the sample data to make sense, but never free.
-    const cheapest = dishCostByStore(r, r.servings, cat)[0];
-    assert.ok(cheapest.perServing > 0.3, `${r.id} suspiciously cheap: ${cheapest.perServing}`);
-    assert.ok(cheapest.perServing < r.order * 1.2, `${r.id} costs ${cheapest.perServing}/serving vs order ${r.order}`);
   }
 });
 
@@ -63,35 +60,57 @@ test("steps never fabricate settings: Varoma/temperature values are sane", () =>
   }
 });
 
-test("prices: every priced ingredient has rows for the always-stocked stores", () => {
-  const { ingredients, stores, prices } = loadRaw();
-  for (const ing of ingredients) {
-    if (ing.free) continue;
-    const row = prices.table[ing.id];
-    assert.ok(row, `no price row for ${ing.id}`);
-    for (const s of ["shufersal", "ramilevy", "victory"]) assert.ok(row[s] > 0, `${ing.id}@${s}`);
-    for (const s of stores) assert.ok(s.id in row, `${ing.id} missing ${s.id} key`);
+test("the dataset ships no invented numbers: no prices, no reference prices, no order prices, no fees", () => {
+  const { ingredients, recipes, stores, prices, sources } = loadRaw();
+  assert.ok(!ingredients.some((i) => "ref" in i), "an ingredient carries a reference price");
+  assert.notEqual(prices.meta.kind, "sample");
+  // The fields below may carry numbers only once they come from a real source, which says so with kind "real".
+  if (prices.meta.kind !== "real") {
+    assert.deepEqual(prices.table, {}, "prices.json has prices but is not marked real");
+    assert.ok(!recipes.some((r) => "order" in r), "a recipe carries an order price");
+    for (const s of stores) assert.deepEqual(Object.keys(s).sort(), ["id", "name"], `${s.id} has more than a name`);
+    for (const s of sources) assert.deepEqual(Object.keys(s).sort(), ["id", "kind", "name"], `${s.id} has fees or markups`);
   }
-  assert.equal(prices.meta.kind, "sample");
 });
 
-test("sample prices stay close to the reference price (generator sanity)", () => {
-  const { ingredients, prices } = loadRaw();
-  for (const ing of ingredients) {
-    if (ing.free) continue;
-    for (const [sid, p] of Object.entries(prices.table[ing.id])) {
-      if (p == null) continue;
-      assert.ok(p > ing.ref * 0.6 && p < ing.ref * 1.5, `${ing.id}@${sid} ${p} vs ref ${ing.ref}`);
+test("price rows, if any, are well-formed: known ingredient and store ids, positive numbers or null", () => {
+  const { ingredients, stores, prices } = loadRaw();
+  const ings = new Set(ingredients.map((i) => i.id));
+  const sids = new Set(stores.map((s) => s.id));
+  for (const [id, row] of Object.entries(prices.table)) {
+    assert.ok(ings.has(id), `price row for unknown ingredient ${id}`);
+    for (const [sid, v] of Object.entries(row)) {
+      assert.ok(sids.has(sid), `${id}: unknown store ${sid}`);
+      assert.ok(v === null || (Number.isFinite(v) && v > 0), `${id}@${sid}: ${v}`);
     }
   }
 });
 
-test("whole-catalog basket: cooking everything beats ordering everything in the sample data", () => {
+test("with no prices nothing is computed: every total is null, never zero, never partial", () => {
   const cat = loadCatalog();
+  assert.deepEqual(cat.prices.table, {});
+  for (const r of cat.recipes) {
+    for (const row of dishCostByStore(r, r.servings, cat)) {
+      assert.equal(row.total, null, `${r.id}@${row.storeId}`);
+      assert.equal(row.perServing, null);
+      assert.ok(row.missing > 0 || r.ingredients.every((l) => !l.id || cat.ingById.get(l.id).free), `${r.id}: nothing missing yet no total`);
+    }
+  }
+  const items = cat.recipes.map((r) => ({ dishId: r.id, servings: r.servings }));
+  const rep = basketReport(items, cat, { sources: cat.sources, orderPrice: cat.orderPrice });
+  assert.equal(rep.bestStore, null);
+  assert.equal(rep.cookTotal, null);
+  assert.equal(rep.saving, null);
+  assert.equal(rep.bestOrder, null, "no order price ships either");
+  assert.ok(rep.ranked.every((r) => r.total === null));
+});
+
+test("whole-catalog basket with typed-in prices: cooking beats nothing odd, and the splits are consistent", () => {
+  const cat = loadPricedCatalog(seeded(77));
   const items = cat.recipes.map((r) => ({ dishId: r.id, servings: r.servings }));
   const rep = basketReport(items, cat, { sources: cat.sources, orderPrice: cat.orderPrice, pantry: new Set(cat.ingredients.filter((i) => i.home).map((i) => i.id)) });
   assert.ok(rep.bestStore.complete);
-  assert.ok(rep.saving > 0, `saving ${rep.saving}`);
+  assert.ok(Number.isFinite(rep.saving));
   assert.ok(rep.perItem.total <= rep.bestStore.total + 1e-6);
   assert.ok(rep.pair.total <= rep.bestStore.total + 1e-6);
   assert.ok(rep.perItem.total <= rep.pair.total + 1e-6);

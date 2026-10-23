@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildCatalog } from "../public/js/lib/catalog.js";
-import { purchaseFor, basketNeeds, priceAtStore, compareStores, bestPerItem, bestPair, dishCostAtStore, dishCostByStore, compareDish, basketReport, deliveryFor, makePricer, consumedCost } from "../public/js/lib/calc.js";
+import { purchaseFor, basketNeeds, priceAtStore, compareStores, bestPerItem, bestPair, dishCostAtStore, dishCostByStore, compareDish, basketReport, deliveryFor, makePricer, consumedCost, suggestAdditions, hourlyGain } from "../public/js/lib/calc.js";
 import { fixture } from "./helpers.js";
 
 const raw = fixture();
@@ -23,18 +23,98 @@ test("purchaseFor: packages round up to whole packs, loose goods to the step", (
   assert.deepEqual(purchaseFor(onion, 0), { bought: 0, packs: 0 });
 });
 
-test("makePricer: user override > dataset > missing > estimate", () => {
+test("makePricer: user override > dataset > missing > none, and never an estimate", () => {
   const ingById = cat.ingById;
-  const storeById = cat.storeById;
-  const p = makePricer({ table: raw.prices.table, overrides: { flour: { a: 4.5 } }, ingById, storeById });
+  const p = makePricer({ table: raw.prices.table, overrides: { flour: { a: 4.5 } }, ingById });
   assert.deepEqual(p("flour", "a"), { price: 4.5, kind: "user" });
   assert.deepEqual(p("flour", "b"), { price: 5, kind: "data" });
-  const eggsB = p("eggs", "b");
-  assert.equal(eggsB.kind, "missing");
-  assert.equal(eggsB.price, 16.2); // 18 x 0.9
-  assert.equal(p("water", "a").price, 0);
-  const noRow = makePricer({ table: {}, ingById, storeById })("flour", "b");
-  assert.deepEqual(noRow, { price: 4.5, kind: "estimate" }); // 5 x 0.9
+  assert.deepEqual(p("eggs", "b"), { price: null, kind: "missing" }); // the dataset says store b does not carry eggs
+  assert.deepEqual(p("water", "a"), { price: 0, kind: "data" }); // free ingredients cost nothing
+  assert.deepEqual(makePricer({ table: {}, ingById })("flour", "b"), { price: null, kind: "none" }); // nobody gave a price
+  assert.deepEqual(p("no-such-ingredient", "a"), { price: null, kind: "none" });
+});
+
+// ---------------------------------------------------------------- unknown prices stay unknown
+
+// Store a has every price, store b has none of eggs, store c has no prices at all.
+const partialRaw = { ...raw, stores: [...raw.stores, { id: "c", name: "חנות ג" }] };
+const partial = buildCatalog(partialRaw);
+
+test("an unpriced item makes the store total null (never a partial sum), and lists what is missing", () => {
+  const { needs } = basketNeeds([{ dishId: "cake", servings: 4 }], partial);
+  const b = priceAtStore(needs, partialRaw.stores[1], partial);
+  assert.equal(b.subtotal, null);
+  assert.equal(b.consumed, null);
+  assert.equal(b.leftover, null);
+  assert.deepEqual(b.missingIds, ["eggs"]);
+  const eggs = b.lines.find((l) => l.ingId === "eggs");
+  assert.equal(eggs.cost, null);
+  assert.equal(eggs.price, null);
+  assert.ok(b.lines.filter((l) => l.ingId !== "eggs").every((l) => Number.isFinite(l.cost)), "the priced lines keep their cost");
+  const c = priceAtStore(needs, partialRaw.stores[2], partial);
+  assert.equal(c.subtotal, null);
+  assert.deepEqual([...c.missingIds].sort(), ["eggs", "flour", "oil", "onion"]); // the pantry is empty here, so oil counts too
+});
+
+test("compareStores: complete stores first; incomplete ones have no total and rank by how little is missing", () => {
+  const { needs } = basketNeeds([{ dishId: "cake", servings: 4 }], partial);
+  const rows = compareStores(needs, partial, { delivery: true });
+  assert.deepEqual(rows.map((r) => r.storeId), ["a", "b", "c"]);
+  assert.equal(Number.isFinite(rows[0].total), true);
+  assert.equal(rows[1].total, null);
+  assert.equal(rows[2].total, null);
+  assert.equal(rows[1].delivery.fee, 0, "no delivery fee is added to a total that does not exist");
+});
+
+test("bestPerItem / bestPair: an item priced nowhere makes the total null, others still get their cheapest store", () => {
+  const onlyA = buildCatalog({ ...raw, prices: { meta: { kind: "real" }, table: { flour: { a: 6, b: 5 }, onion: { a: 8, b: 6 }, oil: { a: 12, b: 11 } } } });
+  const { needs } = basketNeeds([{ dishId: "cake", servings: 4 }], onlyA); // nobody prices the eggs
+  const per = bestPerItem(needs, onlyA);
+  assert.equal(per.total, null);
+  assert.deepEqual(per.missingIds, ["eggs"]);
+  assert.equal(per.lines.find((l) => l.ingId === "eggs").storeId, null);
+  assert.equal(per.lines.find((l) => l.ingId === "flour").storeId, "b");
+  const pair = bestPair(needs, onlyA);
+  assert.equal(pair.total, null);
+  assert.equal(pair.missing, 1);
+});
+
+test("dish cost: null per serving while an ingredient is unpriced, and the best-covered store is named", () => {
+  const rows = dishCostByStore(cake, 4, partial, partialRaw.stores);
+  assert.deepEqual(rows.map((r) => [r.storeId, r.missing]), [["a", 0], ["b", 1], ["c", 4]]);
+  assert.equal(rows[0].perServing > 0, true);
+  assert.equal(rows[1].total, null);
+  assert.equal(rows[1].perServing, null);
+  const blind = buildCatalog({ ...raw, prices: { meta: { kind: "none" }, table: {} } });
+  const cmp = compareDish(cake, 4, blind, { sources: raw.sources, orderPrice: () => 20 });
+  assert.equal(cmp.cook.total, null);
+  assert.equal(cmp.cook.perServing, null);
+  assert.equal(cmp.cook.missing, 4); // flour, onion, eggs, oil: nothing is priced anywhere
+  assert.equal(cmp.saving, null);
+  assert.equal(cmp.winner, null);
+  assert.equal(cmp.order.total > 0, true, "ordering still has its own known price");
+});
+
+test("basketReport with no prices: no best store, no cook total, no saving, and orders without a price have no total", () => {
+  const blind = buildCatalog({ ...raw, prices: { meta: { kind: "none" }, table: {} } });
+  const rep = basketReport([{ dishId: "cake", servings: 4 }], blind, { sources: raw.sources, orderPrice: (d, s) => (s === "s1" ? 20 : null) });
+  assert.equal(rep.bestStore, null);
+  assert.equal(rep.cookTotal, null);
+  assert.equal(rep.saving, null);
+  assert.ok(rep.ranked.every((r) => r.total === null && r.missingIds.length > 0));
+  assert.equal(rep.perItem.total, null);
+  const s2 = rep.orders.find((o) => o.source.id === "s2");
+  assert.equal(s2.missing, 1);
+  assert.equal(s2.total, null);
+  assert.equal(rep.orders.find((o) => o.source.id === "s1").total, 80);
+  assert.equal(rep.bestOrder.source.id, "s1");
+});
+
+test("suggestAdditions and hourlyGain stay quiet when costs are unknown", () => {
+  const blind = buildCatalog({ ...raw, prices: { meta: { kind: "none" }, table: {} } });
+  assert.deepEqual(suggestAdditions([{ dishId: "cake", servings: 4 }], blind), []);
+  const cmp = compareDish(cake, 4, blind, { sources: raw.sources, orderPrice: () => 20 });
+  assert.equal(hourlyGain(cake, cmp), null);
 });
 
 test("basketNeeds: scales by servings and converts to base units", () => {
@@ -187,7 +267,7 @@ test("suggestAdditions: favours dishes that reuse packs already in the basket", 
   const { suggestAdditions } = await import("../public/js/lib/calc.js");
   const base = raw.recipes[0];
   const reuse = { ...base, id: "reuse", name: "ממחזר", servings: 4, ingredients: [{ id: "flour", qty: 200, unit: "g" }, { id: "eggs", qty: 2, unit: "u" }] };
-  const sugar = { id: "sugar", name: "סוכר", aliases: [], aisle: "baking", base: "g", pack: { type: "pack", size: 1000 }, ref: 6, density: 0.85, flags: [] };
+  const sugar = { id: "sugar", name: "סוכר", aliases: [], aisle: "baking", base: "g", pack: { type: "pack", size: 1000 }, density: 0.85, flags: [] };
   const fresh = { ...base, id: "fresh", name: "חדש", servings: 4, ingredients: [{ id: "sugar", qty: 300, unit: "g" }] };
   const prices = { ...raw.prices, table: { ...raw.prices.table, sugar: { a: 6, b: 5.5 } } };
   const c = buildCatalog({ ...raw, ingredients: [...raw.ingredients, sugar], prices, recipes: [base, reuse, fresh] });

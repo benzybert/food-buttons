@@ -47,6 +47,17 @@ export function catalog() {
   return cat;
 }
 
+/**
+ * false until somebody has given a price: in the dataset, typed in by the person, or an order price.
+ * Nothing is bundled, so a fresh install shows no money at all. Screens use this to hide cost blocks
+ * (and say how to add prices) instead of showing empty or partial numbers.
+ */
+export function anyPrices() {
+  const c = catalog();
+  const s = store.get();
+  return Object.keys(c.prices.table || {}).length > 0 || Object.keys(s.priceOverrides).length > 0 || Object.keys(s.orderPrices).length > 0 || c.recipes.some((r) => Number.isFinite(r.order));
+}
+
 export const settings = () => store.get().settings;
 export const stores = () => enabledStores(catalog(), settings().stores);
 export const pantrySet = () => new Set(store.get().pantry || []);

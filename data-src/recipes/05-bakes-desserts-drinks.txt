@@ -6,7 +6,6 @@ servings: 4
 prep: 10
 cook: 15
 level: 1
-order: 38
 tags: חלבי, בוקר, ילדים
 desc: ערימה של פנקייקים אוורירים מבלילה שמתערבבת בחצי דקה.
 ingredients:
@@ -32,7 +31,6 @@ servings: 10
 prep: 20
 cook: 120
 level: 2
-order: 8
 tags: פרווה, אפייה, ריח של בית
 desc: כיכר לחם פשוטה עם קרום פריך ופנים רך.
 ingredients:
@@ -57,7 +55,6 @@ servings: 8
 prep: 10
 cook: 35
 level: 1
-order: 14
 tags: פרווה, אגוזים, בוקר
 desc: גרנולה פריכה עם דבש, שקדים ואגוזים, אפויה בתנור.
 ingredients:
@@ -82,7 +79,6 @@ servings: 12
 prep: 15
 cook: 40
 level: 1
-order: 26
 tags: פרווה, קלאסי, יום הולדת
 desc: עוגת שוקולד לחה במיוחד, מערבבים הכול בקערה אחת.
 ingredients:
@@ -109,7 +105,6 @@ servings: 10
 prep: 20
 cook: 15
 level: 1
-order: 12
 tags: חלבי, ילדים, אפייה
 desc: עוגיות חמאה פריכות עם שלושה מרכיבים עיקריים.
 ingredients:
@@ -133,7 +128,6 @@ servings: 6
 prep: 15
 cook: 5
 level: 2
-order: 32
 tags: חלבי, קינוח, חגיגי
 desc: מוס שוקולד אוורירי ללא ביצים נאות.
 ingredients:
@@ -153,7 +147,6 @@ servings: 4
 prep: 5
 cook: 0
 level: 1
-order: 22
 tags: חלבי, מהיר, ללא סוכר
 desc: גלידה קרמית ממשהו שיש בכל בית: בננות קפואות.
 ingredients:
@@ -173,7 +166,6 @@ servings: 12
 prep: 5
 cook: 0
 level: 1
-order: 6
 tags: פרווה, שורשי, ללא סוכר
 desc: חמאת בוטנים ביתית בלי תוספות מיותרות.
 ingredients:
@@ -194,7 +186,6 @@ servings: 2
 prep: 5
 cook: 0
 level: 1
-order: 28
 tags: חלבי, בוקר, מהיר
 desc: שייק קר וסמיך שמוכן ב-30 שניות.
 ingredients:
@@ -216,7 +207,6 @@ servings: 6
 prep: 5
 cook: 0
 level: 1
-order: 18
 tags: טבעוני, קיץ, ללא בישול
 desc: לימונדה ביתית שלמה, עם קליפה ונענע טרייה.
 ingredients:

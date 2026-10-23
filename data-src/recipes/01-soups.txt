@@ -9,7 +9,6 @@ servings: 5
 prep: 15
 cook: 40
 level: 1
-order: 32
 tags: שישי, קלאסי, מנחם
 desc: מרק עוף צלול עם ירקות שורש, כמו אצל סבתא, בלי לעמוד ליד הסיר.
 ingredients:
@@ -38,7 +37,6 @@ servings: 6
 prep: 15
 cook: 30
 level: 1
-order: 26
 tags: טבעוני, קל, ילדים
 desc: מרק ירקות חם ופשוט, אפשר להשאיר בגושים או לטחון לקרמי.
 ingredients:
@@ -67,7 +65,6 @@ servings: 5
 prep: 10
 cook: 30
 level: 1
-order: 26
 tags: טבעוני, חורף, זול
 desc: מרק עדשים מתובל בכמון וכורכום, עשיר ומשביע.
 ingredients:
@@ -96,7 +93,6 @@ servings: 5
 prep: 10
 cook: 30
 level: 1
-order: 30
 tags: טבעוני, חורף, קרמי
 desc: מרק בטטה כתום וקטיפתי עם חלב קוקוס ונגיעת ג'ינג'ר.
 ingredients:
@@ -124,7 +120,6 @@ servings: 5
 prep: 10
 cook: 25
 level: 1
-order: 28
 tags: ירוק, קרמי, חלבי
 desc: מרק ברוקולי חלק עם קצת שמנת לבישול.
 ingredients:
@@ -151,7 +146,6 @@ servings: 4
 prep: 5
 cook: 25
 level: 1
-order: 26
 tags: טבעוני, מהיר
 desc: מרק עגבניות חמצמץ-מתוק עם בזיליקום טרי, מוכן בחצי שעה.
 ingredients:

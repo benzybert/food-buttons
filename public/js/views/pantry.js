@@ -42,7 +42,7 @@ export function pantryView() {
             { href: `#/dish/${rec.id}`, style: { "text-decoration": "none", display: "flex", "flex-direction": "column", gap: "0.2rem" } },
             h("div.row", h("span", { style: { "font-size": "1.8rem" }, "aria-hidden": "true" }, rec.emoji), h("strong", rec.name)),
             missing.length ? h("span.small.muted", "חסר: ", missing.map((id) => c.ingById.get(id).name).join(", ")) : h("span.chip.good", "יש לכם הכול!"),
-            h("span.small", moneyEl(dishInfo(rec.id).perServing), " למנה"),
+            dishInfo(rec.id).perServing != null ? h("span.small", moneyEl(dishInfo(rec.id).perServing), " למנה") : null,
           ),
         ),
       )

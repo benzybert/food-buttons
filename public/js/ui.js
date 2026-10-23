@@ -5,7 +5,7 @@ import { icon } from "./icons.js";
 import { money, percent, duration, settingParts } from "./fmt.js";
 import { KOSHER_LABELS } from "./lib/derive.js";
 import { CATEGORY_LABELS } from "./lib/catalog.js";
-import { actions, catalog, settings, stores as enabledStoreList, sourcesFor } from "./app.js";
+import { actions, anyPrices, catalog, settings, stores as enabledStoreList, sourcesFor } from "./app.js";
 import { store } from "./store.js";
 import { compareDish, dishCostByStore } from "./lib/calc.js";
 import { splitBySettings } from "./lib/parse.js";
@@ -24,22 +24,17 @@ export function notice(kind, text, ico = kind === "warn" ? "alert" : kind === "g
   return h("div.notice", { class: kind === "info" ? "" : kind, role: kind === "bad" ? "alert" : undefined }, icon(ico, { size: 22 }), h("div", h("p", text), ...extra));
 }
 
-/** Banner shown while prices are the bundled sample set. */
-export function sampleBanner() {
-  const { meta } = catalog().prices;
-  if (meta.kind !== "sample") return null;
-  const hasMine = Object.keys(store.get().priceOverrides).length > 0;
+/**
+ * Shown on the cost screens while nobody has entered a price. There are no bundled or sample prices:
+ * the only numbers are the person's own (or real ones imported later), so say so and say where to add them.
+ */
+export function noPricesBanner() {
+  if (anyPrices()) return null;
   return h(
-    "div.notice.warn.compact",
+    "div.notice.compact",
     { role: "note" },
-    icon("alert", { size: 20 }),
-    h(
-      "p",
-      hasMine ? "רוב המחירים הם נתוני דוגמה (המחירים שהזנתם מסומנים בקו כחול). " : "מחירי דוגמה להמחשה, לא מחירון אמיתי. ",
-      h("a", { href: "#/prices" }, "עדכון מחירים"),
-      " · ",
-      h("a", { href: "#/about" }, "על הנתונים"),
-    ),
+    icon("info", { size: 20 }),
+    h("p", "עדיין אין מחירים. אנחנו לא מציגים מחירי דוגמה: הסכומים יופיעו כשתזינו מחירי מצרכים. ", h("a", { href: "#/prices" }, "הזנת מחירים"), " · ", h("a", { href: "#/about" }, "על הנתונים")),
   );
 }
 
@@ -145,9 +140,9 @@ export function dishInfo(dishId, servings) {
       hourly: 0,
       stores: st,
     });
-    const perServing = cmp.cook.perServing;
+    const perServing = cmp.cook.perServing; // null while some ingredient has no price
     const orderUnit = cmp.order ? Math.min(...cmp.options.filter((o) => o.unit != null).map((o) => o.unit)) : null;
-    sums.set(k, { cmp, perServing, orderUnit, savePct: orderUnit ? (orderUnit - perServing) / orderUnit : null, storeId: cmp.cook.storeId });
+    sums.set(k, { cmp, perServing, orderUnit, savePct: orderUnit && perServing != null ? (orderUnit - perServing) / orderUnit : null, storeId: cmp.cook.storeId });
   }
   return sums.get(k);
 }
@@ -175,13 +170,15 @@ export function dishCard(rec) {
           kosherChip(rec),
           rec.src === "custom" ? h("span.chip.info", "שלי") : null,
         ),
-        h(
-          "div.dcard-price",
-          h("span.cook", moneyEl(info.perServing), h("span.small.muted", " למנה")),
-          info.orderUnit != null
-            ? h("span.vs", "הזמנה ", moneyEl(info.orderUnit), info.savePct > 0.03 ? h("span.chip.good", { style: { "margin-inline-start": "0.4rem" } }, `חיסכון ${percent(info.savePct)}`) : info.savePct < -0.03 ? h("span.chip.bad", { style: { "margin-inline-start": "0.4rem" } }, "הזמנה זולה יותר") : null)
-            : h("span.vs", "אין מחיר הזמנה"),
-        ),
+        anyPrices()
+          ? h(
+              "div.dcard-price",
+              info.perServing != null ? h("span.cook", moneyEl(info.perServing), h("span.small.muted", " למנה")) : h("span.cook.muted", info.cmp.cook.missing ? `חסר מחיר ל-${info.cmp.cook.missing} מצרכים` : "אין מחיר"),
+              info.orderUnit != null
+                ? h("span.vs", "הזמנה ", moneyEl(info.orderUnit), info.savePct > 0.03 ? h("span.chip.good", { style: { "margin-inline-start": "0.4rem" } }, `חיסכון ${percent(info.savePct)}`) : info.savePct < -0.03 ? h("span.chip.bad", { style: { "margin-inline-start": "0.4rem" } }, "הזמנה זולה יותר") : null)
+                : null,
+            )
+          : null,
       ),
     ),
     h("button.fav", { type: "button", "aria-pressed": String(isFav), "aria-label": isFav ? `הסר את ${rec.name} ממועדפים` : `הוסף את ${rec.name} למועדפים`, "data-fk": `fav-${rec.id}`, onclick: () => actions.toggleFavorite(rec.id) }, icon("heart", { size: 22 })),

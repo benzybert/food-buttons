@@ -73,7 +73,7 @@ test("buildPriceTable: median pack price, outliers dropped, sparse matches omitt
     ["shufersal", [flour("עלית", 5), flour("סופר", 6), flour("שף", 4), flour("מותג יקר", 40) /* outlier */, { name: "בצל יבש", desc: "", price: 6, weighted: true }, { name: "בצל סגול", desc: "", price: 9, weighted: true }, { name: "בצל לבן", desc: "", price: 7, weighted: true }, { name: "בצל צהוב", desc: "", price: 6.5, weighted: true }, { name: 'טחינה גולמית 500 גרם', desc: "", price: 24, quantity: 500, unitQty: "גרם" }]],
     ["ramilevy", [flour("עלית", 4.5), flour("סופר", 5), flour("שף", 5.5)]],
   ]);
-  ingredients.push({ id: "red-onion", name: "בצל סגול", aliases: [], aisle: "produce", base: "g", pack: { type: "loose", size: 1000, step: 100 }, ref: 9, flags: [] });
+  ingredients.push({ id: "red-onion", name: "בצל סגול", aliases: [], aisle: "produce", base: "g", pack: { type: "loose", size: 1000, step: 100 }, flags: [] });
   const { table, report } = buildPriceTable(ingredients, products, { minMatches: 3 });
   assert.equal(table.flour.shufersal, 5); // median of 4,5,6 (40 dropped as an outlier)
   assert.equal(table.flour.ramilevy, 5);

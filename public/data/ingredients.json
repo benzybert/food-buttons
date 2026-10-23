@@ -18,7 +18,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 6,
   "flags": [],
   "unitWeight": 150,
   "density": 1,
@@ -39,7 +38,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 9,
   "flags": [],
   "unitWeight": 120,
   "density": 1,
@@ -65,7 +63,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 18,
   "flags": [],
   "unitWeight": 30,
   "density": 1,
@@ -93,7 +90,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 38,
   "flags": [],
   "unitWeight": 5,
   "density": 1,
@@ -117,7 +113,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 40,
   "flags": [],
   "unitWeight": 20,
   "density": 1,
@@ -138,7 +133,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 6,
   "flags": [],
   "unitWeight": 100,
   "density": 1,
@@ -161,7 +155,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 7,
   "flags": [],
   "unitWeight": 170,
   "density": 1,
@@ -182,7 +175,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 9,
   "flags": [],
   "unitWeight": 300,
   "density": 1,
@@ -207,7 +199,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 8,
   "flags": [],
   "unitWeight": 130,
   "density": 1,
@@ -228,7 +219,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 16,
   "flags": [],
   "unitWeight": 15,
   "density": 1,
@@ -249,7 +239,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 8,
   "flags": [],
   "unitWeight": 110,
   "density": 1,
@@ -274,7 +263,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 14,
   "flags": [],
   "unitWeight": 180,
   "density": 1,
@@ -296,7 +284,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 12,
   "flags": [],
   "unitWeight": 150,
   "density": 1,
@@ -325,7 +312,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 28,
   "flags": [],
   "unitWeight": 15,
   "density": 1,
@@ -347,7 +333,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 10,
   "flags": [],
   "unitWeight": 350,
   "density": 1,
@@ -369,7 +354,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 9,
   "flags": [],
   "unitWeight": 200,
   "density": 1,
@@ -390,7 +374,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 16,
   "flags": [],
   "unitWeight": 350,
   "density": 1,
@@ -410,7 +393,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 12,
   "flags": [],
   "unitWeight": 700,
   "density": 1,
@@ -431,7 +413,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 6,
   "flags": [],
   "unitWeight": 1000,
   "density": 1,
@@ -456,7 +437,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 12,
   "flags": [],
   "unitWeight": 40,
   "density": 1,
@@ -476,7 +456,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 14,
   "flags": [],
   "unitWeight": 400,
   "density": 1,
@@ -497,7 +476,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 14,
   "flags": [],
   "unitWeight": 200,
   "density": 1,
@@ -523,7 +501,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 28,
   "flags": [],
   "unitWeight": 20,
   "density": 1,
@@ -546,7 +523,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 18,
   "flags": [],
   "unitWeight": 30,
   "density": 1,
@@ -568,7 +544,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 10,
   "flags": [],
   "unitWeight": 100,
   "density": 1,
@@ -593,7 +568,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 40,
   "flags": [],
   "unitWeight": 50,
   "density": 1,
@@ -618,7 +592,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 40,
   "flags": [],
   "unitWeight": 50,
   "density": 1,
@@ -639,7 +612,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 40,
   "flags": [],
   "unitWeight": 50,
   "density": 1,
@@ -662,7 +634,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 40,
   "flags": [],
   "unitWeight": 30,
   "density": 1,
@@ -684,7 +655,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 90,
   "flags": [],
   "unitWeight": 30,
   "density": 1,
@@ -706,7 +676,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 8,
   "flags": [],
   "unitWeight": 130,
   "density": 1,
@@ -729,7 +698,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 11,
   "flags": [],
   "unitWeight": 180,
   "density": 1,
@@ -751,7 +719,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 32,
   "flags": [],
   "unitWeight": 20,
   "density": 1,
@@ -773,7 +740,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 7,
   "flags": [],
   "unitWeight": 200,
   "density": 1,
@@ -793,7 +759,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 18,
   "flags": [],
   "unitWeight": 220,
   "density": 1,
@@ -816,7 +781,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 6,
   "flags": [],
   "unitWeight": 1000,
   "density": 1,
@@ -842,7 +806,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 44,
   "flags": [
    "m"
   ],
@@ -870,7 +833,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 29,
   "flags": [
    "m"
   ],
@@ -898,7 +860,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 62,
   "flags": [
    "m"
   ],
@@ -925,7 +886,6 @@
    "size": 1000,
    "step": 100
   },
-  "ref": 62,
   "flags": [
    "f"
   ],
@@ -954,7 +914,6 @@
    "type": "pack",
    "size": 12
   },
-  "ref": 17,
   "flags": [
    "e"
   ],
@@ -979,7 +938,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 7.2,
   "flags": [
    "d"
   ],
@@ -1002,7 +960,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 11.5,
   "flags": [
    "d"
   ],
@@ -1028,7 +985,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 9.5,
   "flags": [
    "d"
   ],
@@ -1050,7 +1006,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 7,
   "flags": [
    "d"
   ],
@@ -1073,7 +1028,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 6.8,
   "flags": [
    "d"
   ],
@@ -1096,7 +1050,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 24,
   "flags": [
    "d"
   ],
@@ -1123,7 +1076,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 14,
   "flags": [
    "d"
   ],
@@ -1147,7 +1099,6 @@
    "type": "pack",
    "size": 100
   },
-  "ref": 17,
   "flags": [
    "d"
   ],
@@ -1172,7 +1123,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 8,
   "flags": [
    "d"
   ],
@@ -1202,7 +1152,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 5.5,
   "flags": [
    "g"
   ],
@@ -1225,7 +1174,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 8.5,
   "flags": [
    "g"
   ],
@@ -1248,7 +1196,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 6.5,
   "flags": [],
   "density": 0.85,
   "home": true,
@@ -1270,7 +1217,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 9,
   "flags": [],
   "density": 0.8,
   "kcal": 380
@@ -1291,7 +1237,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 8,
   "flags": [],
   "density": 0.55,
   "kcal": 389
@@ -1314,7 +1259,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 3.5,
   "flags": [],
   "density": 1.2,
   "home": true,
@@ -1333,7 +1277,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 14,
   "flags": [],
   "density": 0.8,
   "kcal": 360
@@ -1357,7 +1300,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 10,
   "flags": [],
   "density": 0.8,
   "kcal": 360,
@@ -1385,7 +1327,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 7,
   "flags": [
    "g"
   ],
@@ -1405,7 +1346,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 8.5,
   "flags": [
    "g"
   ],
@@ -1427,7 +1367,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 9.5,
   "flags": [],
   "density": 0.8,
   "kcal": 350,
@@ -1450,7 +1389,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 9.5,
   "flags": [],
   "density": 0.8,
   "kcal": 350
@@ -1471,7 +1409,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 8.5,
   "flags": [],
   "density": 0.8,
   "kcal": 360
@@ -1494,7 +1431,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 9,
   "flags": [
    "g"
   ],
@@ -1516,7 +1452,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 8.5,
   "flags": [
    "g"
   ],
@@ -1540,7 +1475,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 7.5,
   "flags": [],
   "density": 0.6,
   "kcal": 381,
@@ -1558,7 +1492,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 21,
   "flags": [
    "h"
   ],
@@ -1581,7 +1514,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 16,
   "flags": [],
   "density": 0.5,
   "kcal": 228
@@ -1604,7 +1536,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 14,
   "flags": [],
   "density": 1,
   "kcal": 540
@@ -1622,7 +1553,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 6.5,
   "flags": [],
   "density": 0.8,
   "kcal": 53,
@@ -1644,7 +1574,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 5,
   "flags": [],
   "density": 1.1,
   "kcal": 0
@@ -1667,7 +1596,6 @@
    "type": "pack",
    "size": 33
   },
-  "ref": 8,
   "flags": [],
   "density": 0.6,
   "kcal": 325
@@ -1689,7 +1617,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 15,
   "flags": [],
   "density": 1,
   "kcal": 288
@@ -1714,7 +1641,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 12,
   "flags": [],
   "density": 0.92,
   "home": true,
@@ -1737,7 +1663,6 @@
    "type": "pack",
    "size": 750
   },
-  "ref": 38,
   "flags": [],
   "density": 0.91,
   "home": true,
@@ -1762,7 +1687,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 6,
   "flags": [],
   "density": 1,
   "kcal": 20,
@@ -1783,7 +1707,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 10,
   "flags": [
    "g",
    "o"
@@ -1805,7 +1728,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 12.5,
   "flags": [
    "e"
   ],
@@ -1828,7 +1750,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 7,
   "flags": [],
   "density": 1,
   "kcal": 66,
@@ -1855,7 +1776,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 5,
   "flags": [],
   "density": 1,
   "kcal": 32,
@@ -1876,7 +1796,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 5.5,
   "flags": [],
   "density": 1.1,
   "kcal": 82,
@@ -1900,7 +1819,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 5.5,
   "flags": [],
   "density": 1,
   "kcal": 120,
@@ -1919,7 +1837,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 9,
   "flags": [],
   "density": 1,
   "kcal": 197,
@@ -1940,7 +1857,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 9,
   "flags": [],
   "density": 0.7,
   "kcal": 77
@@ -1963,7 +1879,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 11,
   "flags": [],
   "density": 0.7,
   "kcal": 250,
@@ -1986,7 +1901,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 11,
   "flags": [
    "a"
   ],
@@ -2012,7 +1926,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 11,
   "flags": [],
   "density": 0.5,
   "home": true,
@@ -2033,7 +1946,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 9,
   "flags": [],
   "density": 0.45,
   "kcal": 375,
@@ -2055,7 +1967,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 9,
   "flags": [],
   "density": 0.5,
   "kcal": 282
@@ -2074,7 +1985,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 9,
   "flags": [],
   "density": 0.6,
   "kcal": 312
@@ -2093,7 +2003,6 @@
    "type": "pack",
    "size": 50
   },
-  "ref": 9,
   "flags": [],
   "density": 0.5,
   "kcal": 247
@@ -2112,7 +2021,6 @@
    "type": "pack",
    "size": 20
   },
-  "ref": 8,
   "flags": [],
   "density": 0.2,
   "kcal": 265
@@ -2132,7 +2040,6 @@
    "type": "pack",
    "size": 400
   },
-  "ref": 14,
   "flags": [
    "p"
   ],
@@ -2157,7 +2064,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 22,
   "flags": [
    "n"
   ],
@@ -2178,7 +2084,6 @@
    "type": "pack",
    "size": 200
   },
-  "ref": 24,
   "flags": [
    "n"
   ],
@@ -2202,7 +2107,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 11,
   "flags": [
    "s"
   ],
@@ -2224,7 +2128,6 @@
    "type": "pack",
    "size": 500
   },
-  "ref": 24,
   "flags": [
    "s"
   ],
@@ -2245,7 +2148,6 @@
    "type": "pack",
    "size": 250
   },
-  "ref": 10,
   "flags": [],
   "density": 0.6,
   "kcal": 299
@@ -2273,7 +2175,6 @@
    "type": "pack",
    "size": 1000
   },
-  "ref": 0,
   "flags": [],
   "density": 1,
   "free": true,

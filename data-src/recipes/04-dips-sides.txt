@@ -6,7 +6,6 @@ servings: 6
 prep: 15
 cook: 70
 level: 2
-order: 24
 tags: טבעוני, קלאסי, צריך להשרות מראש
 desc: חומוס חלק ופלאפי כמו בחומוסיות, מגרגירים שהושרו בלילה.
 ingredients:
@@ -34,7 +33,6 @@ servings: 6
 prep: 10
 cook: 0
 level: 1
-order: 24
 tags: טבעוני, מהיר, ללא בישול
 desc: חומוס חלק תוך 5 דקות מגרגירים משומרים.
 ingredients:
@@ -59,7 +57,6 @@ servings: 8
 prep: 5
 cook: 0
 level: 1
-order: 12
 tags: טבעוני, מהיר, ללא בישול
 desc: רוטב טחינה לבן ואוורירי לשווארמה, פלאפל וסלטים.
 ingredients:
@@ -82,7 +79,6 @@ servings: 6
 prep: 10
 cook: 40
 level: 1
-order: 18
 tags: טבעוני, צלוי, פרווה
 desc: חצילים צלויים על האש עם טחינה ולימון.
 ingredients:
@@ -106,7 +102,6 @@ servings: 6
 prep: 10
 cook: 0
 level: 1
-order: 14
 tags: טבעוני, מהיר, ללא בישול
 desc: סלסה חמצמצה וחריפה בחמש דקות.
 ingredients:
@@ -129,7 +124,6 @@ servings: 8
 prep: 10
 cook: 0
 level: 1
-order: 22
 tags: חלבי, ללא בישול
 desc: פסטו ירוק ופריך עם אגוזי מלך ופרמזן.
 ingredients:
@@ -152,7 +146,6 @@ servings: 6
 prep: 10
 cook: 45
 level: 1
-order: 16
 tags: טבעוני, חריף, סלט שבת
 desc: סלט עגבניות מבושל לאט, עם פלפלים ושום.
 ingredients:
@@ -178,7 +171,6 @@ servings: 6
 prep: 10
 cook: 0
 level: 1
-order: 16
 tags: חלבי, מרענן, ללא בישול
 desc: סלט צונן ומרענן עם שמיר ושום.
 ingredients:
@@ -201,7 +193,6 @@ servings: 6
 prep: 10
 cook: 30
 level: 1
-order: 24
 tags: חלבי, ילדים, תוספת
 desc: פירה חלק ואוורירי שמתבשל באדים.
 ingredients:
@@ -224,7 +215,6 @@ servings: 6
 prep: 10
 cook: 0
 level: 1
-order: 16
 tags: פרווה, מהיר, ללא בישול
 desc: קולסלו פריך ומתקתק שנחתך בשניות.
 ingredients:

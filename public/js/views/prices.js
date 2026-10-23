@@ -32,10 +32,10 @@ export function pricesView() {
   const cell = (ing, sid) => {
     const key = `${ing.id}:${sid}`;
     const info = c.priceFor(ing.id, sid);
-    const prices = st.map((x) => c.priceFor(ing.id, x.id)).filter((p) => p.kind !== "missing" && p.kind !== "estimate").map((p) => p.price);
+    const prices = st.map((x) => c.priceFor(ing.id, x.id)).filter((p) => p.price != null).map((p) => p.price);
     const min = prices.length ? Math.min(...prices) : null;
     if (editing === key) {
-      const input = h("input", { type: "number", step: "0.1", min: "0", inputmode: "decimal", value: String(info.price), "aria-label": `מחיר ${ing.name} ב${c.storeById.get(sid).name}`, "data-fk": `edit-${key}` });
+      const input = h("input", { type: "number", step: "0.1", min: "0", inputmode: "decimal", value: info.price != null ? String(info.price) : "", "aria-label": `מחיר ${ing.name} ב${c.storeById.get(sid).name}`, "data-fk": `edit-${key}` });
       const save = () => {
         editing = null;
         const v = Number(input.value);
@@ -50,12 +50,12 @@ export function pricesView() {
       queueMicrotask(() => input.focus());
       return h("td", input);
     }
-    const cls = info.kind === "user" ? "mine" : info.kind === "missing" ? "none" : info.kind === "estimate" ? "est" : "";
-    const cheap = info.kind !== "missing" && info.kind !== "estimate" && min != null && info.price === min && prices.length > 1;
+    const cls = info.kind === "user" ? "mine" : info.price == null ? "none" : "";
+    const cheap = info.price != null && min != null && info.price === min && prices.length > 1;
     return h(
       "td.n",
       { class: `${cls} ${cheap ? "cheap" : ""}` },
-      h("button.btn-link", { type: "button", style: { "text-decoration": "none", color: "inherit", padding: "0.4rem 0.2rem", "min-width": "3.5rem" }, "data-fk": `cell-${key}`, "aria-label": `${ing.name} ב${c.storeById.get(sid).name}: ${info.kind === "missing" ? "לא נמצא" : money(info.price)}. לעריכה`, title: info.kind === "missing" ? "לא נמצא בחנות (אומדן)" : info.kind === "estimate" ? "אומדן" : info.kind === "user" ? "המחיר שהזנתם" : "", onclick: () => ((editing = key), render(true)) }, info.kind === "missing" ? "—" : moneyEl(info.price)),
+      h("button.btn-link", { type: "button", style: { "text-decoration": "none", color: "inherit", padding: "0.4rem 0.2rem", "min-width": "3.5rem" }, "data-fk": `cell-${key}`, "aria-label": `${ing.name} ב${c.storeById.get(sid).name}: ${info.price == null ? "אין מחיר" : money(info.price)}. לעריכה`, title: info.price == null ? "אין מחיר. לחצו להזנה" : info.kind === "user" ? "המחיר שהזנתם" : "", onclick: () => ((editing = key), render(true)) }, info.price == null ? "—" : moneyEl(info.price)),
     );
   };
 
@@ -83,14 +83,14 @@ export function pricesView() {
 
   const el = h(
     "div.page.wide",
-    pageHead("מחירים", `מחיר לאריזה בכל חנות · עודכן ${meta.updated}`, h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: importDialog }, icon("upload", { size: 16 }), "ייבוא מחירים"), mineCount ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => confirm("למחוק את כל המחירים שהזנתם?") && store.update((x) => void (x.priceOverrides = {})) }, `איפוס ${mineCount} מחירים שלי`) : null),
-    meta.kind === "sample"
-      ? notice("warn", "המחירים בטבלה הם נתוני דוגמה שנוצרו אוטומטית, לא מחירון אמיתי. לחצו על מחיר כדי להזין את המחיר האמיתי שראיתם בחנות. מחירים שהזנתם מסומנים בקו כחול ונשמרים רק בדפדפן הזה.", "alert")
+    pageHead("מחירים", `מחיר לאריזה בכל חנות${meta.updated ? ` · עודכן ${meta.updated}` : ""}`, h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: importDialog }, icon("upload", { size: 16 }), "ייבוא מחירים"), mineCount ? h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: () => confirm("למחוק את כל המחירים שהזנתם?") && store.update((x) => void (x.priceOverrides = {})) }, `איפוס ${mineCount} מחירים שלי`) : null),
+    Object.keys(c.prices.table || {}).length === 0
+      ? notice("info", "אין מחירים באתר, ואין בו מחירי דוגמה. המחירים כאן הם רק מה שתזינו: לחצו על תא כדי להזין את המחיר שראיתם בחנות, או הדביקו רשימה ב״ייבוא מחירים״. מחירים שהזנתם נשמרים בדפדפן הזה בלבד ומסומנים בקו כחול.")
       : notice("info", meta.note || ""),
     h("div.search", { style: { margin: "1rem 0 0.5rem" } }, icon("search", { size: 22 }), search),
     h("div.scroll-x", { style: { "margin-bottom": "0.75rem" } }, h("button.chip", { type: "button", "aria-pressed": String(!aisle), onclick: () => ((aisle = ""), render(true)) }, "הכול"), AISLE_ORDER.filter((a) => a !== "free").map((a) => h("button.chip", { type: "button", "aria-pressed": String(aisle === a), onclick: () => ((aisle = a), render(true)) }, AISLE_LABELS[a]))),
     table,
-    h("p.small.muted", "ירוק = הזול ביותר מבין החנויות · נטוי = אומדן (אין נתון לחנות) · — = החנות לא מחזיקה את הפריט. מחירי פריטים הנמכרים בשקילה הם לק״ג."),
+    h("p.small.muted", "ירוק = הזול ביותר מבין החנויות · — = אין מחיר. מחירי פריטים הנמכרים בשקילה הם לק״ג. סכומים באתר מחושבים רק כשיש מחיר לכל המצרכים הנדרשים באותה חנות."),
   );
   return { el, title: "מחירים" };
 }

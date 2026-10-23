@@ -13,7 +13,8 @@
 // (and none of the exclusion words) is a candidate. Its price is normalised to a price per gram / ml / unit,
 // outliers are dropped, and the MEDIAN across candidates and branches is used, so one premium brand does not
 // distort the price. Pack price = median x pack size. Ingredients with too few matches are left out (the app
-// then falls back to a flagged estimate) - this tool never invents a number.
+// then shows no price for them) - this tool never invents a number, and nothing in the catalog is a price to
+// compare against: outliers are judged against the median of the matches themselves.
 //
 // IMPORTANT: written against the published file format and test fixtures, not against live files. Product
 // names in these files are messy; always read the --report before trusting the output.
@@ -187,10 +188,8 @@ export function median(xs) {
   return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
 }
 
-/** Reference price per base unit, for rejecting absurd matches (> 4x or < 0.25x of the catalog's reference price). */
-function refPerBase(ing) {
-  return ing.ref / ing.pack.size;
-}
+/** Matches further than this factor from the median of their own group (either way) are dropped as outliers. */
+const OUTLIER_FACTOR = 4;
 
 /**
  * products: Map<storeId, Product[]> -> { table, report }
@@ -224,16 +223,16 @@ export function buildPriceTable(ingredients, productsByStore, { rules = {}, minM
   const report = [];
   for (const ing of priced) {
     const entry = { id: ing.id, name: ing.name, stores: {} };
-    const ref = refPerBase(ing);
     for (const storeId of productsByStore.keys()) {
-      const vals = [];
-      const samples = [];
+      const found = [];
       for (const p of perStore.get(storeId).get(ing.id) || []) {
         const n = normalisePrice(p, ing.base);
-        if (!n || n.perBase < ref * 0.25 || n.perBase > ref * 4) continue; // unreadable size or absurd price
-        vals.push(n.perBase);
-        if (samples.length < 3) samples.push(`${p.name} (${p.price})`);
+        if (n) found.push({ perBase: n.perBase, label: `${p.name} (${p.price})` }); // unreadable sizes are skipped
       }
+      const mid = found.length ? median(found.map((x) => x.perBase)) : 0;
+      const kept = found.filter((x) => x.perBase >= mid / OUTLIER_FACTOR && x.perBase <= mid * OUTLIER_FACTOR);
+      const vals = kept.map((x) => x.perBase);
+      const samples = kept.slice(0, 3).map((x) => x.label);
       if (vals.length < minMatches) {
         entry.stores[storeId] = { matches: vals.length, price: null, samples };
         continue;

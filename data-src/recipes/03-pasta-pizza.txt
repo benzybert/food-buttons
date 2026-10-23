@@ -6,7 +6,6 @@ servings: 4
 prep: 5
 cook: 25
 level: 1
-order: 46
 tags: טבעוני, ילדים, איטלקי
 desc: רוטב פומודורו ביתי שמוכן בזמן שהפסטה מתבשלת.
 ingredients:
@@ -33,7 +32,6 @@ servings: 4
 prep: 10
 cook: 20
 level: 1
-order: 54
 tags: חלבי, שמנת
 desc: רוטב שמנת ופטריות עם פרמזן, מוכן תוך 15 דקות.
 ingredients:
@@ -62,7 +60,6 @@ servings: 4
 prep: 10
 cook: 25
 level: 2
-order: 58
 tags: חלבי, איטלקי, קרמי
 desc: ריזוטו קרמי שלא צריך לערבב בלי הפסקה.
 ingredients:
@@ -91,7 +88,6 @@ servings: 4
 prep: 25
 cook: 70
 level: 2
-order: 40
 tags: חלבי, ילדים, סוף שבוע
 desc: בצק פיצה שמתפח לבד ורוטב עגבניות מהיר, בלי עגלת משלוחים.
 ingredients:

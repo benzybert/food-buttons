@@ -11,7 +11,6 @@
     "build": "node tools/build-data.js && node tools/build-sw.js",
     "build:data": "node tools/build-data.js",
     "build:sw": "node tools/build-sw.js",
-    "prices:sample": "node tools/gen-sample-prices.js",
     "e2e": "node test/e2e/run.mjs",
     "check": "node tools/build-data.js --check && node tools/build-sw.js --check && npm test",
     "check:bridge": "cd bridge && python3 -m unittest discover -s . -t . -p 'test_*.py'",

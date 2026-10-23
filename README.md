@@ -4,7 +4,7 @@ Hebrew RTL web app that answers one question: **order food (from Sharon or a del
 
 1. **The app** (`public/index.html`, hash routes like `#/cook`): two giant buttons, **שרון** (order) and **Thermomix** (cook).
    - 49 original Thermomix-style recipes with cost per serving, calories, and the price of ordering the same dish.
-   - **Price comparison** of a basket of dishes at 8 supermarkets (whole packs, pantry-aware), the best two-store split, and cook vs. order. *Prices in the app are sample data* until replaced (see `docs/DATA.md`); the UI says so.
+   - **Price comparison** of a basket of dishes at 8 supermarkets (whole packs, pantry-aware), the best two-store split, and cook vs. order. **There is no sample data**: the app ships with no prices of any kind. A price exists only if the person typed it in ("מחירים" screen, or pasted as `ingredient, store, price` lines) or it came from a real price file (`tools/ingest-prices.js`). Totals appear only when every item they need has a price; otherwise the screen says what is missing. See `docs/DATA.md`.
    - Shopping list, weekly planner, pantry, cook mode with timers, "what should I eat tonight?", Sharon menu with a WhatsApp order message, recipe import (paste text or JSON-LD), price editing, backup/restore.
    - Installable PWA that works offline. Everything is stored in the browser (`localStorage`), no accounts, no tracking.
 2. **The shop** (real prices and a family cart, needs the server):
@@ -34,11 +34,11 @@ public/                 the app and the shop pages
   js/lib/               pure logic, shared with Node tests: units, parse, calc, derive, catalog, plan, text
   js/views/             one file per screen (hash routes)
   js/{app,store,router,ui,dom,fmt,icons}.js
-  data/                 GENERATED/committed JSON: ingredients, recipes, prices (sample), stores, sources
+  data/                 GENERATED/committed JSON: ingredients, recipes, prices (empty until real prices exist), stores (names only), sources
   cart.html cart.css cart.js    the shared cart
   sharon/ thermomix/ groceries/  workflow pages; app.js, to-cart.js, menu.json (Sharon's menu), shop.css
 data-src/               editable sources: ingredients.txt and recipes/*.txt (compact Hebrew format)
-tools/                  build-data (txt -> json), build-sw, gen-sample-prices, ingest-prices
+tools/                  build-data (txt -> json), build-sw, ingest-prices (real price files -> prices.json)
 grocery-api/            Python price-comparison service (own Railway service, Root Directory /grocery-api)
 bridge/                 optional Cookidoo bridge (own Railway service, see docs/COOKIDOO.md)
 test/                   node:test unit tests + test/e2e (Playwright); test/shop/ = cart, API, grocery (CommonJS)

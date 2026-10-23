@@ -26,7 +26,7 @@ export function buildCatalog({ ingredients, recipes, stores, prices, sources }, 
     .map((x) => ({ ...x, kind: "custom", min: 0, markup: Number(x.markup) || 0, fee: Number(x.fee) || 0 }));
   const allSources = [...sources, ...customSources];
   const sourceById = new Map(allSources.map((s) => [s.id, s]));
-  const priceFor = makePricer({ table: prices.table, overrides: user.priceOverrides, ingById, storeById });
+  const priceFor = makePricer({ table: prices.table, overrides: user.priceOverrides, ingById });
 
   /** Per-serving order price for a dish at a source: user override, else base order price x markup. */
   function orderPrice(dishId, sourceId) {

@@ -42,7 +42,7 @@ export function settingsView() {
       h(
         "section.card.stack",
         h("h2", "כסף"),
-        h("label.check", h("input", { type: "checkbox", checked: s.delivery, onchange: (e) => upd((x) => void (x.delivery = e.target.checked)) }), "לחשב קנייה במשלוח (כולל דמי משלוח)"),
+        catalog().stores.some((x) => x.delivery) ? h("label.check", h("input", { type: "checkbox", checked: s.delivery, onchange: (e) => upd((x) => void (x.delivery = e.target.checked)) }), "לחשב קנייה במשלוח (כולל דמי משלוח)") : null,
         h("div.field", h("label", { for: "set-hourly" }, "שווי שעת עבודה שלי (₪)"), h("input.input.num-in", { id: "set-hourly", type: "number", min: "0", step: "5", value: String(s.hourly), "data-fk": "set-hourly", onchange: (e) => upd((x) => void (x.hourly = Math.max(0, Number(e.target.value) || 0))) }), h("span.small.muted", "אם תזינו מספר, הוא יתווסף לעלות הבישול בהשוואה מול הזמנה.")),
         h("div.field", h("label", { for: "set-device" }, "כמה עלה המכשיר? (₪)"), h("input.input.num-in", { id: "set-device", type: "number", min: "0", step: "100", value: String(s.deviceCost), "data-fk": "set-device", onchange: (e) => upd((x) => void (x.deviceCost = Math.max(0, Number(e.target.value) || 0))) }), h("span.small.muted", "אופציונלי: נראה כמה מההשקעה כבר חזרה מהחיסכון ביומן הבישולים.")),
         h("div.field", h("label", { for: "set-budget" }, "תקציב מצרכים לשבוע (₪)"), h("input.input.num-in", { id: "set-budget", type: "number", min: "0", step: "50", value: String(s.budget), "data-fk": "set-budget", onchange: (e) => upd((x) => void (x.budget = Math.max(0, Number(e.target.value) || 0))) })),

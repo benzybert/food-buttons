@@ -1,5 +1,7 @@
 # קטלוג מצרכים. עמודות מופרדות ב-| :
-# id | שם | כינויים (פסיקים) | מדף | בסיס (g/ml/u) | אריזה | מחיר ייחוס ₪ | משקל יחידה (גרם) | צפיפות (גרם למ"ל) | דגלים
+# id | שם | כינויים (פסיקים) | מדף | בסיס (g/ml/u) | אריזה | משקל יחידה (גרם) | צפיפות (גרם למ"ל) | דגלים
+#
+# אין כאן מחירים: מחירים מגיעים רק ממחירון אמיתי או מהמשתמש (ראו docs/DATA.md).
 #
 # אריזה:  kg = נמכר בשקילה, מחיר לק"ג (קונים בקפיצות של 100 גרם)
 #         unit = נמכר ביחידה בודדת, מחיר ליחידה
@@ -8,116 +10,116 @@
 #        home = מניחים שיש בבית כברירת מחדל · free = חינם (מים)
 
 # ---------- ירקות ופירות ----------
-onion | בצל | בצלים,בצל יבש,בצל קצוץ,onion,onions,yellow onion,brown onion | produce | g | kg | 6 | 150 | 1 |
-red-onion | בצל סגול | בצלים סגולים,red onion,red onions | produce | g | kg | 9 | 120 | 1 |
-scallion | בצל ירוק | בצלצלים,בצל ירוק קצוץ,spring onion,spring onions,green onion,green onions,scallion,scallions | produce | g | kg | 18 | 30 | 1 |
-garlic | שום | שיני שום,שן שום,שום טרי,שום כתוש,garlic,garlic clove,garlic cloves,clove garlic,cloves garlic | produce | g | kg | 38 | 5 | 1 |
-ginger | ג'ינג'ר | גינגר,ג׳ינג׳ר,זנגביל,ג'ינג'ר טרי,ginger,fresh ginger | produce | g | kg | 40 | 20 | 1 |
-carrot | גזר | גזרים,carrot,carrots | produce | g | kg | 6 | 100 | 1 |
-potato | תפוח אדמה | תפוחי אדמה,תפו"א,תפוד,potato,potatoes | produce | g | kg | 7 | 170 | 1 |
-sweet-potato | בטטה | בטטות,sweet potato,sweet potatoes | produce | g | kg | 9 | 300 | 1 |
-tomato | עגבנייה | עגבניות,עגבנית,עגבניות בשלות,tomato,tomatoes,ripe tomato,ripe tomatoes | produce | g | kg | 8 | 130 | 1 |
-cherry-tomato | עגבניות שרי | שרי,cherry tomato,cherry tomatoes | produce | g | kg | 16 | 15 | 1 |
-cucumber | מלפפון | מלפפונים,cucumber,cucumbers | produce | g | kg | 8 | 110 | 1 |
-red-pepper | פלפל אדום | פלפלים אדומים,red pepper,red bell pepper,bell pepper,red capsicum,capsicum,sweet pepper | produce | g | kg | 14 | 180 | 1 |
-green-pepper | פלפל ירוק | פלפלים ירוקים,green pepper,green bell pepper,green capsicum | produce | g | kg | 12 | 150 | 1 |
-chili | פלפל חריף | צ'ילי,פלפל חריף ירוק,צילי,chili,chilli,chili pepper,chilli pepper,red chili,green chili,red chilli,green chilli | produce | g | kg | 28 | 15 | 1 |
-eggplant | חציל | חצילים,eggplant,aubergine | produce | g | kg | 10 | 350 | 1 |
-zucchini | קישוא | קישואים,zucchini,courgette,courgettes | produce | g | kg | 9 | 200 | 1 |
-broccoli | ברוקולי | ברוקולי טרי,broccoli,broccoli florets | produce | g | kg | 16 | 350 | 1 |
-cauliflower | כרובית | cauliflower,cauliflower florets | produce | g | kg | 12 | 700 | 1 |
-cabbage | כרוב לבן | כרוב,cabbage,white cabbage | produce | g | kg | 6 | 1000 | 1 |
-celery | סלרי | גבעולי סלרי,גבעול סלרי,celery,celery stalk,celery stalks,celery stick,celery sticks | produce | g | kg | 12 | 40 | 1 |
-celeriac | שורש סלרי | celeriac,celery root | produce | g | kg | 14 | 400 | 1 |
-leek | כרישה | כרישות,leek,leeks | produce | g | kg | 14 | 200 | 1 |
-mushroom | פטריות שמפיניון | פטריות,שמפיניון,פטריות שמפניון,mushroom,mushrooms,button mushrooms,champignons,champignon | produce | g | kg | 28 | 20 | 1 |
-spinach | תרד | עלי תרד,תרד טרי,spinach,baby spinach,fresh spinach | produce | g | kg | 18 | 30 | 1 |
-lemon | לימון | לימונים,lemon,lemons,lemon juice | produce | g | kg | 10 | 100 | 1 |
-parsley | פטרוזיליה | פטרוזיליה קצוצה,צרור פטרוזיליה,parsley,fresh parsley,flat leaf parsley,flat-leaf parsley | produce | g | kg | 40 | 50 | 1 |
-cilantro | כוסברה | כוסברה קצוצה,cilantro,fresh cilantro,coriander,fresh coriander,coriander leaves | produce | g | kg | 40 | 50 | 1 |
-dill | שמיר | dill,fresh dill | produce | g | kg | 40 | 50 | 1 |
-mint | נענע | עלי נענע,mint,fresh mint,mint leaves | produce | g | kg | 40 | 30 | 1 |
-basil | בזיליקום | עלי בזיליקום,basil,fresh basil,basil leaves | produce | g | kg | 90 | 30 | 1 |
-banana | בננה | בננות,banana,bananas | produce | g | kg | 8 | 130 | 1 |
-apple | תפוח עץ | תפוחי עץ,תפוחים,תפוח,apple,apples | produce | g | kg | 11 | 180 | 1 |
-strawberry | תות שדה | תותים,תות,strawberry,strawberries | produce | g | kg | 32 | 20 | 1 |
-orange | תפוז | תפוזים,orange,oranges,orange juice | produce | g | kg | 7 | 200 | 1 |
-avocado | אבוקדו | avocado,avocados | produce | g | kg | 18 | 220 | 1 |
-pumpkin | דלעת | דלעת קלופה,pumpkin,butternut squash,butternut pumpkin,squash | produce | g | kg | 6 | 1000 | 1 |
+onion | בצל | בצלים,בצל יבש,בצל קצוץ,onion,onions,yellow onion,brown onion | produce | g | kg | 150 | 1 |
+red-onion | בצל סגול | בצלים סגולים,red onion,red onions | produce | g | kg | 120 | 1 |
+scallion | בצל ירוק | בצלצלים,בצל ירוק קצוץ,spring onion,spring onions,green onion,green onions,scallion,scallions | produce | g | kg | 30 | 1 |
+garlic | שום | שיני שום,שן שום,שום טרי,שום כתוש,garlic,garlic clove,garlic cloves,clove garlic,cloves garlic | produce | g | kg | 5 | 1 |
+ginger | ג'ינג'ר | גינגר,ג׳ינג׳ר,זנגביל,ג'ינג'ר טרי,ginger,fresh ginger | produce | g | kg | 20 | 1 |
+carrot | גזר | גזרים,carrot,carrots | produce | g | kg | 100 | 1 |
+potato | תפוח אדמה | תפוחי אדמה,תפו"א,תפוד,potato,potatoes | produce | g | kg | 170 | 1 |
+sweet-potato | בטטה | בטטות,sweet potato,sweet potatoes | produce | g | kg | 300 | 1 |
+tomato | עגבנייה | עגבניות,עגבנית,עגבניות בשלות,tomato,tomatoes,ripe tomato,ripe tomatoes | produce | g | kg | 130 | 1 |
+cherry-tomato | עגבניות שרי | שרי,cherry tomato,cherry tomatoes | produce | g | kg | 15 | 1 |
+cucumber | מלפפון | מלפפונים,cucumber,cucumbers | produce | g | kg | 110 | 1 |
+red-pepper | פלפל אדום | פלפלים אדומים,red pepper,red bell pepper,bell pepper,red capsicum,capsicum,sweet pepper | produce | g | kg | 180 | 1 |
+green-pepper | פלפל ירוק | פלפלים ירוקים,green pepper,green bell pepper,green capsicum | produce | g | kg | 150 | 1 |
+chili | פלפל חריף | צ'ילי,פלפל חריף ירוק,צילי,chili,chilli,chili pepper,chilli pepper,red chili,green chili,red chilli,green chilli | produce | g | kg | 15 | 1 |
+eggplant | חציל | חצילים,eggplant,aubergine | produce | g | kg | 350 | 1 |
+zucchini | קישוא | קישואים,zucchini,courgette,courgettes | produce | g | kg | 200 | 1 |
+broccoli | ברוקולי | ברוקולי טרי,broccoli,broccoli florets | produce | g | kg | 350 | 1 |
+cauliflower | כרובית | cauliflower,cauliflower florets | produce | g | kg | 700 | 1 |
+cabbage | כרוב לבן | כרוב,cabbage,white cabbage | produce | g | kg | 1000 | 1 |
+celery | סלרי | גבעולי סלרי,גבעול סלרי,celery,celery stalk,celery stalks,celery stick,celery sticks | produce | g | kg | 40 | 1 |
+celeriac | שורש סלרי | celeriac,celery root | produce | g | kg | 400 | 1 |
+leek | כרישה | כרישות,leek,leeks | produce | g | kg | 200 | 1 |
+mushroom | פטריות שמפיניון | פטריות,שמפיניון,פטריות שמפניון,mushroom,mushrooms,button mushrooms,champignons,champignon | produce | g | kg | 20 | 1 |
+spinach | תרד | עלי תרד,תרד טרי,spinach,baby spinach,fresh spinach | produce | g | kg | 30 | 1 |
+lemon | לימון | לימונים,lemon,lemons,lemon juice | produce | g | kg | 100 | 1 |
+parsley | פטרוזיליה | פטרוזיליה קצוצה,צרור פטרוזיליה,parsley,fresh parsley,flat leaf parsley,flat-leaf parsley | produce | g | kg | 50 | 1 |
+cilantro | כוסברה | כוסברה קצוצה,cilantro,fresh cilantro,coriander,fresh coriander,coriander leaves | produce | g | kg | 50 | 1 |
+dill | שמיר | dill,fresh dill | produce | g | kg | 50 | 1 |
+mint | נענע | עלי נענע,mint,fresh mint,mint leaves | produce | g | kg | 30 | 1 |
+basil | בזיליקום | עלי בזיליקום,basil,fresh basil,basil leaves | produce | g | kg | 30 | 1 |
+banana | בננה | בננות,banana,bananas | produce | g | kg | 130 | 1 |
+apple | תפוח עץ | תפוחי עץ,תפוחים,תפוח,apple,apples | produce | g | kg | 180 | 1 |
+strawberry | תות שדה | תותים,תות,strawberry,strawberries | produce | g | kg | 20 | 1 |
+orange | תפוז | תפוזים,orange,oranges,orange juice | produce | g | kg | 200 | 1 |
+avocado | אבוקדו | avocado,avocados | produce | g | kg | 220 | 1 |
+pumpkin | דלעת | דלעת קלופה,pumpkin,butternut squash,butternut pumpkin,squash | produce | g | kg | 1000 | 1 |
 
 # ---------- בשר, עוף ודגים ----------
-chicken-breast | חזה עוף | פילה חזה עוף,חזה עוף טרי,שניצל גולמי,chicken breast,chicken breasts,chicken breast fillet,chicken breast fillets,boneless chicken breast | meat | g | kg | 44 | 250 | 1 | m
-chicken-thighs | שוקי עוף | שוקיים,ירכיים,ירכי עוף,שוקי עוף טריים,chicken thigh,chicken thighs,chicken drumsticks | meat | g | kg | 29 | 160 | 1 | m
-ground-beef | בשר בקר טחון | בשר טחון,בקר טחון,בשר בקר,ground beef,minced beef,beef mince,minced meat,mince | meat | g | kg | 62 | 100 | 1 | m
-tilapia | פילה אמנון | אמנון,פילה דג,פילה דג לבן,tilapia,tilapia fillet,white fish fillet | meat | g | kg | 62 | 150 | 1 | f
+chicken-breast | חזה עוף | פילה חזה עוף,חזה עוף טרי,שניצל גולמי,chicken breast,chicken breasts,chicken breast fillet,chicken breast fillets,boneless chicken breast | meat | g | kg | 250 | 1 | m
+chicken-thighs | שוקי עוף | שוקיים,ירכיים,ירכי עוף,שוקי עוף טריים,chicken thigh,chicken thighs,chicken drumsticks | meat | g | kg | 160 | 1 | m
+ground-beef | בשר בקר טחון | בשר טחון,בקר טחון,בשר בקר,ground beef,minced beef,beef mince,minced meat,mince | meat | g | kg | 100 | 1 | m
+tilapia | פילה אמנון | אמנון,פילה דג,פילה דג לבן,tilapia,tilapia fillet,white fish fillet | meat | g | kg | 150 | 1 | f
 
 # ---------- חלב וביצים ----------
-eggs | ביצים | ביצה,ביצים L,ביצה L,egg,eggs,large egg,large eggs,medium egg,medium eggs | dairy | u | P12 | 17 | 55 | 1 | e
-milk | חלב | חלב 3%,חלב טרי,milk,whole milk,semi-skimmed milk | dairy | ml | P1000 | 7.2 | | 1.03 | d
-butter | חמאה | חמאה רכה,חמאה קרה,butter,unsalted butter,salted butter | dairy | g | P200 | 11.5 | | 0.95 | d
-cream | שמנת מתוקה | שמנת להקצפה,שמנת לקצפת,cream,whipping cream,heavy cream,double cream,whipped cream | dairy | ml | P250 | 9.5 | | 1 | d
-cooking-cream | שמנת לבישול | שמנת לבישול 15%,cooking cream,single cream | dairy | ml | P250 | 7 | | 1 | d
-white-cheese | גבינה לבנה | גבינה לבנה 5%,cottage cheese,white cheese,quark | dairy | g | P250 | 6.8 | | 1 | d
-mozzarella | גבינת מוצרלה | מוצרלה,מוצרלה מגורדת,mozzarella,mozzarella cheese | dairy | g | P400 | 24 | | 1 | d
-yellow-cheese | גבינה צהובה | גבינה צהובה מגורדת,גבינה צהובה בפרוסות,cheddar,cheddar cheese,yellow cheese,gouda,grated cheese,hard cheese | dairy | g | P200 | 14 | | 1 | d
-parmesan | פרמזן | פרמזן מגורד,גבינת פרמזן,parmesan,parmesan cheese,parmigiano | dairy | g | P100 | 17 | | 1 | d
-yogurt | יוגורט טבעי | יוגורט,yogurt,yoghurt,natural yogurt,plain yogurt,greek yogurt | dairy | g | P500 | 8 | | 1.03 | d
+eggs | ביצים | ביצה,ביצים L,ביצה L,egg,eggs,large egg,large eggs,medium egg,medium eggs | dairy | u | P12 | 55 | 1 | e
+milk | חלב | חלב 3%,חלב טרי,milk,whole milk,semi-skimmed milk | dairy | ml | P1000 | | 1.03 | d
+butter | חמאה | חמאה רכה,חמאה קרה,butter,unsalted butter,salted butter | dairy | g | P200 | | 0.95 | d
+cream | שמנת מתוקה | שמנת להקצפה,שמנת לקצפת,cream,whipping cream,heavy cream,double cream,whipped cream | dairy | ml | P250 | | 1 | d
+cooking-cream | שמנת לבישול | שמנת לבישול 15%,cooking cream,single cream | dairy | ml | P250 | | 1 | d
+white-cheese | גבינה לבנה | גבינה לבנה 5%,cottage cheese,white cheese,quark | dairy | g | P250 | | 1 | d
+mozzarella | גבינת מוצרלה | מוצרלה,מוצרלה מגורדת,mozzarella,mozzarella cheese | dairy | g | P400 | | 1 | d
+yellow-cheese | גבינה צהובה | גבינה צהובה מגורדת,גבינה צהובה בפרוסות,cheddar,cheddar cheese,yellow cheese,gouda,grated cheese,hard cheese | dairy | g | P200 | | 1 | d
+parmesan | פרמזן | פרמזן מגורד,גבינת פרמזן,parmesan,parmesan cheese,parmigiano | dairy | g | P100 | | 1 | d
+yogurt | יוגורט טבעי | יוגורט,yogurt,yoghurt,natural yogurt,plain yogurt,greek yogurt | dairy | g | P500 | | 1.03 | d
 
 # ---------- יבשים ----------
-flour | קמח לבן | קמח,קמח רגיל,קמח חיטה,קמח לכל מטרה,flour,plain flour,all-purpose flour,all purpose flour,white flour,wheat flour,bread flour | dry | g | P1000 | 5.5 | | 0.55 | g
-whole-flour | קמח מלא | קמח מלא חיטה,whole wheat flour,wholemeal flour,whole-wheat flour,wholegrain flour | dry | g | P1000 | 8.5 | | 0.55 | g
-sugar | סוכר | סוכר לבן,sugar,white sugar,caster sugar,granulated sugar | baking | g | P1000 | 6.5 | | 0.85 | home
-brown-sugar | סוכר חום | brown sugar,light brown sugar,dark brown sugar,muscovado sugar | baking | g | P500 | 9 | | 0.8 |
-powdered-sugar | אבקת סוכר | סוכר אבקה,powdered sugar,icing sugar,confectioners sugar,confectioner's sugar | baking | g | P500 | 8 | | 0.55 |
-salt | מלח | מלח שולחן,מלח ים,מלח גס,salt,sea salt,table salt,kosher salt | spices | g | P1000 | 3.5 | | 1.2 | home
-rice-basmati | אורז בסמטי | basmati rice,basmati | dry | g | P1000 | 14 | | 0.8 |
-rice-white | אורז לבן | אורז,אורז עגול,אורז פרסי,rice,white rice,long grain rice,long-grain rice,jasmine rice | dry | g | P1000 | 10 | | 0.8 |
-pasta | פסטה | ספגטי,פנה,פסטה יבשה,מקרוני,פוסילי,pasta,spaghetti,penne,macaroni,fusilli,tagliatelle | dry | g | P500 | 7 | | 0.45 | g
-couscous | קוסקוס | couscous | dry | g | P500 | 8.5 | | 0.7 | g
-lentils-red | עדשים כתומות | עדשים אדומות,red lentils,red lentil | dry | g | P500 | 9.5 | | 0.8 |
-lentils-green | עדשים ירוקות | עדשים חומות,עדשים,green lentils,brown lentils,lentils,puy lentils | dry | g | P500 | 9.5 | | 0.8 |
-chickpeas-dry | גרגירי חומוס | חומוס גרגירים,גרגירי חומוס יבשים,חומוס יבש,dried chickpeas,dry chickpeas | dry | g | P500 | 8.5 | | 0.8 |
-oats | שיבולת שועל | קוואקר,שיבולת שועל מלאה,פתיתי שיבולת שועל,oats,rolled oats,oatmeal,porridge oats | dry | g | P500 | 9 | | 0.35 | g
-breadcrumbs | פירורי לחם | פירורי לחם,breadcrumbs,bread crumbs,panko | dry | g | P500 | 8.5 | | 0.45 | g
-cornstarch | עמילן תירס | קורנפלור,cornstarch,corn starch,cornflour,corn flour | baking | g | P400 | 7.5 | | 0.6 |
-honey | דבש | honey | baking | g | P500 | 21 | | 1.4 | h
-cocoa | אבקת קקאו | קקאו,cocoa,cocoa powder,unsweetened cocoa | baking | g | P200 | 16 | | 0.5 |
-dark-chocolate | שוקולד מריר פרווה | שוקולד מריר,שוקולד פרווה,שוקולד,dark chocolate,chocolate,bittersweet chocolate,chocolate chips | baking | g | P200 | 14 | | 1 |
-baking-powder | אבקת אפייה | אבקת אפיה,baking powder | baking | g | P50 | 6.5 | | 0.8 |
-baking-soda | סודה לשתייה | סודה לשתיה,סודה לשתייה,baking soda,bicarbonate of soda,bicarbonate | baking | g | P200 | 5 | | 1.1 |
-yeast | שמרים יבשים | שמרים,שמרים יבשים מיידיים,yeast,dry yeast,dried yeast,fresh yeast,instant yeast | baking | g | P33 | 8 | | 0.6 |
-vanilla | תמצית וניל | וניל,תמצית וניל טבעית,vanilla,vanilla extract,vanilla essence,vanilla sugar | baking | ml | P50 | 15 | | 1 |
+flour | קמח לבן | קמח,קמח רגיל,קמח חיטה,קמח לכל מטרה,flour,plain flour,all-purpose flour,all purpose flour,white flour,wheat flour,bread flour | dry | g | P1000 | | 0.55 | g
+whole-flour | קמח מלא | קמח מלא חיטה,whole wheat flour,wholemeal flour,whole-wheat flour,wholegrain flour | dry | g | P1000 | | 0.55 | g
+sugar | סוכר | סוכר לבן,sugar,white sugar,caster sugar,granulated sugar | baking | g | P1000 | | 0.85 | home
+brown-sugar | סוכר חום | brown sugar,light brown sugar,dark brown sugar,muscovado sugar | baking | g | P500 | | 0.8 |
+powdered-sugar | אבקת סוכר | סוכר אבקה,powdered sugar,icing sugar,confectioners sugar,confectioner's sugar | baking | g | P500 | | 0.55 |
+salt | מלח | מלח שולחן,מלח ים,מלח גס,salt,sea salt,table salt,kosher salt | spices | g | P1000 | | 1.2 | home
+rice-basmati | אורז בסמטי | basmati rice,basmati | dry | g | P1000 | | 0.8 |
+rice-white | אורז לבן | אורז,אורז עגול,אורז פרסי,rice,white rice,long grain rice,long-grain rice,jasmine rice | dry | g | P1000 | | 0.8 |
+pasta | פסטה | ספגטי,פנה,פסטה יבשה,מקרוני,פוסילי,pasta,spaghetti,penne,macaroni,fusilli,tagliatelle | dry | g | P500 | | 0.45 | g
+couscous | קוסקוס | couscous | dry | g | P500 | | 0.7 | g
+lentils-red | עדשים כתומות | עדשים אדומות,red lentils,red lentil | dry | g | P500 | | 0.8 |
+lentils-green | עדשים ירוקות | עדשים חומות,עדשים,green lentils,brown lentils,lentils,puy lentils | dry | g | P500 | | 0.8 |
+chickpeas-dry | גרגירי חומוס | חומוס גרגירים,גרגירי חומוס יבשים,חומוס יבש,dried chickpeas,dry chickpeas | dry | g | P500 | | 0.8 |
+oats | שיבולת שועל | קוואקר,שיבולת שועל מלאה,פתיתי שיבולת שועל,oats,rolled oats,oatmeal,porridge oats | dry | g | P500 | | 0.35 | g
+breadcrumbs | פירורי לחם | פירורי לחם,breadcrumbs,bread crumbs,panko | dry | g | P500 | | 0.45 | g
+cornstarch | עמילן תירס | קורנפלור,cornstarch,corn starch,cornflour,corn flour | baking | g | P400 | | 0.6 |
+honey | דבש | honey | baking | g | P500 | | 1.4 | h
+cocoa | אבקת קקאו | קקאו,cocoa,cocoa powder,unsweetened cocoa | baking | g | P200 | | 0.5 |
+dark-chocolate | שוקולד מריר פרווה | שוקולד מריר,שוקולד פרווה,שוקולד,dark chocolate,chocolate,bittersweet chocolate,chocolate chips | baking | g | P200 | | 1 |
+baking-powder | אבקת אפייה | אבקת אפיה,baking powder | baking | g | P50 | | 0.8 |
+baking-soda | סודה לשתייה | סודה לשתיה,סודה לשתייה,baking soda,bicarbonate of soda,bicarbonate | baking | g | P200 | | 1.1 |
+yeast | שמרים יבשים | שמרים,שמרים יבשים מיידיים,yeast,dry yeast,dried yeast,fresh yeast,instant yeast | baking | g | P33 | | 0.6 |
+vanilla | תמצית וניל | וניל,תמצית וניל טבעית,vanilla,vanilla extract,vanilla essence,vanilla sugar | baking | ml | P50 | | 1 |
 
 # ---------- שמנים, רטבים ושימורים ----------
-oil | שמן | שמן קנולה,שמן צמחי,שמן לטיגון,oil,vegetable oil,sunflower oil,canola oil,rapeseed oil,cooking oil | oils | ml | P1000 | 12 | | 0.92 | home
-olive-oil | שמן זית | שמן זית כתית,שמן זית כתית מעולה,olive oil,extra virgin olive oil,extra-virgin olive oil,evoo | oils | ml | P750 | 38 | | 0.91 | home
-vinegar | חומץ | חומץ יין,חומץ תפוחים,חומץ לבן,vinegar,white vinegar,apple cider vinegar,white wine vinegar,rice vinegar | oils | ml | P500 | 6 | | 1 |
-soy-sauce | רוטב סויה | סויה,soy sauce,soya sauce,tamari | canned | ml | P250 | 10 | | 1.1 | g o
-mayo | מיונז | mayo,mayonnaise | canned | g | P500 | 12.5 | | 0.95 | e
-mustard | חרדל | חרדל דיז'ון,חרדל צהוב,mustard,dijon mustard | canned | g | P200 | 7 | | 1 |
-crushed-tomatoes | עגבניות מרוסקות | עגבניות משומרות,רוטב עגבניות,עגבניות מרוסקות משומרות,crushed tomatoes,canned tomatoes,tinned tomatoes,chopped tomatoes,canned chopped tomatoes,passata,peeled tomatoes | canned | g | P400 | 5 | | 1 |
-tomato-paste | רסק עגבניות | tomato paste,tomato puree,tomato purée,tomato concentrate | canned | g | P200 | 5.5 | | 1.1 |
-chickpeas-canned | חומוס מבושל | חומוס משומר,גרגירי חומוס מבושלים,chickpeas,canned chickpeas,tinned chickpeas,cooked chickpeas,garbanzo beans | canned | g | P400 | 5.5 | | 1 |
-coconut-milk | חלב קוקוס | coconut milk,coconut cream | canned | ml | P400 | 9 | | 1 |
-peas-frozen | אפונה קפואה | אפונה,peas,frozen peas,green peas | frozen | g | P400 | 9 | | 0.7 |
+oil | שמן | שמן קנולה,שמן צמחי,שמן לטיגון,oil,vegetable oil,sunflower oil,canola oil,rapeseed oil,cooking oil | oils | ml | P1000 | | 0.92 | home
+olive-oil | שמן זית | שמן זית כתית,שמן זית כתית מעולה,olive oil,extra virgin olive oil,extra-virgin olive oil,evoo | oils | ml | P750 | | 0.91 | home
+vinegar | חומץ | חומץ יין,חומץ תפוחים,חומץ לבן,vinegar,white vinegar,apple cider vinegar,white wine vinegar,rice vinegar | oils | ml | P500 | | 1 |
+soy-sauce | רוטב סויה | סויה,soy sauce,soya sauce,tamari | canned | ml | P250 | | 1.1 | g o
+mayo | מיונז | mayo,mayonnaise | canned | g | P500 | | 0.95 | e
+mustard | חרדל | חרדל דיז'ון,חרדל צהוב,mustard,dijon mustard | canned | g | P200 | | 1 |
+crushed-tomatoes | עגבניות מרוסקות | עגבניות משומרות,רוטב עגבניות,עגבניות מרוסקות משומרות,crushed tomatoes,canned tomatoes,tinned tomatoes,chopped tomatoes,canned chopped tomatoes,passata,peeled tomatoes | canned | g | P400 | | 1 |
+tomato-paste | רסק עגבניות | tomato paste,tomato puree,tomato purée,tomato concentrate | canned | g | P200 | | 1.1 |
+chickpeas-canned | חומוס מבושל | חומוס משומר,גרגירי חומוס מבושלים,chickpeas,canned chickpeas,tinned chickpeas,cooked chickpeas,garbanzo beans | canned | g | P400 | | 1 |
+coconut-milk | חלב קוקוס | coconut milk,coconut cream | canned | ml | P400 | | 1 |
+peas-frozen | אפונה קפואה | אפונה,peas,frozen peas,green peas | frozen | g | P400 | | 0.7 |
 
 # ---------- תבלינים ----------
-veg-stock | אבקת מרק ירקות | תבלין מרק ירקות,אבקת מרק,vegetable stock,vegetable broth,veg stock,vegetable stock paste,vegetable bouillon | spices | g | P400 | 11 | | 0.7 |
-chicken-stock | אבקת מרק עוף | תבלין מרק עוף,אבקת מרק עוף,chicken stock,chicken broth,chicken stock paste,chicken bouillon | spices | g | P400 | 11 | | 0.7 | a
-pepper | פלפל שחור | פלפל שחור גרוס,פלפל,פלפל שחור טחון,pepper,black pepper,ground pepper,ground black pepper,white pepper | spices | g | P50 | 11 | | 0.5 | home
-cumin | כמון | כמון טחון,cumin,ground cumin,cumin powder | spices | g | P50 | 9 | | 0.45 |
-paprika | פפריקה | פפריקה מתוקה,פפריקה חריפה,paprika,sweet paprika,smoked paprika | spices | g | P50 | 9 | | 0.5 |
-turmeric | כורכום | turmeric,ground turmeric,turmeric powder | spices | g | P50 | 9 | | 0.6 |
-cinnamon | קינמון | קינמון טחון,cinnamon,ground cinnamon | spices | g | P50 | 9 | | 0.5 |
-oregano | אורגנו | אורגנו יבש,oregano,dried oregano | spices | g | P20 | 8 | | 0.2 |
+veg-stock | אבקת מרק ירקות | תבלין מרק ירקות,אבקת מרק,vegetable stock,vegetable broth,veg stock,vegetable stock paste,vegetable bouillon | spices | g | P400 | | 0.7 |
+chicken-stock | אבקת מרק עוף | תבלין מרק עוף,אבקת מרק עוף,chicken stock,chicken broth,chicken stock paste,chicken bouillon | spices | g | P400 | | 0.7 | a
+pepper | פלפל שחור | פלפל שחור גרוס,פלפל,פלפל שחור טחון,pepper,black pepper,ground pepper,ground black pepper,white pepper | spices | g | P50 | | 0.5 | home
+cumin | כמון | כמון טחון,cumin,ground cumin,cumin powder | spices | g | P50 | | 0.45 |
+paprika | פפריקה | פפריקה מתוקה,פפריקה חריפה,paprika,sweet paprika,smoked paprika | spices | g | P50 | | 0.5 |
+turmeric | כורכום | turmeric,ground turmeric,turmeric powder | spices | g | P50 | | 0.6 |
+cinnamon | קינמון | קינמון טחון,cinnamon,ground cinnamon | spices | g | P50 | | 0.5 |
+oregano | אורגנו | אורגנו יבש,oregano,dried oregano | spices | g | P20 | | 0.2 |
 
 # ---------- אגוזים ופירות יבשים ----------
-peanuts | בוטנים קלויים | בוטנים,peanuts,peanut,roasted peanuts | nuts | g | P400 | 14 | | 0.6 | p
-almonds | שקדים | שקדים קלופים,שקדים טחונים,almonds,almond,ground almonds,flaked almonds | nuts | g | P200 | 22 | | 0.6 | n
-walnuts | אגוזי מלך | walnuts,walnut | nuts | g | P200 | 24 | | 0.4 | n
-sesame | שומשום | שומשום קלוי,שומשום לבן,sesame,sesame seeds,sesame seed | nuts | g | P250 | 11 | | 0.6 | s
-tahini | טחינה גולמית | טחינה,טחינה גולמית משומשום מלא,tahini,tahina | dry | g | P500 | 24 | | 0.95 | s
-raisins | צימוקים | raisins,sultanas | nuts | g | P250 | 10 | | 0.6 |
+peanuts | בוטנים קלויים | בוטנים,peanuts,peanut,roasted peanuts | nuts | g | P400 | | 0.6 | p
+almonds | שקדים | שקדים קלופים,שקדים טחונים,almonds,almond,ground almonds,flaked almonds | nuts | g | P200 | | 0.6 | n
+walnuts | אגוזי מלך | walnuts,walnut | nuts | g | P200 | | 0.4 | n
+sesame | שומשום | שומשום קלוי,שומשום לבן,sesame,sesame seeds,sesame seed | nuts | g | P250 | | 0.6 | s
+tahini | טחינה גולמית | טחינה,טחינה גולמית משומשום מלא,tahini,tahina | dry | g | P500 | | 0.95 | s
+raisins | צימוקים | raisins,sultanas | nuts | g | P250 | | 0.6 |
 
 # ---------- מים ----------
-water | מים | מים קרים,מים חמים,קוביות קרח,קרח,water,hot water,cold water,warm water,lukewarm water,boiling water,ice water,tap water | free | ml | P1000 | 0 | | 1 | free
+water | מים | מים קרים,מים חמים,קוביות קרח,קרח,water,hot water,cold water,warm water,lukewarm water,boiling water,ice water,tap water | free | ml | P1000 | | 1 | free

@@ -2,10 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { seeded } from "../public/js/lib/plan.js";
 import { basketReport, basketNeeds, compareStores, priceAtStore, purchaseFor } from "../public/js/lib/calc.js";
-import { loadCatalog } from "./helpers.js";
+import { loadPricedCatalog } from "./helpers.js";
 
-const cat = loadCatalog();
 const rnd = seeded(20261021);
+// The shipped data has no prices, so the invariants run on prices typed in by "a person" (made up here, test-only).
+const cat = loadPricedCatalog(seeded(1));
 const pick = (xs) => xs[Math.floor(rnd() * xs.length)];
 
 function randomBasket() {
@@ -85,5 +86,33 @@ test("a store's total is the sum of its lines", () => {
     assert.ok(Math.abs(sum - r.subtotal) < 0.011);
     const again = priceAtStore(needs, r.store, cat);
     assert.equal(again.subtotal, r.subtotal);
+  }
+});
+
+test("partially priced catalogs: a total exists exactly when nothing in it is unpriced, and nothing is ever NaN", () => {
+  for (const coverage of [0, 0.3, 0.7, 0.95]) {
+    const part = loadPricedCatalog(seeded(Math.round(coverage * 100) + 5), { coverage, orderPrices: false });
+    for (let k = 0; k < 40; k++) {
+      const items = Array.from({ length: 1 + Math.floor(rnd() * 5) }, () => ({ dishId: pick(part.recipes).id, servings: 1 + Math.floor(rnd() * 10) }));
+      const pantry = new Set(part.ingredients.filter(() => rnd() < 0.2).map((i) => i.id));
+      const rep = basketReport(items, part, { pantry, delivery: rnd() < 0.5, sources: part.sources, orderPrice: part.orderPrice });
+      const tag = `${coverage} ${JSON.stringify(items)}`;
+      for (const r of rep.ranked) {
+        assert.equal(r.total === null, r.missingIds.length > 0, `${tag}: ${r.storeId} total vs missing`);
+        assert.equal(r.subtotal === null, r.missingIds.length > 0, `${tag}: ${r.storeId} subtotal vs missing`);
+        for (const v of [r.total, r.subtotal, r.consumed, r.leftover]) assert.ok(v === null || Number.isFinite(v), `${tag}: NaN`);
+        for (const l of r.lines) assert.equal(l.cost === null, l.price === null, `${tag}: line cost vs price`);
+      }
+      assert.equal(rep.bestStore === null, rep.ranked.every((r) => !r.complete), `${tag}: bestStore`);
+      assert.equal(rep.cookTotal === null, rep.bestStore === null, `${tag}: cookTotal`);
+      assert.equal(rep.perItem.total === null, rep.perItem.missingIds.length > 0, `${tag}: perItem`);
+      if (rep.pair) assert.equal(rep.pair.total === null, rep.pair.missing > 0, `${tag}: pair`);
+      // complete stores always come before incomplete ones
+      const flags = rep.ranked.map((r) => r.complete);
+      assert.deepEqual(flags, [...flags].sort((a, b) => Number(b) - Number(a)), `${tag}: order`);
+      // no order price ships and none was given: no order total either
+      assert.ok(rep.orders.every((o) => o.total === null && o.missing === items.length), `${tag}: orders`);
+      assert.equal(rep.saving, null);
+    }
   }
 });

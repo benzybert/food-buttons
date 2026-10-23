@@ -1,9 +1,9 @@
 import { h } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, settings, report, actions, stores as storeList, pantrySet } from "../app.js";
+import { anyPrices, catalog, settings, report, actions, stores as storeList, pantrySet } from "../app.js";
 import { replaceQuery, render } from "../router.js";
-import { pageHead, moneyEl, stepper, emptyState, sampleBanner, toast, dishInfo, addWithToast } from "../ui.js";
+import { pageHead, moneyEl, stepper, emptyState, noPricesBanner, toast, dishInfo, addWithToast } from "../ui.js";
 import { suggestAdditions } from "../lib/calc.js";
 import { percent, money, signedMoney, countOf, recipesWord, servingsWord } from "../fmt.js";
 import { formatQty } from "../lib/units.js";
@@ -44,7 +44,7 @@ export function compareView({ query }) {
           h("a.btn", { href: "#/cook" }, icon("book", { size: 20 }), "לבחירת מתכונים"),
           h("button.btn.btn-ghost", { type: "button", onclick: () => DEMO.forEach(([id, n]) => c.recById.has(id) && actions.addToBasket(id, n)) }, "נסו עם 3 מתכונים לדוגמה"),
         ),
-        sampleBanner(),
+        noPricesBanner(),
       ),
     };
   }
@@ -68,7 +68,7 @@ export function compareView({ query }) {
       h("a.nm", { href: `#/dish/${rec.id}?s=${b.servings}` }, rec.name, b.day != null ? h("span.chip", { style: { "margin-inline-start": "0.5rem" } }, `יום ${["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "שבת"][b.day]}`) : null),
       h("button.btn.btn-ghost.btn-sm.btn-icon", { type: "button", "aria-label": `הסר את ${rec.name} מהסל`, onclick: () => actions.removeFromBasket(b.id) }, icon("trash", { size: 18 })),
       stepper({ value: b.servings, label: `מנות של ${rec.name}`, size: "sm", onChange: (n) => actions.setServings(b.id, n) }),
-      h("span.small.muted.cost", "בישול ", moneyEl(info.cmp.cook.ingredients), info.cmp.order ? [" · הזמנה ", moneyEl(info.cmp.order.total)] : null),
+      info.cmp.cook.ingredients != null || info.cmp.order ? h("span.small.muted.cost", info.cmp.cook.ingredients != null ? ["בישול ", moneyEl(info.cmp.cook.ingredients)] : null, info.cmp.order ? [info.cmp.cook.ingredients != null ? " · " : "", "הזמנה ", moneyEl(info.cmp.order.total)] : null) : null,
     );
   });
   const basketCard = h(
@@ -77,6 +77,39 @@ export function compareView({ query }) {
     h("div.spread", h("h2", { id: "basket-h" }, `הסל שלכם (${items.length})`), h("div.row", h("a.btn.btn-ghost.btn-sm", { href: "#/cook" }, icon("plus", { size: 16 }), "עוד מנות"), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: shareBasket }, icon("share", { size: 16 }), "שיתוף"), h("button.btn.btn-ghost.btn-sm", { type: "button", onclick: clearBasket }, icon("trash", { size: 16 }), "ניקוי"))),
     basketRows,
   );
+
+  // ------------------------------------------------ no store prices the whole basket
+  if (!best) {
+    const nearest = rep.ranked[0]; // the store missing the fewest prices
+    const unpriced = anyPrices() && nearest ? nearest.missingIds.map((id) => c.ingById.get(id)?.name).filter(Boolean) : [];
+    const orderRows = rep.orders.filter((o) => o.total != null);
+    return {
+      title: "השוואת מחירים",
+      el: h(
+        "div.page.wide",
+        pageHead("השוואת מחירים", `${servingsWord(items.reduce((a, b) => a + b.servings, 0))} בסל`),
+        sharedCard,
+        noPricesBanner(),
+        h("div.stack", { style: { "margin-top": "1rem" } }, basketCard),
+        unpriced.length
+          ? h(
+              "section.card",
+              { style: { "margin-top": "1rem" }, "aria-labelledby": "missing-h" },
+              h("h2", { id: "missing-h" }, "חסרים מחירים"),
+              h("p", `כדי לחשב כמה עולה הסל צריך מחיר לכל מצרך באותה חנות. ב${nearest.store.name} חסרים ${countOf(unpriced.length, "מחיר", "מחירים")}: ${unpriced.slice(0, 12).join(", ")}${unpriced.length > 12 ? "…" : ""}.`),
+              h("a.btn", { href: "#/prices" }, icon("tag", { size: 20 }), "הזנת מחירים"),
+            )
+          : null,
+        orderRows.length
+          ? [
+              h("h2.section", "אם מזמינים הכול"),
+              h("ul.rows", { "aria-label": "עלות הזמנת כל המנות" }, orderRows.map((o, i) => h("li", { class: i === 0 ? "best" : "" }, h("div.main", h("div.t", o.source.name), h("div.s", o.fee ? `כולל ${money(o.fee)} משלוח` : "ללא דמי משלוח")), h("div.amt", moneyEl(o.total))))),
+            ]
+          : null,
+        h("div.row.no-print", { style: { "margin-top": "1.5rem" } }, h("a.btn", { href: "#/list" }, icon("list", { size: 20 }), "לרשימת הקניות"), h("a.btn.btn-ghost", { href: "#/prices" }, icon("tag", { size: 20 }), "הזנת מחירים")),
+      ),
+    };
+  }
 
   // ------------------------------------------------ verdict
   const verdict = h(
@@ -107,7 +140,7 @@ export function compareView({ query }) {
       ? h("p.verdict-msg", { style: { color: cookWins ? "var(--good)" : "var(--bad)" } }, cookWins ? ["בישול חוסך ", moneyEl(rep.saving), ` (${percent(rep.saving / order.total)})`] : ["ההזמנה זולה ב-", moneyEl(-rep.saving)])
       : null,
     rep.custom.length ? h("p.small.muted", `${rep.custom.length} מצרכים (למשל ${rep.custom[0].name}) אין להם מחיר ולכן לא נכללו בחישוב.`) : null,
-    controls(set),
+    controls(set, c.stores.some((x) => x.delivery)),
     set.budget > 0 ? budgetBar(set.budget, cook) : null,
   );
 
@@ -123,9 +156,9 @@ export function compareView({ query }) {
         h(
           "div.main",
           h("div.t", r.store.name, i === 0 ? h("span.chip.good", { style: { "margin-inline-start": "0.5rem" } }, "הזול ביותר") : null),
-          h("div.s", [r.missingIds.length ? `לא מחזיקים ${countOf(r.missingIds.length, "פריט", "פריטים")} (באומדן)` : null, r.estimatedIds.length ? `${countOf(r.estimatedIds.length, "אומדן", "אומדנים")}` : null, set.delivery ? (r.delivery.fee ? `כולל משלוח ${money(r.delivery.fee)}` : "משלוח חינם") : null].filter(Boolean).join(" · ") || (i === 0 ? "" : `יקר יותר ב-${money(r.total - cheapest.total)}`)),
+          h("div.s", [r.missingIds.length ? `חסרים מחירים ל-${countOf(r.missingIds.length, "מצרך", "מצרכים")}` : null, r.complete && set.delivery && r.delivery.available ? (r.delivery.fee ? `כולל משלוח ${money(r.delivery.fee)}` : "משלוח חינם") : null].filter(Boolean).join(" · ") || (i === 0 ? "" : `יקר יותר ב-${money(r.total - cheapest.total)}`)),
         ),
-        h("div.amt", moneyEl(r.total), i > 0 && (r.missingIds.length || r.estimatedIds.length || set.delivery) ? h("small", signedMoney(r.total - cheapest.total)) : null),
+        h("div.amt", r.total != null ? moneyEl(r.total) : h("span.muted", "-"), r.total != null && i > 0 && set.delivery ? h("small", signedMoney(r.total - cheapest.total)) : null),
         h("a.btn.btn-ghost.btn-sm", { href: "#/list", onclick: () => store.update((x) => void (x.settings.primaryStore = r.storeId)) }, "לרשימה"),
       ),
     ),
@@ -135,10 +168,10 @@ export function compareView({ query }) {
   const names = (ids) => ids.map((id) => c.storeById.get(id).name).join(" + ");
   const splitCards = [];
   const pair = rep.pair;
-  if (pair && pair.total < cheapest.subtotal - 0.5 && !set.delivery) {
+  if (pair?.total != null && pair.total < cheapest.subtotal - 0.5 && !set.delivery) {
     splitCards.push(splitCard("שתי חנויות", names(pair.storeIds), pair.total, cheapest.subtotal - pair.total, "pair"));
   }
-  if (rep.perItem.storeIds.length > 2 && rep.perItem.total < (pair ? Math.min(pair.total, cheapest.subtotal) : cheapest.subtotal) - 0.5 && !set.delivery) {
+  if (rep.perItem.total != null && rep.perItem.storeIds.length > 2 && rep.perItem.total < (pair?.total != null ? Math.min(pair.total, cheapest.subtotal) : cheapest.subtotal) - 0.5 && !set.delivery) {
     splitCards.push(splitCard(`הכי זול לכל פריט (${rep.perItem.storeIds.length} חנויות)`, "קונים כל מצרך איפה שהוא הכי זול", rep.perItem.total, cheapest.subtotal - rep.perItem.total, "item"));
   }
 
@@ -150,7 +183,7 @@ export function compareView({ query }) {
 
   // ------------------------------------------------ per-item table
   const perStoreCosts = new Map();
-  for (const r of rep.ranked) for (const l of r.lines) if (l.kind !== "missing") (perStoreCosts.get(l.ingId) || perStoreCosts.set(l.ingId, []).get(l.ingId)).push({ cost: l.cost, storeId: r.storeId });
+  for (const r of rep.ranked) for (const l of r.lines) if (l.cost != null) (perStoreCosts.get(l.ingId) || perStoreCosts.set(l.ingId, []).get(l.ingId)).push({ cost: l.cost, storeId: r.storeId });
   const itemRows = [...rep.perItem.lines]
     .map((l) => {
       const ing = c.ingById.get(l.ingId);
@@ -175,19 +208,21 @@ export function compareView({ query }) {
   );
 
   // ------------------------------------------------ bars
-  const max = Math.max(cook, ...rep.ranked.map((r) => r.total), ...rep.orders.map((o) => o.total), 1);
+  const fullStores = rep.ranked.filter((r) => r.total != null);
+  const pricedOrders = rep.orders.filter((o) => o.total != null);
+  const max = Math.max(cook, ...fullStores.map((r) => r.total), ...pricedOrders.map((o) => o.total), 1);
   const bars = h(
     "div.bars",
     { role: "img", "aria-label": "השוואת עלויות בגרף עמודות" },
-    ...rep.ranked.slice(0, 4).map((r, i) => bar(`קנייה ב${r.store.name}`, r.total, max, i === 0 ? "best" : "")),
-    ...rep.orders.map((o) => bar(`הזמנה: ${o.source.name}`, o.total, max, "order")),
+    ...fullStores.slice(0, 4).map((r, i) => bar(`קנייה ב${r.store.name}`, r.total, max, i === 0 ? "best" : "")),
+    ...pricedOrders.map((o) => bar(`הזמנה: ${o.source.name}`, o.total, max, "order")),
   );
 
   const el = h(
     "div.page.wide",
     pageHead("השוואת מחירים", `${servingsWord(items.reduce((a, b) => a + b.servings, 0))} בסל · ${st.length} חנויות בהשוואה`),
     sharedCard,
-    sampleBanner(),
+    noPricesBanner(),
     h(
       "div.grid.two",
       { style: { "margin-top": "1rem", "align-items": "start" } },
@@ -196,7 +231,7 @@ export function compareView({ query }) {
     ),
     h("h2.section", "באיזו חנות לקנות?"),
     storesTable,
-    h("p.small.muted", "הסכום הוא עלות קניית אריזות שלמות בפועל, בניכוי מה שיש לכם בבית (", h("a", { href: "#/pantry" }, "מזווה"), "). חנות שחסר בה פריט מופיעה אחרי החנויות המלאות, והפריט החסר מחושב באומדן."),
+    h("p.small.muted", "הסכום הוא עלות קניית אריזות שלמות בפועל, בניכוי מה שיש לכם בבית (", h("a", { href: "#/pantry" }, "מזווה"), "). חנות שחסר בה מחיר לפריט מופיעה אחרי החנויות המלאות, בלי סכום."),
     splitCards.length ? [h("h2.section", "אפשר לחסוך עוד"), h("div.grid.two", splitCards)] : null,
     additionCards.length ? [h("h2.section", "כמעט בחינם: מנות שמנצלות אריזות שכבר קונים"), h("div.grid", additionCards)] : null,
     h("h2.section", "הכי זול לכל מצרך"),
@@ -214,7 +249,7 @@ export function compareView({ query }) {
   }
 }
 
-function controls(set) {
+function controls(set, hasDelivery) {
   const hourly = h("input.input.num-in", { type: "number", min: "0", step: "5", inputmode: "numeric", value: String(set.hourly || 0), "aria-label": "שווי שעת עבודה בשקלים", "data-fk": "hourly", onchange: (e) => store.update((s) => void (s.settings.hourly = Math.max(0, Number(e.target.value) || 0))) });
   const budget = h("input.input.num-in", { type: "number", min: "0", step: "50", inputmode: "numeric", value: String(set.budget || 0), "aria-label": "תקציב בשקלים", "data-fk": "budget", onchange: (e) => store.update((s) => void (s.settings.budget = Math.max(0, Number(e.target.value) || 0))) });
   return h(
@@ -223,7 +258,7 @@ function controls(set) {
     h("summary", { style: { cursor: "pointer", "font-weight": "700", "min-height": "2.75rem", display: "flex", "align-items": "center" } }, "התאמות לחישוב"),
     h(
       "div.stack",
-      h("label.check", h("input", { type: "checkbox", checked: set.delivery, "data-fk": "delivery", onchange: (e) => store.update((s) => void (s.settings.delivery = e.target.checked)) }), "קנייה במשלוח (כולל דמי משלוח לפי חנות)"),
+      hasDelivery ? h("label.check", h("input", { type: "checkbox", checked: set.delivery, "data-fk": "delivery", onchange: (e) => store.update((s) => void (s.settings.delivery = e.target.checked)) }), "קנייה במשלוח (כולל דמי משלוח לפי חנות)") : null,
       h("div.row", h("label", { for: "hourly-in" }, "שווי שעת עבודה שלי (₪):"), Object.assign(hourly, { id: "hourly-in" }), h("span.small.muted", "מוסיף לעלות הבישול את זמן העבודה")),
       h("div.row", h("label", { for: "budget-in" }, "תקציב לסל (₪):"), Object.assign(budget, { id: "budget-in" }), h("span.small.muted", "0 = ללא")),
     ),

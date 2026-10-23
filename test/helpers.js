@@ -23,15 +23,15 @@ export function loadCatalog(user = {}) {
 /** Minimal ingredient fixture for unit tests that should not depend on the real catalog. */
 export function fixture() {
   const ingredients = [
-    { id: "flour", name: "קמח לבן", aliases: ["קמח"], aisle: "dry", base: "g", pack: { type: "pack", size: 1000 }, ref: 5, density: 0.55, flags: ["g"] },
-    { id: "onion", name: "בצל", aliases: ["בצלים"], aisle: "produce", base: "g", pack: { type: "loose", size: 1000, step: 100 }, ref: 6, unitWeight: 150, flags: [] },
-    { id: "eggs", name: "ביצים", aliases: ["ביצה"], aisle: "dairy", base: "u", pack: { type: "pack", size: 12 }, ref: 18, unitWeight: 55, flags: ["e"] },
-    { id: "oil", name: "שמן", aliases: [], aisle: "oils", base: "ml", pack: { type: "pack", size: 1000 }, ref: 12, density: 0.92, flags: [], home: true },
-    { id: "water", name: "מים", aliases: [], aisle: "free", base: "ml", pack: { type: "pack", size: 1000 }, ref: 0, flags: [], free: true },
+    { id: "flour", name: "קמח לבן", aliases: ["קמח"], aisle: "dry", base: "g", pack: { type: "pack", size: 1000 }, density: 0.55, flags: ["g"] },
+    { id: "onion", name: "בצל", aliases: ["בצלים"], aisle: "produce", base: "g", pack: { type: "loose", size: 1000, step: 100 }, unitWeight: 150, flags: [] },
+    { id: "eggs", name: "ביצים", aliases: ["ביצה"], aisle: "dairy", base: "u", pack: { type: "pack", size: 12 }, unitWeight: 55, flags: ["e"] },
+    { id: "oil", name: "שמן", aliases: [], aisle: "oils", base: "ml", pack: { type: "pack", size: 1000 }, density: 0.92, flags: [], home: true },
+    { id: "water", name: "מים", aliases: [], aisle: "free", base: "ml", pack: { type: "pack", size: 1000 }, flags: [], free: true },
   ];
   const stores = [
-    { id: "a", name: "חנות א", index: 1, delivery: { fee: 30, freeOver: 100, min: 50 } },
-    { id: "b", name: "חנות ב", index: 0.9, delivery: { fee: 20, freeOver: 80, min: 30 } },
+    { id: "a", name: "חנות א", delivery: { fee: 30, freeOver: 100, min: 50 } },
+    { id: "b", name: "חנות ב", delivery: { fee: 20, freeOver: 80, min: 30 } },
   ];
   const recipes = [
     {
@@ -60,4 +60,24 @@ export function fixture() {
     { id: "s2", name: "מקור 2", markup: 0.5, fee: 20 },
   ];
   return { ingredients, recipes, stores, prices, sources };
+}
+
+/**
+ * The real catalog (recipes, ingredients, stores) with synthetic prices for every ingredient at every store,
+ * as if a person had typed them in. Test-only: the shipped data has no prices. `rnd` is a seeded () => [0,1).
+ * `coverage` < 1 leaves that share of the price cells empty (partially priced).
+ */
+export function loadPricedCatalog(rnd, { coverage = 1, orderPrices = true } = {}) {
+  const raw = loadRaw();
+  const priceOverrides = {};
+  for (const ing of raw.ingredients) {
+    if (ing.free) continue;
+    for (const s of raw.stores) {
+      if (rnd() >= coverage) continue;
+      (priceOverrides[ing.id] ||= {})[s.id] = Math.round((2 + rnd() * 40) * 10) / 10;
+    }
+  }
+  const orders = {};
+  if (orderPrices) for (const r of raw.recipes) orders[r.id] = { sharon: Math.round((10 + rnd() * 60) * 10) / 10 };
+  return buildCatalog(raw, { priceOverrides, orderPrices: orders });
 }

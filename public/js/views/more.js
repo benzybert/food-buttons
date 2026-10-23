@@ -34,7 +34,7 @@ export function moreView() {
     ? h(
         "section.card",
         { style: { "margin-top": "1rem" }, "aria-labelledby": "journal-h" },
-        h("div.spread", h("h2", { id: "journal-h" }, "יומן בישולים"), h("span.chip.good", "חסכתם ", moneyEl(totalSaved))),
+        h("div.spread", h("h2", { id: "journal-h" }, "יומן בישולים"), totalSaved > 0 ? h("span.chip.good", "חסכתם ", moneyEl(totalSaved)) : null),
         h("p.small.muted", `${cooked.length} בישולים. החיסכון הוא ההפרש מול ההזמנה הזולה ביותר, על המצרכים בלבד.`),
         settings().deviceCost > 0
           ? h("div", { style: { margin: "0.5rem 0" } }, h("div.spread", h("span.small.strong", "החזר השקעה במכשיר"), h("span.small", `${percent(Math.min(1, totalSaved / settings().deviceCost))} מתוך `, moneyEl(settings().deviceCost))), h("div.progress-track", { role: "progressbar", "aria-valuemin": "0", "aria-valuemax": "100", "aria-valuenow": String(Math.round(Math.min(100, (totalSaved / settings().deviceCost) * 100))), "aria-label": "החזר השקעה" }, h("span", { style: { "--w": String(Math.min(100, (totalSaved / settings().deviceCost) * 100)) } })))

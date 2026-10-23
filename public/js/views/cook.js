@@ -233,7 +233,7 @@ export function cookView({ match, query }) {
     return [
       h("p.count", "סיימתם!"),
       h("h1", { style: { "font-size": "clamp(2rem, 7vw, 3.2rem)" } }, "בתיאבון 🍽"),
-      saved != null ? h("p.text", saved > 0 ? ["בישלתם ב-", moneyEl(cmp.cook.total), " במקום ", moneyEl(cmp.order.total), ": חסכתם ", moneyEl(saved)] : ["עלות המנה: ", moneyEl(cmp.cook.total)]) : h("p.text", ["עלות המנה: ", moneyEl(cmp.cook.total)]),
+      saved != null ? h("p.text", saved > 0 ? ["בישלתם ב-", moneyEl(cmp.cook.total), " במקום ", moneyEl(cmp.order.total), ": חסכתם ", moneyEl(saved)] : ["עלות המנה: ", moneyEl(cmp.cook.total)]) : cmp.cook.total != null ? h("p.text", ["עלות המנה: ", moneyEl(cmp.cook.total)]) : null,
       h(
         "div.row",
         session.logged

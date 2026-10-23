@@ -80,6 +80,37 @@ const go = async (page, hash) => {
 const addDish = (page, id) => page.locator(`[data-fk="add-${id}"]`).click();
 const text = (page, sel) => page.locator(sel).first().innerText();
 
+// The app ships with no prices. Tests that need numbers type them in the way a person does.
+const INGREDIENTS = new Map(JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../../public/data/ingredients.json"), "utf8")).map((i) => [i.id, i]));
+const dishName = (id) => RECIPES.find((r) => r.id === id).name;
+const FIRST_STORES = ["שופרסל", "רמי לוי", "ויקטורי", "אושר עד"]; // the other four stay unpriced on purpose
+
+/** "ייבוא מחירים": every ingredient of the dishes at the first four stores; store i costs 8 + i per pack. */
+async function seedPrices(page, dishIds) {
+  const ids = new Set();
+  for (const d of dishIds) for (const l of RECIPES.find((r) => r.id === d).ingredients) if (l.id && !INGREDIENTS.get(l.id).free) ids.add(l.id);
+  const lines = [...ids].flatMap((id) => FIRST_STORES.map((s, i) => `${INGREDIENTS.get(id).name}, ${s}, ${8 + i}`));
+  await go(page, "#/prices");
+  await page.getByRole("button", { name: "ייבוא מחירים" }).click();
+  await page.locator('[aria-label="מחירים בפורמט מצרך, חנות, מחיר"]').fill(lines.join("\n"));
+  await page.getByRole("button", { name: "ייבוא", exact: true }).click();
+  await page.waitForSelector("[role=status]");
+  assert.match(await text(page, "[role=status]"), new RegExp(`יובאו ${lines.length} מחירים`), "every line was understood");
+  await page.keyboard.press("Escape");
+}
+
+/** Sharon's "עריכת מחירון": a price per serving for each dish, { dishId: price }. */
+async function setSharonPrices(page, prices) {
+  await go(page, "#/order");
+  await page.getByRole("button", { name: "עריכת מחירון" }).click();
+  for (const [id, price] of Object.entries(prices)) {
+    const input = page.locator(`[aria-label="מחיר למנה: ${dishName(id)}"]`);
+    await input.fill(String(price));
+    await input.press("Tab");
+  }
+  await page.getByRole("button", { name: "סיום עריכה" }).click();
+}
+
 console.log(`e2e against ${BASE}`);
 
 await step("home: two big buttons link to Sharon and Thermomix", async (page) => {
@@ -122,9 +153,9 @@ await step("dish page: servings scale the ingredients and cost", async (page) =>
   const after = await text(page, ".ing-list li:first-child .q");
   assert.notEqual(before, after);
   assert.match(page.url(), /s=6/);
-  const verdict = await text(page, ".verdict");
-  assert.match(verdict, /בישול עצמי/);
-  assert.match(verdict, /הזמנה/);
+  assert.equal(await page.locator(".verdict").count(), 0, "no cook-vs-order block while nothing has a price");
+  assert.equal(await page.locator(".ing-list .c").count(), 0, "no per-ingredient cost");
+  assert.match(await text(page, ".notice.compact"), /אין מחירים/);
   assert.match(await text(page, ".dish-hero"), /קק״ל/);
   await page.locator('[data-fk="note-chicken-soup"]').fill("פחות מלח");
   await page.locator('[data-fk="note-chicken-soup"]').press("Tab");
@@ -132,21 +163,79 @@ await step("dish page: servings scale the ingredients and cost", async (page) =>
   assert.equal(await page.locator('[data-fk="note-chicken-soup"]').inputValue(), "פחות מלח");
 });
 
-await step("basket and compare: totals, stores, delivery toggle", async (page) => {
+await step("no prices, no numbers: not one shekel sign on any screen until somebody types a price", async (page) => {
   await go(page, "#/cook");
-  for (const id of ["chicken-soup", "pasta-pomodoro", "shakshuka"]) await addDish(page, id);
+  for (const id of ["chicken-soup", "pasta-pomodoro"]) await addDish(page, id);
+  const screens = ["#/", "#/cook", "#/dish/chicken-soup", "#/compare", "#/list", "#/plan", "#/order", "#/pantry", "#/surprise"];
+  for (const hash of screens) {
+    await go(page, hash);
+    await page.waitForTimeout(150);
+    const body = await page.locator("body").innerText();
+    assert.ok(!body.includes("₪"), `${hash} shows a price with none entered: ${body.match(/.{0,30}₪.{0,10}/)?.[0]}`);
+  }
+  await go(page, "#/compare");
+  assert.match(await text(page, ".notice.compact"), /אין מחירים/);
+  assert.equal(await page.locator(".verdict, .big-num").count(), 0);
+  await go(page, "#/cook");
+  assert.equal(await page.locator(".dcard-price").count(), 0, "recipe cards carry no price line");
+  assert.equal(await page.locator('select[aria-label="מיון"] option[value="cheap"]').count(), 0, "no sort by price");
+  // the list and the Sharon order still work: quantities need no price
+  await go(page, "#/list");
+  assert.ok((await page.locator(".shop-item").count()) > 5);
+});
+
+await step("basket and compare: a total exists only for stores that price every item", async (page) => {
+  const dishes = ["chicken-soup", "pasta-pomodoro", "shakshuka"];
+  await seedPrices(page, dishes);
+  await setSharonPrices(page, Object.fromEntries(dishes.map((d) => [d, 60])));
+  await go(page, "#/cook");
+  for (const id of dishes) await addDish(page, id);
   assert.match(await text(page, "#basket-pill"), /3 מתכונים/);
   await go(page, "#/compare");
   assert.equal(await page.locator(".basket-row").count(), 3);
-  assert.ok((await page.locator('ul.rows[aria-label="עלות הסל לפי חנות"] > li').count()) >= 4);
+  const rows = page.locator('ul.rows[aria-label="עלות הסל לפי חנות"] > li');
+  assert.equal(await rows.count(), 8, "all eight stores are listed");
+  const withTotal = await rows.filter({ hasText: "₪" }).count();
+  assert.equal(withTotal, 4, "only the four stores with prices get a total");
+  assert.equal(await rows.filter({ hasText: "חסרים מחירים ל-" }).count(), 4, "the others say what is missing");
+  assert.match(await text(page, 'ul.rows[aria-label="עלות הסל לפי חנות"] > li.best'), /שופרסל/, "the cheapest priced store wins");
   assert.match(await text(page, ".verdict-msg"), /בישול חוסך/);
-  const before = await text(page, 'ul.rows[aria-label="עלות הסל לפי חנות"] > li.best .amt');
   await page.locator("summary", { hasText: "התאמות לחישוב" }).click();
-  await page.locator('[data-fk="delivery"]').check();
-  await page.waitForFunction((b) => document.querySelector('ul.rows[aria-label="עלות הסל לפי חנות"] > li.best .amt')?.innerText !== b, before);
-  // pantry-aware: marking everything at home empties the shopping bill
+  assert.equal(await page.locator('[data-fk="delivery"]').count(), 0, "no delivery toggle: there is no delivery data");
   await go(page, "#/list");
   assert.ok((await page.locator(".shop-item").count()) > 5);
+});
+
+await step("compare with one dish unpriced: no store total, and it names what is missing", async (page) => {
+  await seedPrices(page, ["chicken-soup", "pasta-pomodoro"]); // shakshuka's ingredients stay unpriced
+  await go(page, "#/cook");
+  for (const id of ["chicken-soup", "pasta-pomodoro", "shakshuka"]) await addDish(page, id);
+  await go(page, "#/compare");
+  await page.waitForSelector("#missing-h");
+  assert.match(await text(page, "#missing-h"), /חסרים מחירים/);
+  assert.match(await text(page, "section[aria-labelledby=missing-h]"), /חסרים \d+ מחירים/);
+  assert.equal(await page.locator(".verdict, ul.rows[aria-label='עלות הסל לפי חנות']").count(), 0, "no verdict and no store totals while a price is missing");
+  // the dishes that are fully priced still show their own cost in the basket
+  const rowsText = await page.locator(".basket-row").allInnerTexts();
+  assert.equal(rowsText.filter((t) => t.includes("₪")).length, 2);
+  await page.getByRole("link", { name: "הזנת מחירים" }).first().click();
+  await page.waitForSelector("table.tbl");
+});
+
+await step("dish page with prices: cook vs order, and a missing price shows as missing", async (page) => {
+  await seedPrices(page, ["chicken-soup"]);
+  await setSharonPrices(page, { "chicken-soup": 40 });
+  await go(page, "#/dish/chicken-soup");
+  const verdict = await text(page, ".verdict");
+  assert.match(verdict, /בישול עצמי/);
+  assert.match(verdict, /₪/);
+  assert.match(verdict, /הזמנה · שרון/);
+  assert.match(await text(page, ".verdict-msg"), /מבשלים וחוסכים|ההזמנה זולה/);
+  assert.ok((await page.locator(".ing-list .c").count()) > 3, "each ingredient shows its cost");
+  // a dish whose ingredients are not priced says so instead of showing a number
+  await go(page, "#/dish/shakshuka");
+  assert.match(await text(page, ".verdict"), /חסר מחיר ל-/);
+  assert.equal(await page.locator(".verdict .big-num", { hasText: "₪" }).count(), 0);
 });
 
 await step("shopping list: tick items, persist after reload, text export", async (page) => {
@@ -188,7 +277,20 @@ await step("cook mode: steps, keyboard, timer, finish logs saving", async (page)
   await page.waitForSelector(".chip.good");
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("fb:v1")).cooked);
   assert.equal(saved.length, 1);
-  assert.ok(saved[0].saved > 50);
+  assert.equal(saved[0].saved, 0, "no prices, so no saving is claimed");
+  await go(page, "#/");
+  assert.doesNotMatch(await text(page, ".home-foot"), /חסכתם/);
+});
+
+await step("cook mode with prices: finishing logs a real saving", async (page) => {
+  await seedPrices(page, ["chicken-soup"]);
+  await setSharonPrices(page, { "chicken-soup": 60 });
+  await go(page, "#/cook/chicken-soup");
+  for (let i = 0; i < 6; i++) await page.keyboard.press("ArrowLeft");
+  await page.getByRole("button", { name: /רשמו שבישלתי/ }).click();
+  await page.waitForSelector(".chip.good");
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("fb:v1")).cooked);
+  assert.ok(saved[0].saved > 50, `saved ${saved[0].saved}`);
   await go(page, "#/");
   assert.match(await text(page, ".home-foot"), /חסכתם החודש/);
 });
@@ -205,8 +307,9 @@ await step("Sharon order: cart total, WhatsApp link with number and text", async
   const href = await link.getAttribute("href");
   assert.match(href, /^https:\/\/wa\.me\/972501234567\?text=/);
   assert.match(decodeURIComponent(href), /2 × מרק עוף של שישי/);
-  assert.match(decodeURIComponent(href), /64 ₪/);
-  // edit mode: change a price and see it reflected
+  assert.doesNotMatch(decodeURIComponent(href), /₪|סה״כ/, "ordering works without a price: the message has quantities only");
+  assert.doesNotMatch(await text(page, "section[aria-labelledby=cart-h]"), /₪/);
+  // edit mode: enter a price and see it in the cart and in the message
   await page.getByRole("button", { name: "עריכת מחירון" }).click();
   const input = page.locator('[aria-label="מחיר למנה: מרק עוף של שישי"]');
   await input.fill("40");
@@ -214,6 +317,8 @@ await step("Sharon order: cart total, WhatsApp link with number and text", async
   await page.getByRole("button", { name: "סיום עריכה" }).click();
   await page.waitForSelector("#cart-h");
   assert.match(await text(page, ".price"), /40/);
+  assert.match(await text(page, "section[aria-labelledby=cart-h]"), /80/);
+  assert.match(decodeURIComponent(await page.getByRole("link", { name: /שליחה לשרון/ }).getAttribute("href")), /סה״כ לפי המחירון: 80 ₪/);
 });
 
 await step("custom order source: added, priced, and compared on the dish page", async (page) => {
@@ -225,10 +330,18 @@ await step("custom order source: added, priced, and compared on the dish page", 
   await page.getByRole("button", { name: "הוספה", exact: true }).click();
   await page.waitForSelector('h1:has-text("הזמנה דרך וולט")');
   assert.match(page.url(), /src=src-/);
+  // the source has a markup and a fee but nothing to apply the markup to: the dish has no price there yet
   await page.getByRole("button", { name: /הוסף מנות של מרק עוף/ }).click();
   await page.waitForSelector("#cart-h");
-  // 32 x 1.3 = 41.60 + 20 delivery
-  assert.match(await text(page, "section[aria-labelledby=cart-h]"), /61\.60/);
+  assert.doesNotMatch(await text(page, "section[aria-labelledby=cart-h]"), /₪/, "no price, no total");
+  await page.getByRole("button", { name: "עריכת מחירון" }).click();
+  const price = page.locator('[aria-label="מחיר למנה: מרק עוף של שישי"]');
+  await price.fill("32");
+  await price.press("Tab");
+  await page.getByRole("button", { name: "סיום עריכה" }).click();
+  await page.waitForSelector("#cart-h");
+  // 32 for the serving + 20 delivery
+  assert.match(await text(page, "section[aria-labelledby=cart-h]"), /52/);
   await go(page, "#/dish/chicken-soup");
   await page.locator("summary", { hasText: "פירוט לפי חנות" }).click();
   assert.match(await text(page, "details"), /וולט/);
@@ -259,7 +372,7 @@ await step("import: paste a recipe, fix it, save, price it, cook it", async (pag
   await page.getByRole("button", { name: "שמירת המתכון" }).click();
   await page.waitForURL(/#\/dish\/my-/);
   assert.match(await text(page, "h1"), /פסטה בשמנת/);
-  assert.match(await text(page, ".verdict"), /בישול עצמי/);
+  assert.match(await text(page, ".notice.compact"), /אין מחירים/);
   assert.equal(await page.locator(".chip-tm").count(), 2);
   await go(page, "#/cook");
   assert.match((await page.locator(".dcard h2").allInnerTexts()).join("|"), /פסטה בשמנת/);
@@ -381,7 +494,7 @@ await step("cookidoo bridge: connect in settings, search, import an English reci
   await page.waitForURL(/#\/dish\/my-/);
   assert.match(await text(page, "h1"), /Tomato soup/);
   assert.equal(await page.locator(".chip-tm").count(), 2);
-  assert.match(await text(page, ".verdict"), /בישול עצמי/);
+  assert.match(await text(page, ".notice.compact"), /אין מחירים/);
   assert.equal(await page.locator("ol p[dir='auto']").count(), 2);
 
   const kept = await page.evaluate(() => localStorage.getItem("fb:v1"));

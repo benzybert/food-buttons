@@ -18,7 +18,7 @@ export function surpriseView() {
   let pool = c.recipes.filter((r) => ["main", "soup"].includes(r.category) && (prefs.kosher === "all" || r.kosher === prefs.kosher) && prefs.diet.every((d) => r.diet.includes(d)) && !prefs.avoid.some((a) => r.allergens.includes(a)));
   if (maxTime) pool = pool.filter((r) => r.time.total <= maxTime);
   if (mode === "pantry") pool = cookableWith(pool, have, c.ingById).filter((x) => x.missing.length <= 3).map((x) => x.rec);
-  if (mode === "cheap") pool = [...pool].sort((a, b) => dishInfo(a.id).perServing - dishInfo(b.id).perServing).slice(0, Math.max(3, Math.ceil(pool.length / 3)));
+  if (mode === "cheap") pool = [...pool].sort((a, b) => (dishInfo(a.id).perServing ?? 1e9) - (dishInfo(b.id).perServing ?? 1e9)).slice(0, Math.max(3, Math.ceil(pool.length / 3)));
 
   let pick = pool.find((r) => r.id === currentId) || null;
   if (!pick) {
@@ -45,7 +45,7 @@ export function surpriseView() {
       h("div", { style: { "font-size": "5rem", "line-height": 1 }, "aria-hidden": "true" }, pick.emoji),
       h("h2", { style: { "font-size": "2rem" } }, pick.name),
       pick.description ? h("p.muted", pick.description) : null,
-      h("div.chips", { style: { "justify-content": "center" } }, h("span.chip", icon("clock", { size: 14 }), duration(pick.time.total)), kosherChip(pick), h("span.chip", moneyEl(info.perServing), " למנה"), info.savePct > 0.03 ? h("span.chip.good", `חיסכון ${percent(info.savePct)} מול הזמנה`) : null),
+      h("div.chips", { style: { "justify-content": "center" } }, h("span.chip", icon("clock", { size: 14 }), duration(pick.time.total)), kosherChip(pick), info.perServing != null ? h("span.chip", moneyEl(info.perServing), " למנה") : null, info.savePct > 0.03 ? h("span.chip.good", `חיסכון ${percent(info.savePct)} מול הזמנה`) : null),
       h("div.row", { style: { "justify-content": "center" } }, h("a.btn", { href: `#/dish/${pick.id}` }, icon("book", { size: 20 }), "למתכון"), h("a.btn.btn-green", { href: `#/cook/${pick.id}` }, icon("chef", { size: 20 }), "מבשלים!"), h("button.btn.btn-ghost", { type: "button", onclick: () => addWithToast(pick) }, icon("plus", { size: 20 }), "לסל")),
       h("button.btn.btn-ghost", { type: "button", onclick: () => ((currentId = null), render(true)) }, icon("shuffle", { size: 20 }), "עוד הצעה"),
     );
