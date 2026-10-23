@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>העגלה המשותפת</title>
+    <meta name="description" content="עגלה אחת לשרון ול-Thermomix, השוואת מחירים ועדכון ל-Instinct" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="fonts/alef-he-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="cart.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="top">
+        <a class="back" href="./">→ חזרה</a>
+        <h1>העגלה המשותפת</h1>
+        <button type="button" class="chip" id="who" hidden></button>
+      </header>
+
+      <form class="card" id="gate" hidden>
+        <h2>כניסה</h2>
+        <p class="hint">הקוד נשמר במכשיר הזה בלבד.</p>
+        <label class="field">איך לקרוא לך?<input id="gate-name" autocomplete="nickname" maxlength="40" required /></label>
+        <label class="field">קוד גישה<input id="gate-key" type="password" dir="ltr" autocomplete="current-password" required /></label>
+        <p class="error" id="gate-error" role="alert" hidden></p>
+        <button class="btn" type="submit">כניסה</button>
+      </form>
+
+      <div id="content" hidden>
+        <form class="card" id="add">
+          <h2>הוספה לעגלה</h2>
+          <fieldset class="seg" id="source">
+            <legend class="sr-only">דרך מי</legend>
+            <label class="src-sharon"><input type="radio" name="source" value="sharon" /><span>שרון</span></label>
+            <label class="src-thermomix"><input type="radio" name="source" value="thermomix" /><span dir="ltr">Thermomix</span></label>
+            <label class="src-manual"><input type="radio" name="source" value="manual" checked /><span>ידני</span></label>
+          </fieldset>
+          <div class="row">
+            <input name="name" placeholder="מה להוסיף?" aria-label="שם הפריט" maxlength="80" required autocomplete="off" />
+            <input name="qty" type="number" inputmode="decimal" min="0" step="any" value="1" aria-label="כמות" />
+            <input name="unit" placeholder="יחידה" aria-label="יחידה" maxlength="20" autocomplete="off" />
+          </div>
+          <button class="btn" type="submit">הוסף</button>
+        </form>
+
+        <details class="card" id="import">
+          <summary>ייבוא מתכון מ-Thermomix</summary>
+          <form id="import-form" class="card plain">
+            <input name="recipe" placeholder="שם המתכון" aria-label="שם המתכון" maxlength="120" autocomplete="off" />
+            <textarea name="lines" placeholder="מצרך בכל שורה, למשל:&#10;2 כוסות קמח&#10;1/2 כפית מלח&#10;3 ביצים" aria-label="מצרכים" required></textarea>
+            <p class="hint">אפשר להדביק ישירות את רשימת המצרכים מהמתכון.</p>
+            <button class="btn" type="submit">הוסף את המצרכים לעגלה</button>
+          </form>
+        </details>
+
+        <section class="card" aria-labelledby="items-title">
+          <h2 id="items-title">בעגלה <span id="items-count"></span></h2>
+          <ul class="items" id="items"></ul>
+          <p class="empty" id="items-empty" hidden>העגלה ריקה.</p>
+        </section>
+
+        <section class="card" aria-labelledby="compare-title">
+          <h2 id="compare-title">השוואה והזמנה</h2>
+          <p class="hint">את המחיר ליחידה מזינים לכל פריט (תחת "מחירים"). ההזמנה עצמה נעשית באתר הרשת: פותחים, מעתיקים את הרשימה, ואז מסמנים כאן שהוזמן.</p>
+          <div class="table" id="compare"></div>
+          <button class="btn ghost" type="button" id="copy">העתק רשימה</button>
+          <details id="ordered-wrap" hidden>
+            <summary>הוזמנו כבר <span id="ordered-count"></span></summary>
+            <ul class="log" id="ordered"></ul>
+            <button class="btn ghost small" type="button" id="clear-ordered">נקה את הרשימה</button>
+          </details>
+        </section>
+
+        <section class="card" aria-labelledby="instinct-title">
+          <h2 id="instinct-title">Instinct</h2>
+          <p class="hint" id="instinct-status"></p>
+          <button class="btn" type="button" id="instinct-sync">שלח ל-Instinct עדכון מלא עכשיו</button>
+        </section>
+
+        <section class="card" aria-labelledby="log-title">
+          <h2 id="log-title">מה קרה לאחרונה</h2>
+          <ul class="log" id="log"></ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="cart.js" defer></script>
+  </body>
+</html>

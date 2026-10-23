@@ -46,11 +46,14 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--ink);
   font-family: "Alef", system-ui, sans-serif;
@@ -59,7 +62,7 @@ body {
 }
 
 main {
-  min-height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
@@ -116,6 +119,26 @@ main {
 }
 #thermomix {
   --c: var(--btn-2);
+}
+
+.cart-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 56px;
+  padding: 0.5em 1em;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: clamp(1.1rem, 3.5vmin, 1.6rem);
+  text-decoration: none;
+}
+
+.cart-bar:focus-visible {
+  outline: 0.35rem solid var(--focus);
+  outline-offset: -0.35rem;
 }
 
 @media (min-width: 900px) and (orientation: landscape) {

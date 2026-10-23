@@ -1,0 +1,421 @@
+/* Shared cart page. Tokens and fonts come from style.css. */
+:root {
+  --card: #fffdf8;
+  --line: rgb(43 26 14 / 0.16);
+  --muted: #6b5644;
+  --ok: #1d6b4a;
+  --warn: #9a5b00;
+  --bad: #b3341b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card: #2a1c12;
+    --line: rgb(255 242 224 / 0.18);
+    --muted: #c9b39b;
+    --ok: #5fcf9f;
+    --warn: #ffc933;
+    --bad: #ff8a73;
+  }
+}
+
+/* body is a flex column (style.css), so the page needs an explicit width */
+.page {
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: var(--gap);
+  display: grid;
+  gap: var(--gap);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.plain {
+  border: 0;
+  padding: 0.75rem 0 0;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.top h1 {
+  flex: 1;
+  margin: 0;
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  line-height: 1.1;
+}
+
+a.back,
+.chip {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card > h2,
+summary {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.hint {
+  margin: 0;
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.error {
+  margin: 0;
+  color: var(--bad);
+  font-size: 1rem;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: 0.8rem;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 0.25rem solid var(--focus);
+  outline-offset: 0.1rem;
+}
+
+label.field {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 5.5rem 6.5rem;
+  gap: 0.5rem;
+}
+
+.btn {
+  min-height: 48px;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: var(--ink);
+  color: var(--bg);
+  font: inherit;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 0.2rem 0 rgb(0 0 0 / 0.25);
+}
+
+.btn:active {
+  transform: translateY(0.15rem);
+  box-shadow: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--line);
+  box-shadow: none;
+}
+
+.btn.small {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  font-size: 1rem;
+}
+
+.seg {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.seg label {
+  position: relative;
+}
+
+.seg input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.seg span {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--line);
+  border-radius: 0.9rem;
+  font-size: 1.05rem;
+}
+
+.seg input:checked + span {
+  color: #fff;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--c) 80%, black);
+}
+
+.seg input:focus-visible + span {
+  outline: 0.25rem solid var(--focus);
+  outline-offset: 0.1rem;
+}
+
+.src-sharon {
+  --c: var(--btn-1);
+}
+.src-thermomix {
+  --c: var(--btn-2);
+}
+.src-manual {
+  --c: #5b4636;
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item {
+  border: 2px solid var(--line);
+  border-radius: 1rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+}
+
+.badges {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c) 80%, black);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.qty input {
+  width: 4.5rem;
+  text-align: center;
+  padding: 0.25rem;
+}
+
+.qty .btn {
+  min-width: 44px;
+  padding: 0;
+}
+
+.prices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.item details summary {
+  min-height: 36px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.table {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.prov {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: 1rem;
+}
+
+.prov.best {
+  border-color: var(--ok);
+}
+
+.prov .total {
+  font-size: 1.4rem;
+}
+
+.prov .meta {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.tag-ok {
+  color: var(--ok);
+  font-weight: 700;
+}
+.tag-warn {
+  color: var(--warn);
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.log li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.log time {
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.empty {
+  text-align: center;
+  padding: 1rem 0;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.toast {
+  position: fixed;
+  inset-inline: 1rem;
+  bottom: 1rem;
+  margin-inline: auto;
+  max-width: 28rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 1rem;
+  background: var(--ink);
+  color: var(--bg);
+  text-align: center;
+  box-shadow: 0 0.4rem 1.2rem rgb(0 0 0 / 0.3);
+}
+
+.toast.bad {
+  background: var(--bad);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
