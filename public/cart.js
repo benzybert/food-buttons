@@ -22,6 +22,7 @@ let actor = store.get("fb.actor");
 let cart = null;
 let rev = -1;
 let pending = -1;
+let inviteLoaded = false;
 const openItems = new Set();
 
 const money = (n) => `${n.toLocaleString("he-IL", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} ₪`;
@@ -100,6 +101,7 @@ $("gate").addEventListener("submit", (e) => {
   key = $("gate-key").value;
   store.set("fb.actor", actor);
   store.set("fb.key", key);
+  inviteLoaded = false;
   $("gate-key").value = "";
   showApp();
   rev = -1;
@@ -138,7 +140,7 @@ function renderItems() {
       const prices = cart.providers.map((p) =>
         el(
           "label",
-          { class: "field" },
+          { class: "cart-field" },
           p.name,
           el("input", {
             "data-key": `price:${item.id}:${p.id}`,
@@ -157,7 +159,7 @@ function renderItems() {
 
       return el(
         "li",
-        { class: "item" },
+        { class: "cart-item" },
         el(
           "div",
           { class: "item-main" },
@@ -217,7 +219,7 @@ function renderCompare() {
           : el("span", { class: "tag-warn" }, `חסר מחיר ל-${row.missing} מתוך ${active.length}`);
       return el(
         "div",
-        { class: `prov${row.cheapest ? " best" : ""}` },
+        { class: `prov${row.cheapest ? " is-best" : ""}` },
         el("strong", {}, row.name),
         el("span", { class: "total" }, active.length && row.missing < active.length ? `${row.complete ? "" : "עד כה "}${money(row.total)}` : "—"),
         el(
@@ -259,10 +261,21 @@ function renderCompare() {
   );
 }
 
+// The invite carries the read-only key, so it is fetched with the main key and
+// only lives in this page's link.
+async function loadInvite() {
+  if (inviteLoaded) return;
+  const { whatsappUrl } = await api("GET", "/api/instinct/invite");
+  $("instinct-whatsapp").href = whatsappUrl;
+  $("instinct-whatsapp").hidden = false;
+  $("instinct-whatsapp-note").hidden = false;
+  inviteLoaded = true;
+}
+
 function renderInstinct(s) {
   $("instinct-sync").disabled = !s.enabled;
   $("instinct-status").textContent = !s.enabled
-    ? "לא מחובר. כדי לחבר, מגדירים בשרת את INSTINCT_WEBHOOK_URL (ואת INSTINCT_TOKEN)."
+    ? "עוד לא מחובר. הכפתור למטה פותח ווטסאפ עם הודעה מוכנה ל-Instinct. כשתהיה לו כתובת webhook, מגדירים אותה בשרת (INSTINCT_WEBHOOK_URL)."
     : [
         `מחובר ל-${s.host}.`,
         s.pending ? `${s.pending} עדכונים ממתינים לשליחה${s.lastError ? ` (${s.lastError})` : ""}.` : "כל העדכונים נשלחו.",
@@ -304,12 +317,13 @@ async function refresh() {
     showApp();
     renderItems();
     renderCompare();
-    await renderLog();
+    // Restore right away: anything typed while the awaits below run must not be overwritten.
     const again = focused && document.querySelector(`[data-key="${CSS.escape(focused)}"]`);
     if (again) {
       again.value = typed;
       again.focus();
     }
+    await Promise.all([renderLog(), loadInvite()]);
   });
 }
 

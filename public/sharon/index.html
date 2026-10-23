@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>שרון | הזמנת אוכל</title>
+    <meta name="description" content="מה שרון מבשלת השבוע: מהתפריט שלה או ממתכון שאנחנו רוצים" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/alef-he-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body data-page="sharon">
+    <main class="page">
+      <a class="back" href="/">→ חזרה</a>
+      <h1>שרון</h1>
+      <p class="lead">מה שרון מבשלת השבוע?</p>
+
+      <fieldset class="choice">
+        <legend>מאיפה בוחרים?</legend>
+        <label>
+          <input type="radio" name="source" value="menu" checked />
+          <span>מהתפריט של שרון</span>
+        </label>
+        <label>
+          <input type="radio" name="source" value="recipe" />
+          <span>ממתכון שאנחנו רוצים</span>
+        </label>
+      </fieldset>
+
+      <section id="panel-menu" aria-label="התפריט של שרון">
+        <p id="menu-empty" class="muted" hidden>התפריט של שרון עוד לא נוסף לאתר.</p>
+        <ul id="dishes" class="dishes"></ul>
+        <p id="menu-note" class="muted" hidden>מנות שסימנתם בלי רשימת מצרכים לא ייכנסו לחישוב.</p>
+      </section>
+
+      <section id="panel-recipe" aria-label="מתכון" hidden>
+        <label class="field">
+          <span>שם המתכון (לא חובה)</span>
+          <input id="title" type="text" maxlength="100" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>המצרכים, מצרך בכל שורה</span>
+          <textarea id="ingredients" rows="9" placeholder="2 כוסות קמח&#10;3 ביצים&#10;500 גרם חזה עוף"></textarea>
+        </label>
+      </section>
+
+      <button class="shop" id="shop" type="button" disabled>🛒 קנה מצרכים</button>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

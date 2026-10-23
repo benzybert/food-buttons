@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="cart.css" />
   </head>
   <body>
-    <div class="page">
+    <div class="cart-page">
       <header class="top">
-        <a class="back" href="./">→ חזרה</a>
+        <a class="cart-back" href="./">→ חזרה</a>
         <h1>העגלה המשותפת</h1>
         <button type="button" class="chip" id="who" hidden></button>
       </header>
@@ -21,8 +21,8 @@
       <form class="card" id="gate" hidden>
         <h2>כניסה</h2>
         <p class="hint">הקוד נשמר במכשיר הזה בלבד.</p>
-        <label class="field">איך לקרוא לך?<input id="gate-name" autocomplete="nickname" maxlength="40" required /></label>
-        <label class="field">קוד גישה<input id="gate-key" type="password" dir="ltr" autocomplete="current-password" required /></label>
+        <label class="cart-field">איך לקרוא לך?<input id="gate-name" autocomplete="nickname" maxlength="40" required /></label>
+        <label class="cart-field">קוד גישה<input id="gate-key" type="password" dir="ltr" autocomplete="current-password" required /></label>
         <p class="error" id="gate-error" role="alert" hidden></p>
         <button class="btn" type="submit">כניסה</button>
       </form>
@@ -56,7 +56,7 @@
 
         <section class="card" aria-labelledby="items-title">
           <h2 id="items-title">בעגלה <span id="items-count"></span></h2>
-          <ul class="items" id="items"></ul>
+          <ul class="cart-items" id="items"></ul>
           <p class="empty" id="items-empty" hidden>העגלה ריקה.</p>
         </section>
 
@@ -75,6 +75,8 @@
         <section class="card" aria-labelledby="instinct-title">
           <h2 id="instinct-title">Instinct</h2>
           <p class="hint" id="instinct-status"></p>
+          <a class="btn" id="instinct-whatsapp" href="#" target="_blank" rel="noopener" hidden>בקש מ-Instinct בווטסאפ להתחבר</a>
+          <p class="hint" id="instinct-whatsapp-note" hidden>נפתחת הודעה מוכנה בווטסאפ, ואתה שולח אותה בעצמך. היא כוללת מפתח לקריאה בלבד.</p>
           <button class="btn" type="button" id="instinct-sync">שלח ל-Instinct עדכון מלא עכשיו</button>
         </section>
 

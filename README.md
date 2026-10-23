@@ -1,28 +1,42 @@
 # food-buttons
 
-Two giant food-order buttons (Sharon, Thermomix), Alef font, Hebrew RTL, and a **shared cart** behind them. Node server with no dependencies (`server.js`), static files in `public/`, reads `PORT`.
+Two giant food-order buttons (Sharon, Thermomix), Alef font, Hebrew RTL. Static files in `public/`, served by `server.js` (no dependencies, reads `PORT`).
 
-- Run: `npm start`, test: `npm test`
-- Both buttons open `public/cart.html` with their source preselected, so everything added through Sharon, Thermomix or by hand lands in one cart. The same item from two places becomes one line with both source badges.
+- Run: `npm start`, test: `npm test` (Node) and `pytest` in `grocery-api/`
+- Home: `public/index.html`, each button is an `<a>` to its workflow page, plus a bar linking to the shared cart
+- Sharon (`public/sharon/`): Sharon is the chef who comes on Sundays. Choose dishes from her menu, or paste a recipe
+- Thermomix (`public/thermomix/`): paste a recipe's ingredients
+- Both end in **🛒 קנה מצרכים** → `public/groceries/`, which compares prices at Shufersal and Tiv Taam
+- Sharon's menu: `public/menu.json`, `{"dishes": [{"name": "...", "ingredients": ["2 כוסות קמח", "..."]}]}` (a dish without `ingredients` is listed but can't be priced)
+- Price comparison runs in `grocery-api/` (Python, separate service). `server.js` proxies `POST /api/compare` and `GET /api/health` to `GROCERY_API_URL`; see `grocery-api/README.md`
+- **Shared cart** (`public/cart.html`, API under `/api/cart`): see below
 - Fonts: Alef (SIL OFL), subset to Hebrew letters and ASCII in `public/fonts/`
-- Deploy: Railway (needs the server for `/api`; the static-only hosts no longer fit)
+- Deploy: Railway (site service from the repo root, grocery API service from `grocery-api/`)
 
 ## Configuration (environment variables)
 
 | Variable | Purpose |
 | --- | --- |
-| `ACCESS_KEY` | Required in practice. Every `/api` call needs `Authorization: Bearer <key>`; the cart page asks for it once per device. If unset, a temporary key is printed at startup. |
+| `GROCERY_API_URL`, `GROCERY_API_TOKEN` | Where the price-comparison service lives, and its key. |
+| `ACCESS_KEY` | Required in practice. The cart API needs `Authorization: Bearer <key>`; the cart page asks for it once per device. If unset, a temporary key is printed at startup. |
 | `DATA_DIR` | Where `state.json` (cart, orders, events) is kept. Mount a Railway volume here, otherwise the cart is wiped on each deploy. Default `./data`. |
-| `INSTINCT_WEBHOOK_URL` | https URL that receives every event. Unset = integration off. |
-| `INSTINCT_TOKEN` | Sent as `Authorization: Bearer <token>` to the webhook. |
+| `INSTINCT_WEBHOOK_URL`, `INSTINCT_TOKEN` | https URL (and bearer token) that receives every event. Unset = push is off. |
+| `INSTINCT_READ_KEY` | Read-only key for Instinct. Defaults to one derived from `ACCESS_KEY`. |
+| `INSTINCT_WHATSAPP` | Number the "ask Instinct to connect" button writes to. Default `16508702892`. |
+| `PUBLIC_URL` | The site's public URL, if it can't be taken from the request headers. |
 
-## Price comparison and ordering
+## Shared cart
 
-Platforms are listed in `providers.json` (id, name, https url). Prices are per unit and entered by hand per item and platform, because the chains have no public price API. A platform can be "cheapest" only if every item in the cart is priced there. Ordering happens on the chain's own site: open it, copy the list, then press "הזמנתי כאן", which marks the items as ordered and records an `order.placed` event.
+Sharon's dishes, Thermomix recipes and manual entries all land in one cart; the same item from two places becomes one line with both source badges. Recipes can be pasted into the cart page too (one ingredient per line, `2 כוסות קמח`).
 
-## Instinct
+Prices are per unit, entered by hand per item and platform (`providers.json`: id, name, https url). A platform can be "cheapest" only if every item in the cart is priced there. Ordering happens on the chain's own site: open it, copy the list, then press "הזמנתי כאן", which marks the items as ordered and records an `order.placed` event.
 
-Every change is recorded as an event and POSTed to `INSTINCT_WEBHOOK_URL`:
+## Instinct (AI assistant)
+
+Every change is recorded as an event. Instinct can get them two ways, both documented for it at `/api/instinct/spec`:
+
+- **Pull:** `GET /api/events?after=<last id>` with the read-only key. Also `GET /api/cart` for the current state.
+- **Push (webhook):** set `INSTINCT_WEBHOOK_URL` and every event is POSTed there:
 
 ```json
 {
@@ -38,22 +52,25 @@ Every change is recorded as an event and POSTed to `INSTINCT_WEBHOOK_URL`:
 }
 ```
 
-Types: `cart.item_added`, `cart.item_updated`, `cart.item_removed`, `cart.price_set`, `cart.ordered_cleared`, `thermomix.recipe_imported`, `order.placed`, `instinct.sync`. `Idempotency-Key` is the event id. Undelivered events are kept and retried with backoff, oldest first; a 4xx other than 408/429 drops that event so it cannot block the queue. The "שלח ל-Instinct עדכון מלא" button sends an `instinct.sync` event carrying the whole cart.
+Types: `cart.item_added`, `cart.item_updated`, `cart.item_removed`, `cart.price_set`, `cart.ordered_cleared`, `thermomix.recipe_imported`, `order.placed`, `instinct.sync`. `Idempotency-Key` is the event id. Undelivered events are kept and retried with backoff, oldest first; a 4xx other than 408/429 drops that event so it cannot block the queue.
 
-## API
+On the cart page, **"בקש מ-Instinct בווטסאפ להתחבר"** opens WhatsApp to Instinct with a ready message (spec link, read-only key, how to pull, and a request for a webhook URL). The sender presses send. **"שלח ל-Instinct עדכון מלא"** pushes an `instinct.sync` event carrying the whole cart.
 
-All JSON, all need the access key. `X-Actor` (URL-encoded) names who is acting.
+## Cart API
+
+All JSON and all need a key; the read-only key only works on the rows marked read. `X-Actor` (URL-encoded) names who is acting.
 
 | Call | |
 | --- | --- |
-| `GET /api/cart` | items, providers, price comparison, recent orders |
+| `GET /api/cart` (read) | items, providers, price comparison, recent orders |
 | `POST /api/cart/items` | `{name, qty?, unit?, source?: sharon\|thermomix\|manual, note?}` |
 | `PATCH /api/cart/items/:id` | `{name?, qty?, unit?, note?, prices?: {providerId: number\|null}}` |
 | `DELETE /api/cart/items/:id` | remove |
 | `DELETE /api/cart/ordered` | clear items already ordered |
 | `POST /api/thermomix/import` | `{recipe?, servings?, lines: "2 כוסות קמח\n3 ביצים"}` or `{ingredients: [{name, qty, unit}]}` |
 | `POST /api/orders` | `{provider}`: mark everything in the cart as ordered there |
-| `GET /api/events?limit=50` | activity log, newest first |
-| `GET /api/instinct`, `POST /api/instinct/sync` | delivery status, full sync |
+| `GET /api/events?limit=50&after=` (read) | activity log; with `after`, oldest first from that id |
+| `GET /api/instinct` (read), `POST /api/instinct/sync` | delivery status, full sync |
+| `GET /api/instinct/spec` (read), `GET /api/instinct/invite` | integration doc; WhatsApp invite (main key only) |
 
-Thermomix/Cookidoo has no public API, so recipes come in as a pasted ingredient list (or structured ingredients from whatever sends them).
+Thermomix/Cookidoo has no public API, so recipes come in as a pasted ingredient list.

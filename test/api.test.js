@@ -125,3 +125,58 @@ test("bad requests get clear errors", async () => {
   const big = await call("POST", "/api/cart/items", { name: "x", note: "y".repeat(70000) });
   assert.equal(big.status, 413);
 });
+
+test("Instinct's read-only key can read but not write", async () => {
+  const invite = await (await call("GET", "/api/instinct/invite")).json();
+  const readKey = decodeURIComponent(invite.whatsappUrl).match(/Bearer (\S+)/)[1];
+  assert.notEqual(readKey, KEY);
+
+  assert.equal((await call("GET", "/api/cart", undefined, readKey)).status, 200);
+  assert.equal((await call("GET", "/api/events", undefined, readKey)).status, 200);
+  assert.equal((await call("POST", "/api/cart/items", { name: "x" }, readKey)).status, 403);
+  assert.equal((await call("POST", "/api/instinct/sync", undefined, readKey)).status, 403);
+  assert.equal((await call("GET", "/api/instinct/invite", undefined, readKey)).status, 403);
+});
+
+test("the invite is a WhatsApp link to Instinct with the spec and read key", async () => {
+  const invite = await (await call("GET", "/api/instinct/invite")).json();
+  const url = new URL(invite.whatsappUrl);
+  assert.equal(url.origin + url.pathname, "https://wa.me/16508702892");
+  const text = url.searchParams.get("text");
+  assert.equal(text, invite.message);
+  assert.ok(text.includes(`${base}/api/instinct/spec`));
+  assert.ok(text.includes("Authorization: Bearer "));
+  assert.ok(!text.includes(KEY), "the main key must never be in the message");
+});
+
+test("the spec is markdown an agent can fetch with the read key", async () => {
+  const res = await call("GET", "/api/instinct/spec");
+  assert.match(res.headers.get("content-type"), /text\/markdown/);
+  const text = await res.text();
+  assert.ok(text.includes(`Base URL: ${base}`));
+  assert.ok(text.includes("order.placed"));
+});
+
+test("events can be polled with after= without gaps or repeats", async () => {
+  const all = await (await call("GET", "/api/events?after=&limit=200")).json();
+  assert.ok(all.length >= 3);
+  const mid = all[Math.floor(all.length / 2)];
+  const rest = await (await call("GET", `/api/events?after=${mid.id}&limit=200`)).json();
+  assert.deepEqual(rest.map((e) => e.id), all.slice(all.indexOf(mid) + 1).map((e) => e.id));
+  assert.deepEqual(await (await call("GET", `/api/events?after=${all.at(-1).id}`)).json(), []);
+});
+
+test("the grocery proxy routes stay public and report when the API is not connected", async () => {
+  const res = await fetch(base + "/api/health");
+  assert.equal(res.status, 503);
+  assert.equal((await fetch(base + "/api/compare", { method: "POST", body: "{}" })).status, 503);
+  assert.equal((await fetch(base + "/api/cart")).status, 401);
+});
+
+test("workflow pages from the grocery feature are served", async () => {
+  assert.equal((await fetch(base + "/sharon/")).status, 200);
+  const dir = await fetch(base + "/thermomix", { redirect: "manual" });
+  assert.equal(dir.status, 301);
+  assert.equal(dir.headers.get("location"), "/thermomix/");
+  assert.equal((await fetch(base + "/menu.json")).headers.get("content-type"), "application/json; charset=utf-8");
+});

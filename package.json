@@ -2,7 +2,7 @@
   "name": "food-buttons",
   "version": "1.0.0",
   "private": true,
-  "description": "Two giant food-order buttons (Sharon, Thermomix) with a shared cart, price comparison and an Instinct feed. Node server, no dependencies (Railway).",
+  "description": "Two giant food-order buttons (Sharon, Thermomix) with a grocery price comparison step, a shared cart and an Instinct event feed. Alef font, RTL, small Node server (Railway).",
   "scripts": {
     "start": "node server.js",
     "test": "node --test"
