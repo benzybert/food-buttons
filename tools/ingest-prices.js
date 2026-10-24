@@ -279,6 +279,11 @@ export function normalisePrice(p, wantBase) {
   const fromName = sizeFromName(`${p.name} ${p.desc}`);
   // The name is usually more reliable than Quantity=1 / UnitQty="יחידה".
   if (fromName && (!size || size.base !== fromName.base || size.amount <= 1)) size = fromName;
+  // Eggs and the like are sold "ביצים אריזון 12 גדול": a bare count in the name, no unit word.
+  if (wantBase === "u" && (!size || size.base !== "u" || size.amount <= 1)) {
+    const bare = String(p.name).match(/(?:^|\s)(\d{1,2})(?=\s|$)/);
+    if (bare && Number(bare[1]) >= 2) size = { base: "u", amount: Number(bare[1]) };
+  }
   if (!size || !(size.amount > 0)) return null;
   if (size.base !== wantBase) {
     // eggs are sold "12 יחידות": a unit count is already what we want
@@ -302,7 +307,7 @@ const DEFAULT_EXCLUDE = [
   "לחם", "לחמניה", "לחמניות", "פיתה", "פיתות", "טורטיה", "טוסט", "מאפה", "מאפים", "מאפין", "גליליות", "כעכים", "בצק", "איטריות", "אטריות", "שבבי", "דייסת", "דייסה",
   "פסטרמה", "נקניק", "נקניקיות", "סלמי", "שניצל", "קציצות", "ממולא", "ממולאים", "סלט", "ירקות", "מיונז", "במיונז", "זיתים",
   "גבינה", "גבינת", "גאודה", "נפוליאון", "בורסאן", "קרמאמא", "שמנת",
-  "תבלין", "תיבול", "תיבולית", "תיבוליות", "נמס", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "אורגנית", "אורגניים", "אורגניות", "קולסלו", "טורטיות", "שימורים", "שימורי", "חמוצים", "כבוש", "כבושים", "כבושות", "במי מלח",
+  "תבלין", "תיבול", "תיבולית", "תיבוליות", "נמס", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "אורגנית", "אורגניים", "אורגניות", "קולסלו", "טורטיות", "קורני", "קטשופ", "שימורים", "שימורי", "חמוצים", "כבוש", "כבושים", "כבושות", "במי מלח",
   "ממתק", "שוקו", "פנטזיה", "יופלה", "גמדים", "דנונה", "מולר", "מילקי",
   // babies and pets
   "תינוקות", "לתינוק", "בייביז", "מטרנה", "סימילאק", "חתול", "חתולים", "כלב", "כלבים",
@@ -321,8 +326,8 @@ export function loadRules(file = path.join(ROOT, "tools", "price-rules.json")) {
 /** A brand may come first ("לייף וולנס שמן זית", "קנור מרק עוף"): the ingredient's phrase may start up to two words in. */
 const MAX_LEAD = 2;
 
-/** What follows these words is absent or reduced, not the product ("חמאה ללא מלח", "מנגו דל סוכר"); before them it still is ("חלב דל לקטוז"). */
-const SIDE = new Set(["ללא", "בלי", "דל", "דלת"]);
+/** What follows these words is absent, reduced or replaced, not the product ("חמאה ללא מלח", "קטשופ מופחת סוכר", "תחליף סוכר"); before them it still is ("חלב דל לקטוז"). */
+const SIDE = new Set(["ללא", "בלי", "דל", "דלת", "מופחת", "מופחתת", "פחות", "תחליף"]);
 
 const LEAD_BONUS = 0.5;
 const isStrong = (score) => score % 1 === LEAD_BONUS;
@@ -356,7 +361,7 @@ export function scorerFor(ing, rules = {}) {
     const side = tokens.findIndex((t) => SIDE.has(t));
     const main = side === -1 ? tokens : tokens.slice(0, side);
     for (const ph of phrases) {
-      const i = at(main, ph, 0, MAX_LEAD);
+      const i = at(main, ph, 0, r.start ? 0 : MAX_LEAD);
       const sc = i === -1 ? 0 : ph.join("").length + (i === 0 ? LEAD_BONUS : 0);
       if (sc > best) (best = sc), (bestPhrase = ph);
     }

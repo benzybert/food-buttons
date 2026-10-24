@@ -270,6 +270,8 @@ test("live match report, October 2026: what went wrong on the chains' real files
   const yes = [["milk", "חלב טרי 2% דל לקטוז 1 ל"], ["sugar", 'סוכר לבן 1 ק"ג'], ["white-cheese", "גבינה לבנה 5% 250 גרם"], ["parmesan", "גבינת פרמזן 23% במשקל"], ["cooking-cream", "שמנת לבישול 15% 250 מל"], ["breadcrumbs", "פירורי לחם 500 גרם"], ["butter", "אלוויר חמאה רכה 250 גר"]];
   for (const [id, name] of yes) assert.ok(m(id)(name), `${id} should match "${name}"`);
   assert.deepEqual(sizeFromName("ביצים ארוזות 18יח L"), { base: "u", amount: 18 });
+  for (const name of ["קטשופ מופחת סוכר 690 גרם", "טרוביה תחליף סוכר 360 גר", "סקיני סוכר ללא סוכר 700 גרם", "מאסטר שף סוכר לבן 1 קג"]) assert.ok(!m("sugar")(name), name);
+  assert.equal(normalisePrice({ name: "ביצים אריזון 12 גדול", desc: "", price: 14.24, quantity: 1, unitQty: "יחידה" }, "u").perBase, 14.24 / 12);
 });
 
 test("only strong matches of packaged ingredients lend their barcode", () => {

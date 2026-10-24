@@ -1,5 +1,5 @@
 {
-  "_comment": "Matching rules for tools/ingest-prices.js, per ingredient id. only = match these phrases instead of the name and aliases; include = extra phrases; exclude = words that mean another product; barcodes = manufacturer barcodes that are this ingredient; packaged = a loose (per kg) ingredient may also be priced from packs with a weight in the name (otherwise only items sold by weight count). No prices here.",
+  "_comment": "Matching rules for tools/ingest-prices.js, per ingredient id. only = match these phrases instead of the name and aliases; include = extra phrases; exclude = words that mean another product; barcodes = manufacturer barcodes that are this ingredient; start = the name must begin with the ingredient (no brand first); packaged = a loose (per kg) ingredient may also be priced from packs with a weight in the name (otherwise only items sold by weight count). No prices here.",
   "oil": {
     "only": [
       "שמן קנולה",
@@ -45,8 +45,12 @@
       "צנצנת",
       "בצנצנת",
       "גולדן",
-      "סוויטנגו"
-    ]
+      "סוויטנגו",
+      "פירות",
+      "סקיני",
+      "טרוביה"
+    ],
+    "start": true
   },
   "salt": {
     "exclude": [
@@ -56,7 +60,8 @@
       "בצל",
       "מופחת",
       "50"
-    ]
+    ],
+    "start": true
   },
   "rice-white": {
     "exclude": [
@@ -165,7 +170,8 @@
       "דורות",
       "טחון",
       "טחונה",
-      "זרעי"
+      "זרעי",
+      "פרג"
     ]
   },
   "cilantro": {
@@ -180,7 +186,8 @@
       "דורות",
       "טחון",
       "טחונה",
-      "זרעי"
+      "זרעי",
+      "פרג"
     ]
   },
   "dill": {
@@ -195,7 +202,8 @@
       "דורות",
       "טחון",
       "טחונה",
-      "זרעי"
+      "זרעי",
+      "פרג"
     ]
   },
   "mint": {
@@ -210,7 +218,8 @@
       "דורות",
       "טחון",
       "טחונה",
-      "זרעי"
+      "זרעי",
+      "פרג"
     ]
   },
   "basil": {
@@ -225,7 +234,8 @@
       "דורות",
       "טחון",
       "טחונה",
-      "זרעי"
+      "זרעי",
+      "פרג"
     ]
   },
   "sesame": {
@@ -258,7 +268,8 @@
       "תפוחי אדמה",
       "ללא",
       "גלוט"
-    ]
+    ],
+    "start": true
   },
   "milk": {
     "exclude": [
