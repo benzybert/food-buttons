@@ -149,6 +149,7 @@ function toBranch(get) {
     name: clean(get(STORE_FIELDS.name)),
     address: clean(get(STORE_FIELDS.address)),
     city: /^\d*$/.test(city) || city === "unknown" ? "" : clean(city),
+    ...(/^\d+$/.test(city) && Number(city) > 0 ? { cityCode: String(Number(city)) } : {}),
     zip: /^\d{5,7}$/.test(get(STORE_FIELDS.zip)) ? get(STORE_FIELDS.zip) : "",
   };
 }
@@ -603,7 +604,12 @@ function main(argv) {
     if (branches.length) branchesByStore.set(id, branches);
     const nBranches = new Set(products.map((x) => x.store)).size;
     console.log(`${id}: ${products.length} products from ${nBranches} branches, ${branches.length} branches listed (${branches.filter((b) => b.city).length} with a city) (${sourceOf(p)})`);
-    if (branches.length && !branches.some((b) => b.city)) console.log(`  first branch as read: ${JSON.stringify(branches[0])}`);
+    if (branches.length && !branches.some((b) => b.city)) {
+      console.log(`  first branch as read: ${JSON.stringify(branches[0])}`);
+      const f = listFiles(p, isStoresFile).find((x) => !/\.csv/i.test(x));
+      const m = f && readPriceFile(f).match(/<(Store|Branch)(?:\s[^>]*)?>([\s\S]*?)<\/\1>/i);
+      if (m) console.log(`  raw: ${m[0].replace(/\s+/g, " ").slice(0, 600)}`);
+    }
     if (!products.length) continue;
     byStore.set(id, products);
     runStores.set(id, { source: sourceOf(p), branches: nBranches, products: products.length });
