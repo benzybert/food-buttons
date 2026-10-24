@@ -302,7 +302,7 @@ const DEFAULT_EXCLUDE = [
   "לחם", "לחמניה", "לחמניות", "פיתה", "פיתות", "טורטיה", "טוסט", "מאפה", "מאפים", "מאפין", "גליליות", "כעכים", "בצק", "איטריות", "אטריות", "שבבי", "דייסת", "דייסה",
   "פסטרמה", "נקניק", "נקניקיות", "סלמי", "שניצל", "קציצות", "ממולא", "ממולאים", "סלט", "ירקות", "מיונז", "במיונז", "זיתים",
   "גבינה", "גבינת", "גאודה", "נפוליאון", "בורסאן", "קרמאמא", "שמנת",
-  "תבלין", "תיבול", "תיבולית", "תיבוליות", "נמס", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "שימורים", "שימורי", "חמוצים", "כבוש", "כבושים", "כבושות", "במי מלח",
+  "תבלין", "תיבול", "תיבולית", "תיבוליות", "נמס", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "אורגנית", "אורגניים", "אורגניות", "קולסלו", "טורטיות", "שימורים", "שימורי", "חמוצים", "כבוש", "כבושים", "כבושות", "במי מלח",
   "ממתק", "שוקו", "פנטזיה", "יופלה", "גמדים", "דנונה", "מולר", "מילקי",
   // babies and pets
   "תינוקות", "לתינוק", "בייביז", "מטרנה", "סימילאק", "חתול", "חתולים", "כלב", "כלבים",
@@ -348,7 +348,9 @@ export function scorerFor(ing, rules = {}) {
     for (let i = from; i <= Math.min(to, tokens.length - seq.length); i++) if (seq.every((w, k) => tokens[i + k] === w)) return i;
     return -1;
   };
-  return ({ tokens }) => {
+  // An exclusion word counts unless it is part of the matched phrase (any of the ingredient's phrases, for a barcode match).
+  const excluded = (tokens, phrase) => exclude.some((e) => at(tokens, e) !== -1 && (phrase ? at(phrase, e) === -1 : !phrases.some((ph) => at(ph, e) !== -1)));
+  const scorer = ({ tokens }) => {
     let best = 0;
     let bestPhrase = null;
     const side = tokens.findIndex((t) => SIDE.has(t));
@@ -359,9 +361,11 @@ export function scorerFor(ing, rules = {}) {
       if (sc > best) (best = sc), (bestPhrase = ph);
     }
     if (!best) return 0;
-    if (exclude.some((e) => at(tokens, e) !== -1 && at(bestPhrase, e) === -1)) return 0;
+    if (excluded(tokens, bestPhrase)) return 0;
     return best;
   };
+  scorer.excluded = (tokens) => excluded(tokens, null);
+  return scorer;
 }
 
 export const prepare = (name) => ({ hay: norm(name), tokens: stemTokens(name) });
@@ -437,11 +441,13 @@ export function buildPriceTable(ingredients, productsByStore, { rules = {}, minM
     unmatched.set(storeId, rest);
   }
 
+  const scorerById = new Map(scorers.map(({ ing, score }) => [ing.id, score]));
   for (const [storeId, rest] of unmatched) {
     const byIng = perStore.get(storeId);
     for (const p of rest) {
       const owner = barcodeOwner.get(String(p.code));
-      if (owner) (byIng.get(owner) || byIng.set(owner, []).get(owner)).push({ p, via: "barcode" });
+      // The same barcode with this chain's name for it: "תמצית בטעם וניל" is still not vanilla extract.
+      if (owner && !scorerById.get(owner).excluded(prepare(p.name).tokens)) (byIng.get(owner) || byIng.set(owner, []).get(owner)).push({ p, via: "barcode" });
     }
   }
 

@@ -283,3 +283,14 @@ test("only strong matches of packaged ingredients lend their barcode", () => {
   assert.equal(report.find((r) => r.id === "sugar").stores.b.byBarcode, 1, "the weak match (brand first) does not travel");
   assert.equal(report.find((r) => r.id === "onion").stores.b.matches, 0, "produce codes do not travel");
 });
+
+test("a barcode match still has to pass the ingredient's exclusions in this chain's name", () => {
+  const ings = loadRaw().ingredients.filter((i) => i.id === "vanilla");
+  const prod = (code, name, price) => ({ code, name, desc: "", price, weighted: false });
+  const products = new Map([
+    ["a", [prod("7290000000301", 'תמצית וניל טהור 30 מ"ל', 30)]],
+    ["b", [prod("7290000000301", 'תמצית בטעם וניל 50 מ"ל', 5.5)]],
+  ]);
+  const { report } = buildPriceTable(ings, products, { rules: loadRules(), minMatches: 1 });
+  assert.equal(report[0].stores.b.matches, 0);
+});
