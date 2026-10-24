@@ -3,9 +3,10 @@
 Roughly by value / effort. Everything here is optional.
 
 **Real data**
-- Nightly job (server or GitHub Action) that downloads the chains' price files, runs `tools/ingest-prices.js`, and commits `prices.json`. Needs a verified list of download URLs/credentials per chain.
-- Match more products with per-ingredient rules in `tools/price-rules.json` (the tool reads it; no rules shipped yet).
-- Price history per ingredient (needs the nightly job) -> "cheaper than usual" hints.
+- Built: the nightly job, matching rules, barcodes across chains, price history with "cheaper than usual" hints, and the branch list (see `docs/DATA.md`).
+- Prices per branch (today a chain-wide median): pick "my branch" on the branches screen and price from its own file.
+- Promotions (the chains' PromoFull files): "on sale this week" next to the price.
+- Show the price trend on the dish and compare screens, not only on the prices screen.
 
 **Cooking**
 - Cook several dishes at once with one merged timeline.

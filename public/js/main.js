@@ -122,6 +122,7 @@ async function boot() {
   route(/^\/plan$/, lazy("plan", "planView"));
   route(/^\/pantry$/, lazy("pantry", "pantryView"));
   route(/^\/prices$/, lazy("prices", "pricesView"));
+  route(/^\/branches$/, lazy("branches", "branchesView"));
   route(/^\/import(?:\/([\w-]+))?$/, lazy("import", "importView"));
   route(/^\/settings$/, lazy("settings", "settingsView"));
   route(/^\/about$/, lazy("about", "aboutView"));

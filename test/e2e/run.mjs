@@ -616,7 +616,7 @@ await step("desktop layout: header nav replaces the tab bar", async (page) => {
 }, { width: 1280, height: 800 });
 
 // ---------------------------------------------------------------- no horizontal overflow on any route, phone width
-const ROUTES = ["", "#/cook", "#/dish/chicken-soup", "#/compare", "#/list", "#/cook/shakshuka", "#/order", "#/plan", "#/pantry", "#/prices", "#/import", "#/settings", "#/about", "#/more", "#/surprise"];
+const ROUTES = ["", "#/cook", "#/dish/chicken-soup", "#/compare", "#/list", "#/cook/shakshuka", "#/order", "#/plan", "#/pantry", "#/prices", "#/branches", "#/import", "#/settings", "#/about", "#/more", "#/surprise"];
 const seedBasket = (page) =>
   page.addInitScript(() => {
     if (!localStorage.getItem("fb:v1")) localStorage.setItem("fb:v1", JSON.stringify({ v: 1, basket: [{ id: "b1", dishId: "chicken-soup", servings: 6 }, { id: "b2", dishId: "shakshuka", servings: 4, day: 1, slot: "dinner" }] }));

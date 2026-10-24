@@ -4,7 +4,8 @@ Hebrew RTL web app that answers one question: **order food (from Sharon or a del
 
 1. **The app** (`public/index.html`, hash routes like `#/cook`): two giant buttons, **שרון** (order) and **Thermomix** (cook).
    - 49 original Thermomix-style recipes with cost per serving, calories, and the price of ordering the same dish.
-   - **Price comparison** of a basket of dishes at 8 supermarkets (whole packs, pantry-aware), the best two-store split, and cook vs. order. **There is no sample data**: the app ships with no prices of any kind. A price exists only if the person typed it in ("מחירים" screen, or pasted as `ingredient, store, price` lines) or it came from a real price file (`tools/ingest-prices.js`). Totals appear only when every item they need has a price; otherwise the screen says what is missing. See `docs/DATA.md`.
+   - **Price comparison** of a basket of dishes at 8 supermarkets (whole packs, pantry-aware), the best two-store split, and cook vs. order. **There is no sample data**: a price exists only if the person typed it in ("מחירים" screen, or pasted as `ingredient, store, price` lines) or it came from the chains' own price files, which a **nightly GitHub Action** downloads and matches to the catalog (`.github/workflows/prices.yml`, with [OpenIsraeliSupermarkets](https://github.com/OpenIsraeliSupermarkets)' scraper and daily dataset). Totals appear only when every item they need has a price; otherwise the screen says what is missing. See `docs/DATA.md`.
+   - **Price history**: "cheaper than usual" marks and a list of current drops on the prices screen. **Nearby branches** (`#/branches`): the closest branches of each chain by city or location.
    - Shopping list, weekly planner, pantry, cook mode with timers, "what should I eat tonight?", Sharon menu with a WhatsApp order message, recipe import (paste text or JSON-LD), price editing, backup/restore.
    - Installable PWA that works offline. Everything is stored in the browser (`localStorage`), no accounts, no tracking.
 2. **The shop** (real prices and a family cart, needs the server):
@@ -38,7 +39,8 @@ public/                 the app and the shop pages
   cart.html cart.css cart.js    the shared cart
   sharon/ thermomix/ groceries/  workflow pages; app.js, to-cart.js, menu.json (Sharon's menu), shop.css
 data-src/               editable sources: ingredients.txt and recipes/*.txt (compact Hebrew format)
-tools/                  build-data (txt -> json), build-sw, ingest-prices (real price files -> prices.json)
+tools/                  build-data (txt -> json), build-sw, nightly prices: fetch-prices.py (download), ingest-prices (match -> prices,
+                        history, branches), geocode-branches, price-rules.json
 grocery-api/            Python price-comparison service (own Railway service, Root Directory /grocery-api)
 bridge/                 optional Cookidoo bridge (own Railway service, see docs/COOKIDOO.md)
 test/                   node:test unit tests + test/e2e (Playwright); test/shop/ = cart, API, grocery (CommonJS)
@@ -118,9 +120,10 @@ Thermomix/Cookidoo has no public API, so recipes come in as a pasted ingredient 
 
 - Recipes: edit `data-src/recipes/*.txt`, then `npm run build`. The build fails loudly on an unknown ingredient, a unit it cannot convert, or a recipe that mixes meat and dairy.
 - Ingredients and their packs: `data-src/ingredients.txt`.
-- Prices: `public/data/prices.json` (see `docs/DATA.md`); people can also type their own prices in the app.
+- Prices: filled nightly by `.github/workflows/prices.yml` (see `docs/DATA.md`); wrong matches are fixed with rules in `tools/price-rules.json`. People can also type their own prices in the app. Optional repo secrets for the Kaggle fallback: `KAGGLE_API_TOKEN`, or `KAGGLE_USERNAME` + `KAGGLE_KEY`.
 
 ## Notes
 
 - Recipes in `data-src/` were written for this project. The app is not affiliated with Vorwerk/Thermomix/Cookidoo and does not fetch anything from them; the importer works on text you paste. Optionally you can run your own small service (`bridge/`, see [docs/COOKIDOO.md](docs/COOKIDOO.md)) that searches and imports from *your* Cookidoo account through an unofficial library; it is off unless you configure it.
 - Fonts: Alef (SIL OFL 1.1), subset with fonttools, see `public/fonts/README.txt`.
+- Prices and branches: downloaded with the scraper and daily dataset of [OpenIsraeliSupermarkets](https://github.com/OpenIsraeliSupermarkets) by Sefi Erlich, licensed for **non-commercial use only** with attribution (credited on the About screen; we install and call their tools, matched and aggregated for this app, and copy none of their code). Branch positions © OpenStreetMap contributors.

@@ -1,0 +1,154 @@
+{
+  "_comment": "Matching rules for tools/ingest-prices.js, per ingredient id. only = match these phrases instead of the name and aliases; include = extra phrases; exclude = words that mean another product; barcodes = manufacturer barcodes that are this ingredient; packaged = a loose (per kg) ingredient may also be priced from packs with a weight in the name (otherwise only items sold by weight count). No prices here.",
+  "oil": {
+    "only": [
+      "שמן קנולה",
+      "שמן צמחי",
+      "שמן חמניות",
+      "שמן סויה",
+      "שמן תירס",
+      "שמן לטיגון"
+    ]
+  },
+  "vanilla": {
+    "only": [
+      "תמצית וניל"
+    ]
+  },
+  "dark-chocolate": {
+    "only": [
+      "שוקולד מריר",
+      "שוקולד מריר פרווה"
+    ]
+  },
+  "pepper": {
+    "only": [
+      "פלפל שחור",
+      "פלפל שחור גרוס",
+      "פלפל שחור טחון"
+    ]
+  },
+  "sugar": {
+    "exclude": [
+      "וניל",
+      "חום",
+      "דמררה",
+      "קנים",
+      "אבקת"
+    ]
+  },
+  "salt": {
+    "exclude": [
+      "לימון",
+      "אנגלי",
+      "שום",
+      "בצל",
+      "מופחת",
+      "50"
+    ]
+  },
+  "rice-white": {
+    "exclude": [
+      "מלא",
+      "בסמטי",
+      "יסמין",
+      "פריך",
+      "אטריות",
+      "פתיתים"
+    ]
+  },
+  "couscous": {
+    "exclude": [
+      "פתיתים",
+      "פתיתי",
+      "מלא"
+    ]
+  },
+  "lentils-green": {
+    "exclude": [
+      "שחורות",
+      "בלוגה",
+      "מבושלות",
+      "אדומים",
+      "אדומות",
+      "כתומות"
+    ]
+  },
+  "yeast": {
+    "exclude": [
+      "טריים"
+    ]
+  },
+  "peas-frozen": {
+    "exclude": [
+      "וגזר",
+      "יכין"
+    ]
+  },
+  "chicken-thighs": {
+    "exclude": [
+      "אווז",
+      "הודו",
+      "ברווז"
+    ]
+  },
+  "tilapia": {
+    "exclude": [
+      "הרינג",
+      "סלמון",
+      "מלוח",
+      "מעושן"
+    ]
+  },
+  "white-cheese": {
+    "exclude": [
+      "תוספת",
+      "שמנת"
+    ]
+  },
+  "almonds": {
+    "exclude": [
+      "ממתק",
+      "מצופה",
+      "מצופים",
+      "חמאת"
+    ]
+  },
+  "peanuts": {
+    "exclude": [
+      "מצופ",
+      "מצופה",
+      "מצופים",
+      "בקליפה",
+      "חמאת"
+    ]
+  },
+  "mushroom": {
+    "packaged": true
+  },
+  "cherry-tomato": {
+    "packaged": true
+  },
+  "parsley": {
+    "packaged": true
+  },
+  "cilantro": {
+    "packaged": true
+  },
+  "dill": {
+    "packaged": true
+  },
+  "mint": {
+    "packaged": true
+  },
+  "basil": {
+    "packaged": true
+  },
+  "sesame": {
+    "exclude": [
+      "טחינה",
+      "קבוקים",
+      "בייגלה"
+    ]
+  }
+}

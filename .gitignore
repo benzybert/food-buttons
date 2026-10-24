@@ -11,3 +11,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
+
+# Nightly price job (tools/fetch-prices.py, .github/workflows/prices.yml)
+/downloads/
+/match-report.txt

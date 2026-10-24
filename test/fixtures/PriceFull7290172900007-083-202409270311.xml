@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<OrderXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Envelope>
+		<ChainId>7290172900007</ChainId>
+		<SubChainId>100</SubChainId>
+		<StoreId>83</StoreId>
+		<BikoretNo>100</BikoretNo>
+		<Header>
+			<Details>
+				<Line>
+					<PriceUpdateDate>2024-06-10</PriceUpdateDate>
+					<ItemCode>7290111603150</ItemCode>
+					<ItemName>לייף וולנס שמן זית כתית מעולה 750 מל</ItemName>
+					<ManufacturerName>גהשאן</ManufacturerName>
+					<ManufactureCountry>ישראל</ManufactureCountry>
+					<ManufacturerItemDescription>שמן זית כתית מעולה חמיצות מירבית 0.8%</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>49.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2024-04-26</PriceUpdateDate>
+					<ItemCode>7290107974806</ItemCode>
+					<ItemName>מאסטר שף אורז בסמטי 1 קג</ItemName>
+					<ManufacturerName>שסטוביץ</ManufacturerName>
+					<ManufactureCountry>תאילנד</ManufactureCountry>
+					<ManufacturerItemDescription>אורז בסמטי</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>1.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>9.90</ItemPrice>
+					<UnitOfMeasurePrice>9.90</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2024-09-18</PriceUpdateDate>
+					<ItemCode>8076800195057</ItemCode>
+					<ItemName>ברילה ספגטי מס 5 500 גרם</ItemName>
+					<ManufacturerName>שסטוביץ</ManufacturerName>
+					<ManufactureCountry>איטליה</ManufactureCountry>
+					<ManufacturerItemDescription>ספגטי מס&apos; 5</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>7.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2023-08-27</PriceUpdateDate>
+					<ItemCode>7290000112619</ItemCode>
+					<ItemName>קנור מרק עוף אמיתי 400 גרם בשרי</ItemName>
+					<ManufacturerName>יוניליוור</ManufacturerName>
+					<ManufactureCountry>ישראל</ManufactureCountry>
+					<ManufacturerItemDescription>מרק עוף אמיתי - בשרי</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>22.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2024-03-03</PriceUpdateDate>
+					<ItemCode>7290000149844</ItemCode>
+					<ItemName>סינטבון</ItemName>
+					<ManufacturerName>החברה הדרומית</ManufacturerName>
+					<ManufactureCountry>ישראל</ManufactureCountry>
+					<ManufacturerItemDescription>סבון רב שימושי להסרת כתמים קשים מכביסה צבעונית ולבנה</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>7.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2023-08-06</PriceUpdateDate>
+					<ItemCode>7290008116862</ItemCode>
+					<ItemName>בלנאום שמן רחצה יומיומי לתינוקות וילדים</ItemName>
+					<ManufacturerName>ניאופארם</ManufacturerName>
+					<ManufactureCountry></ManufactureCountry>
+					<ManufacturerItemDescription>בייבי - שמן אמבט לתינוקות וילדים</ManufacturerItemDescription>
+					<UnitQty>מ&quot;ל</UnitQty>
+					<Quantity>500.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>99.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2024-02-08</PriceUpdateDate>
+					<ItemCode>96198032</ItemCode>
+					<ItemName>פישרמנס סוכריות מנטה ירוק</ItemName>
+					<ManufacturerName>שלפארם</ManufacturerName>
+					<ManufactureCountry></ManufactureCountry>
+					<ManufacturerItemDescription>סוכריות בטעם מנטה</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>0.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>9.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line><Line>
+					<PriceUpdateDate>2024-06-19</PriceUpdateDate>
+					<ItemCode>7290116531069</ItemCode>
+					<ItemName>קנור מרק בצל 100% רכיבים טבעיים 225 גרם</ItemName>
+					<ManufacturerName>יוניליוור</ManufacturerName>
+					<ManufactureCountry>ישראל</ManufactureCountry>
+					<ManufacturerItemDescription>מרק בצל 100% רכיבים טבעיים</ManufacturerItemDescription>
+					<UnitQty></UnitQty>
+					<Quantity>0.00</Quantity>
+					<UnitOfMeasure>100.00</UnitOfMeasure>
+					<blsWeighted>0</blsWeighted>
+					<QtyInPackage>1.00</QtyInPackage>
+					<ItemPrice>15.90</ItemPrice>
+					<UnitOfMeasurePrice>0.00</UnitOfMeasurePrice>
+					<AllowDiscount>1</AllowDiscount>
+					<ItemStatus>0</ItemStatus>
+				</Line>
+			</Details>
+		</Header>
+	</Envelope>
+</OrderXml>

@@ -21,6 +21,7 @@ export function defaults() {
       theme: "auto", // auto | light | dark
       textSize: 100, // percent
       primaryStore: "", // store used for the shopping list; "" = cheapest
+      homeCity: "", // city for "nearest branches"; the device location itself is never stored
       bridgeUrl: "", // optional cookidoo-bridge service (docs/COOKIDOO.md)
       bridgeToken: "", // its access token: a secret, kept only in this browser and left out of backups
       bridgeSession: "", // the sealed Cookidoo login the bridge gave us (never the password); also a secret, also left out of backups

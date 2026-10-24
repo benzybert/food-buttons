@@ -19,14 +19,18 @@ async function getJSON(name) {
 }
 
 export async function loadData() {
-  const [ingredients, recipes, stores, prices, sources] = await Promise.all([
+  // History and branches only add hints, so the app still starts without them (an older cached copy, a host page).
+  const optional = (name, empty) => getJSON(name).catch(() => empty);
+  const [ingredients, recipes, stores, prices, sources, history, branches] = await Promise.all([
     getJSON("ingredients.json"),
     getJSON("recipes.json"),
     getJSON("stores.json"),
     getJSON("prices.json"),
     getJSON("sources.json"),
+    optional("price-history.json", { days: [], table: {} }),
+    optional("branches.json", { meta: {}, branches: [] }),
   ]);
-  raw = { ingredients, recipes, stores: stores.stores, prices, sources: sources.sources, storesNote: stores.note, sourcesNote: sources.note };
+  raw = { ingredients, recipes, stores: stores.stores, prices, sources: sources.sources, storesNote: stores.note, sourcesNote: sources.note, history, branches: branches.branches || [], branchesMeta: branches.meta || {} };
   // First run: assume the usual staples are at home.
   const s = store.get();
   if (s.pantry === null) store.update((st) => void (st.pantry = ingredients.filter((i) => i.home).map((i) => i.id)));

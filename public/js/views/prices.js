@@ -1,14 +1,15 @@
 import { h, debounce } from "../dom.js";
 import { icon } from "../icons.js";
 import { store } from "../store.js";
-import { catalog, actions, stores as storeList } from "../app.js";
+import { catalog, actions, stores as storeList, rawData } from "../app.js";
 import { pageHead, moneyEl, openDialog, toast, notice } from "../ui.js";
 import { render } from "../router.js";
 import { AISLE_LABELS, AISLE_ORDER } from "../lib/catalog.js";
 import { formatQty } from "../lib/units.js";
 import { matchIngredient } from "../lib/parse.js";
 import { norm } from "../lib/text.js";
-import { money } from "../fmt.js";
+import { money, percent } from "../fmt.js";
+import { priceTrend, cheaperThanUsual } from "../lib/history.js";
 
 let q = "";
 let aisle = "";
@@ -25,6 +26,7 @@ export function pricesView() {
   const st = storeList();
   const s = store.get();
   const meta = c.prices.meta;
+  const history = rawData().history;
   const mineCount = Object.values(s.priceOverrides).reduce((a, r) => a + Object.keys(r).length, 0);
 
   const ings = c.ingredients.filter((i) => !i.free && (!aisle || i.aisle === aisle) && (!q || norm([i.name, ...i.aliases].join(" ")).includes(norm(q))));
@@ -52,10 +54,18 @@ export function pricesView() {
     }
     const cls = info.kind === "user" ? "mine" : info.price == null ? "none" : "";
     const cheap = info.price != null && min != null && info.price === min && prices.length > 1;
+    // Only the imported price has a history; a price the person typed is theirs.
+    const trend = info.kind === "data" ? priceTrend(history, ing.id, sid, info.price) : null;
+    const trendText = trend?.label ? `${trend.label === "cheap" ? "זול" : "יקר"} מהרגיל (בדרך כלל ${money(trend.usual)})` : "";
     return h(
       "td.n",
       { class: `${cls} ${cheap ? "cheap" : ""}` },
-      h("button.btn-link", { type: "button", style: { "text-decoration": "none", color: "inherit", padding: "0.4rem 0.2rem", "min-width": "3.5rem" }, "data-fk": `cell-${key}`, "aria-label": `${ing.name} ב${c.storeById.get(sid).name}: ${info.price == null ? "אין מחיר" : money(info.price)}. לעריכה`, title: info.price == null ? "אין מחיר. לחצו להזנה" : info.kind === "user" ? "המחיר שהזנתם" : "", onclick: () => ((editing = key), render(true)) }, info.price == null ? "—" : moneyEl(info.price)),
+      h(
+        "button.btn-link",
+        { type: "button", style: { "text-decoration": "none", color: "inherit", padding: "0.4rem 0.2rem", "min-width": "3.5rem" }, "data-fk": `cell-${key}`, "aria-label": `${ing.name} ב${c.storeById.get(sid).name}: ${info.price == null ? "אין מחיר" : money(info.price)}${trendText ? `, ${trendText}` : ""}. לעריכה`, title: info.price == null ? "אין מחיר. לחצו להזנה" : info.kind === "user" ? "המחיר שהזנתם" : trendText, onclick: () => ((editing = key), render(true)) },
+        info.price == null ? "—" : moneyEl(info.price),
+        trend?.label ? h("span.trend", { class: trend.label === "cheap" ? "down" : "up", "aria-hidden": "true" }, trend.label === "cheap" ? "↓" : "↑") : null,
+      ),
     );
   };
 
@@ -87,12 +97,52 @@ export function pricesView() {
     Object.keys(c.prices.table || {}).length === 0
       ? notice("info", "אין מחירים באתר, ואין בו מחירי דוגמה. המחירים כאן הם רק מה שתזינו: לחצו על תא כדי להזין את המחיר שראיתם בחנות, או הדביקו רשימה ב״ייבוא מחירים״. מחירים שהזנתם נשמרים בדפדפן הזה בלבד ומסומנים בקו כחול.")
       : notice("info", meta.note || ""),
+    sourcesLine(meta, c),
+    dropsCard(c, history, st, s),
     h("div.search", { style: { margin: "1rem 0 0.5rem" } }, icon("search", { size: 22 }), search),
     h("div.scroll-x", { style: { "margin-bottom": "0.75rem" } }, h("button.chip", { type: "button", "aria-pressed": String(!aisle), onclick: () => ((aisle = ""), render(true)) }, "הכול"), AISLE_ORDER.filter((a) => a !== "free").map((a) => h("button.chip", { type: "button", "aria-pressed": String(aisle === a), onclick: () => ((aisle = a), render(true)) }, AISLE_LABELS[a]))),
     table,
-    h("p.small.muted", "ירוק = הזול ביותר מבין החנויות · — = אין מחיר. מחירי פריטים הנמכרים בשקילה הם לק״ג. סכומים באתר מחושבים רק כשיש מחיר לכל המצרכים הנדרשים באותה חנות."),
+    h("p.small.muted", "ירוק = הזול ביותר מבין החנויות · ↓ = זול ב-10% או יותר מהמחיר הרגיל באותה רשת בחודש האחרון, ↑ = יקר באותה מידה · — = אין מחיר. מחירי פריטים הנמכרים בשקילה הם לק״ג. סכומים באתר מחושבים רק כשיש מחיר לכל המצרכים הנדרשים באותה חנות."),
   );
   return { el, title: "מחירים" };
+}
+
+const SOURCE_LABEL = { scraper: "מאתר הרשת", kaggle: "מהמאגר היומי של OpenIsraeliSupermarkets" };
+const shortDate = (iso) => (iso ? iso.split("-").reverse().slice(0, 2).join(".") : "");
+
+/** When each chain's prices were last refreshed: a chain that failed to download keeps older prices, and says so. */
+function sourcesLine(meta, c) {
+  const entries = Object.entries(meta.sources || {}).filter(([sid]) => c.storeById.has(sid));
+  if (!entries.length) return null;
+  return h(
+    "p.small.muted",
+    { style: { margin: "0.5rem 0 0" } },
+    "עדכון לפי רשת: ",
+    entries.map(([sid, x], i) => [i ? " · " : "", h("span", { title: SOURCE_LABEL[x.source] || "" }, `${c.storeById.get(sid).name} ${shortDate(x.updated)}`, x.updated !== meta.updated ? " (ישן)" : "")]),
+  );
+}
+
+/** The imported prices that are clearly below their usual level right now, at the stores the person uses. */
+function dropsCard(c, history, st, s) {
+  const enabled = new Set(st.map((x) => x.id));
+  const drops = cheaperThanUsual(history, c.prices.table).filter((d) => enabled.has(d.storeId) && !Number.isFinite(s.priceOverrides[d.ingId]?.[d.storeId]) && c.ingById.has(d.ingId));
+  if (!drops.length) return null;
+  return h(
+    "section.card",
+    { style: { "margin-top": "1rem" }, "aria-labelledby": "drops-h" },
+    h("h2", { id: "drops-h", style: { "font-size": "1.1rem" } }, "זול מהרגיל עכשיו"),
+    h(
+      "ul.list-plain",
+      drops.slice(0, 8).map((d) =>
+        h(
+          "li.shop-item",
+          h("div.info", h("span.what", c.ingById.get(d.ingId).name), h("span.qty", `${c.storeById.get(d.storeId).name} · בדרך כלל `, moneyEl(d.usual))),
+          h("span.price", { style: { color: "var(--good)" } }, moneyEl(d.price), " ", h("bdi.small", `(−${percent(-d.change)})`)),
+        ),
+      ),
+    ),
+    h("p.small.muted", "לפי היסטוריית המחירים שנאספת כל לילה. מחיר רגיל = החציון של החודש האחרון באותה רשת."),
+  );
 }
 
 function importDialog() {

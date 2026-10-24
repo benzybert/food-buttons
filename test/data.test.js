@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildAll } from "../tools/build-data.js";
 import { toBase } from "../public/js/lib/units.js";
 import { loadRaw, loadCatalog, loadPricedCatalog } from "./helpers.js";
+import { buildCatalog } from "../public/js/lib/catalog.js";
 import { seeded } from "../public/js/lib/plan.js";
 import { basketReport, dishCostByStore } from "../public/js/lib/calc.js";
 
@@ -87,7 +88,8 @@ test("price rows, if any, are well-formed: known ingredient and store ids, posit
 });
 
 test("with no prices nothing is computed: every total is null, never zero, never partial", () => {
-  const cat = loadCatalog();
+  // The shipped prices.json fills up nightly, so this builds the catalog without it.
+  const cat = buildCatalog({ ...loadRaw(), prices: { meta: { kind: "none" }, table: {} } });
   assert.deepEqual(cat.prices.table, {});
   for (const r of cat.recipes) {
     for (const row of dishCostByStore(r, r.servings, cat)) {
@@ -116,8 +118,31 @@ test("whole-catalog basket with typed-in prices: cooking beats nothing odd, and 
   assert.ok(rep.perItem.total <= rep.pair.total + 1e-6);
 });
 
+test("price history and branches, if any, are well-formed: known ids, arrays aligned with the days", () => {
+  const { ingredients, stores } = loadRaw();
+  const ings = new Set(ingredients.map((i) => i.id));
+  const sids = new Set(stores.map((s) => s.id));
+  const history = JSON.parse(fs.readFileSync(path.join(PUBLIC, "data", "price-history.json"), "utf8"));
+  assert.ok(Array.isArray(history.days));
+  assert.deepEqual([...history.days].sort(), history.days);
+  for (const [id, row] of Object.entries(history.table)) {
+    assert.ok(ings.has(id), `history for unknown ingredient ${id}`);
+    for (const [sid, arr] of Object.entries(row)) {
+      assert.ok(sids.has(sid), `${id}: unknown store ${sid}`);
+      assert.equal(arr.length, history.days.length, `${id}@${sid} not aligned`);
+      assert.ok(arr.every((v) => v === null || (Number.isFinite(v) && v > 0)));
+    }
+  }
+  const { branches } = JSON.parse(fs.readFileSync(path.join(PUBLIC, "data", "branches.json"), "utf8"));
+  for (const b of branches) {
+    assert.ok(sids.has(b.store), `branch of unknown store ${b.store}`);
+    assert.ok(b.id, "branch without id");
+    if ("lat" in b) assert.ok(b.lat > 29 && b.lat < 34 && b.lon > 34 && b.lon < 36.5, `${b.store}/${b.id} is not in Israel`);
+  }
+});
+
 test("every file the app loads exists", () => {
-  for (const f of ["index.html", "style.css", "data/ingredients.json", "data/recipes.json", "data/prices.json", "data/stores.json", "data/sources.json"]) {
+  for (const f of ["index.html", "style.css", "data/ingredients.json", "data/recipes.json", "data/prices.json", "data/stores.json", "data/sources.json", "data/price-history.json", "data/branches.json"]) {
     assert.ok(fs.existsSync(path.join(PUBLIC, f)), f);
   }
 });

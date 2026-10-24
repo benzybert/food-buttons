@@ -1,0 +1,107 @@
+name: Nightly prices
+
+# Real supermarket prices, every night: download the chains' price and store files (OpenIsraeliSupermarkets'
+# scraper, with their daily Kaggle dataset as the fallback for sites that block runners outside Israel), match them to
+# the ingredient catalog, append the price history, locate the branches, and commit public/data.
+#
+# - schedule / manual run: commits the result to the branch it runs on.
+# - push that changes the download or matching code: the same run, report only (nothing is committed), so a change
+#   is checked against the real sites before it ships.
+#
+# Optional secrets for the Kaggle fallback: KAGGLE_API_TOKEN, or KAGGLE_USERNAME + KAGGLE_KEY (kaggle.com > Settings > API).
+
+on:
+  schedule:
+    - cron: "37 2 * * *" # 04:37/05:37 in Israel, after the chains publish their nightly PriceFull files
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Store ids, comma-separated (empty = all)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Report only, commit nothing"
+        type: boolean
+        default: false
+  push:
+    paths:
+      - ".github/workflows/prices.yml"
+      - "tools/fetch-prices.py"
+      - "tools/ingest-prices.js"
+      - "tools/price-rules.json"
+      - "tools/geocode-branches.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prices-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      COMMIT: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Pinned: a new scraper release is a change to review, not something to pick up at night.
+      - run: pip install il-supermarket-scraper==1.0.17 kaggle==2.2.5
+
+      - name: Download price and store files
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: python tools/fetch-prices.py --out downloads --branches 6 --only "${{ inputs.only }}"
+
+      - name: Which chains
+        id: chains
+        run: |
+          args=$(node -e 'const m=require("./downloads/manifest.json");console.log(Object.entries(m).filter(([,v])=>v).map(([k])=>`--store ${k}=downloads/${k}`).join(" "))')
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+          node -e 'const m=require("./downloads/manifest.json");for(const[k,v]of Object.entries(m))console.log(`${k.padEnd(12)} ${v?`${v.source} (${v.files} files)`:"-"}`)' | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Match report
+        run: |
+          node tools/ingest-prices.js ${{ steps.chains.outputs.args }} --report > match-report.txt
+          tail -n 1 match-report.txt | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Prices, history and branches
+        run: node tools/ingest-prices.js ${{ steps.chains.outputs.args }} --keep-missing
+
+      - name: Branch locations
+        # Best effort: a Nominatim outage leaves branches without a position, it does not fail the night.
+        run: node tools/geocode-branches.js --max 300 || echo "geocoding skipped"
+
+      - name: Check
+        run: npm run build:sw && npm run check
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prices-${{ github.run_id }}
+          path: |
+            match-report.txt
+            downloads/manifest.json
+            public/data/prices.json
+          retention-days: 14
+
+      - name: Commit
+        if: env.COMMIT == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/prices.json public/data/price-history.json public/data/branches.json data-src/geocache.json public/sw.js
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "Prices $(date -u +%F): $(node -e 'const m=require("./downloads/manifest.json");console.log(Object.entries(m).filter(([,v])=>v).map(([k,v])=>k+(v.source==="kaggle"?" (kaggle)":"")).join(", "))')"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

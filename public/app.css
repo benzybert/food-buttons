@@ -1005,6 +1005,16 @@ a.chip[aria-current="true"] {
 .tbl th.sticky-col {
   background: var(--surface-2);
 }
+.tbl .trend {
+  margin-inline-start: 0.2rem;
+  font-weight: 700;
+}
+.tbl .trend.down {
+  color: var(--good);
+}
+.tbl .trend.up {
+  color: var(--bad);
+}
 .tbl .cheap {
   background: var(--good-bg);
   color: var(--good);
