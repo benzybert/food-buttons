@@ -602,7 +602,8 @@ function main(argv) {
     const branches = loadBranches(p);
     if (branches.length) branchesByStore.set(id, branches);
     const nBranches = new Set(products.map((x) => x.store)).size;
-    console.log(`${id}: ${products.length} products from ${nBranches} branches, ${branches.length} branches listed (${sourceOf(p)})`);
+    console.log(`${id}: ${products.length} products from ${nBranches} branches, ${branches.length} branches listed (${branches.filter((b) => b.city).length} with a city) (${sourceOf(p)})`);
+    if (branches.length && !branches.some((b) => b.city)) console.log(`  first branch as read: ${JSON.stringify(branches[0])}`);
     if (!products.length) continue;
     byStore.set(id, products);
     runStores.set(id, { source: sourceOf(p), branches: nBranches, products: products.length });

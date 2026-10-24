@@ -94,7 +94,8 @@ def try_scraper(chain, cfg, out, branches, timeout):
                 shutil.copy2(f, out / f.name)
             shutil.rmtree(raw, ignore_errors=True)
             return {"source": "scraper", "scraper": scraper, "files": len(prices)}
-        log(f"  {scraper}: no price files")
+        seen = [p.name for p in Path(raw).rglob("*") if p.is_file()][:8]
+        log(f"  {scraper}: no price files; downloaded: {seen or 'nothing'}")
         shutil.rmtree(raw, ignore_errors=True)
     return None
 

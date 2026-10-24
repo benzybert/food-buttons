@@ -92,7 +92,9 @@ jobs:
           path: |
             match-report.txt
             downloads/manifest.json
+            downloads/*/Stores*
             public/data/prices.json
+            public/data/branches.json
           retention-days: 14
 
       - name: Commit
