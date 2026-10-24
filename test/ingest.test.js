@@ -253,3 +253,33 @@ test("mergePrices: real kind, per-chain sources, a chain missing tonight keeps i
   const fresh = mergePrices(previous, { flour: { shufersal: 5.5 } }, run, { today: "2026-10-24" });
   assert.deepEqual(fresh.table, { flour: { shufersal: 5.5 } });
 });
+
+test("live match report, October 2026: what went wrong on the chains' real files stays fixed", () => {
+  const ings = loadRaw().ingredients;
+  const rules = loadRules();
+  const m = (id) => matcherFor(ings.find((i) => i.id === id), rules);
+  const no = [
+    ["sugar", "מנגו דל סוכר במשקל"], ["salt", "בייגלה מקלות מלח אסם"], ["honey", "פסטרמה מקורמלת דבש במשקל"], ["honey", "קורנפלקס דבש 448ג תלמה"],
+    ["yogurt", "יוגורט תות/אפרסק סימ"], ["yogurt", "יוגורט עם אוכמניות שחורות בכוס"], ["milk", "חלב מרוכז ממותק 397 גרם"], ["soy-sauce", "אלפרו סויה וניל 1 ליטר"],
+    ["flour", "קמח שקדים מיה 250 גר"], ["whole-flour", "לחם קמח מלא 100% 750 גרם"], ["dill", "שמנת שום שמיר 225 גר"], ["cumin", "גבינת גאודה כמון 28%"],
+    ["mint", "חליטת צמחים נענע פומפדור"], ["eggs", "פורס ביצים פלסטיק"], ["raisins", "צימוקים בציפוי שוקולד מריר"], ["peanuts", "M&M's בוטנים 45 גרם"],
+    ["eggplant", "חציל במיונז"], ["cabbage", "כרוב אדום"], ["ground-beef", "סינטה בשר בקר 100% קפוא"], ["pasta", "דלעת ספגטי"], ["rice-white", "פרגית ממולא אורז פטריות"],
+    ["mushroom", "פטריות ברוביצקי במי מלח 680 גר"], ["oregano", "זיתים ירוקים אורגנו ופלפלים"], ["apple", "תפוח עץ מיובש טבעות במשקל"],
+  ];
+  for (const [id, name] of no) assert.ok(!m(id)(name), `${id} should not match "${name}"`);
+  const yes = [["milk", "חלב טרי 2% דל לקטוז 1 ל"], ["sugar", 'סוכר לבן 1 ק"ג'], ["white-cheese", "גבינה לבנה 5% 250 גרם"], ["parmesan", "גבינת פרמזן 23% במשקל"], ["cooking-cream", "שמנת לבישול 15% 250 מל"], ["breadcrumbs", "פירורי לחם 500 גרם"], ["butter", "אלוויר חמאה רכה 250 גר"]];
+  for (const [id, name] of yes) assert.ok(m(id)(name), `${id} should match "${name}"`);
+  assert.deepEqual(sizeFromName("ביצים ארוזות 18יח L"), { base: "u", amount: 18 });
+});
+
+test("only strong matches of packaged ingredients lend their barcode", () => {
+  const ings = loadRaw().ingredients.filter((i) => ["sugar", "onion"].includes(i.id));
+  const prod = (code, name, price, weighted = false) => ({ code, name, desc: "", price, weighted });
+  const products = new Map([
+    ["a", [prod("7290000000201", "שלווה טבע סוכר חום 200 גרם", 9), prod("7290000000202", 'סוכר לבן 1 ק"ג', 5), prod("7290000000203", "בצל יבש", 6, true)]],
+    ["b", [prod("7290000000201", "שלווה 200 ג", 9), prod("7290000000202", 'ס. לבן 1 ק"ג', 5), prod("7290000000203", "ירק במשקל", 6, true)]],
+  ]);
+  const { report } = buildPriceTable(ings, products, { minMatches: 1 });
+  assert.equal(report.find((r) => r.id === "sugar").stores.b.byBarcode, 1, "the weak match (brand first) does not travel");
+  assert.equal(report.find((r) => r.id === "onion").stores.b.matches, 0, "produce codes do not travel");
+});

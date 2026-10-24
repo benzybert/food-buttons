@@ -258,7 +258,7 @@ function unitInfo(word) {
 /** "קמח לבן 1 ק"ג" -> { base: "g", amount: 1000 }. Looks for the LAST "<number> <unit>" in the text. */
 export function sizeFromName(text) {
   let found = null;
-  for (const m of String(text).matchAll(/(\d+(?:[.,]\d+)?)\s*(ק"ג|קג|קילו|קילוגרם|גרם|גר'?|ג'|ליטר|מ"ל|מל|מיליליטר|יח'|יחידות|יחידה|kg|g|ml|l)(?![\p{L}])/giu)) {
+  for (const m of String(text).matchAll(/(\d+(?:[.,]\d+)?)\s*(ק"ג|קג|קילו|קילוגרם|גרם|גר'?|ג'|ליטר|מ"ל|מל|מיליליטר|יחידות|יחידה|יח'?|kg|g|ml|l)(?![\p{L}])/giu)) {
     const info = unitInfo(m[2]);
     if (info) found = { base: info.base, amount: Number(m[1].replace(",", ".")) * info.mult };
   }
@@ -289,20 +289,25 @@ export function normalisePrice(p, wantBase) {
 
 // ------------------------------------------------------------------ matching
 
-// Words that mean "this is not the plain ingredient": processed foods that carry an ingredient's name ("מרק בצל",
-// "סוכריות לימון") and things that are not food at all ("שמן רחצה", "חלב ודבש" shower gel). A word that is part of
-// the ingredient's own phrase does not exclude it ("רוטב סויה" is soy sauce). Extend per ingredient via price-rules.json.
+// Words that mean "this is not the plain ingredient": processed foods and other products that carry an ingredient's
+// name ("מרק בצל", "בייגלה מלח", "גאודה כמון"), variants ("יוגורט עם אננס") and things that are not food at all
+// ("שמן רחצה"). A word that is part of the ingredient's own phrase does not exclude it ("רוטב סויה" is soy sauce,
+// "גבינה לבנה" is white cheese). Tuned on the match report of the chains' real files; extend via price-rules.json.
 const DEFAULT_EXCLUDE = [
-  // processed
-  "תופח", "מוכן", "מוכנה", "טעם", "בטעם", "חטיף", "חטיפי", "עוגיות", "עוגת", "עוגה", "עוגות", "טראפל", "פרלינים", "ביסקוויט", "וופל", "ופלים", "וופלים", "קרקר", "פריכיות", "ציפס",
-  "סוכריות", "סוכריה", "מסטיק", "שוקולד חלב", "משקה", "מיץ", "נקטר", "תה", "מרק", "ממרח", "רוטב", "פסטו", "מחית", "מעדן", "פודינג", "גלידה",
-  "דגני", "גרנולה", "במבה", "ביסלי", "תבלין", "תיבול", "מילוי", "ציפוי", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "שימורים", "חמוצים", "כבוש",
+  // processed, or a variant of the plain product ("X עם Y", "X בטעם Y" is not plain X)
+  "תופח", "מוכן", "מוכנה", "טעם", "בטעם", "עם", "בתוספת", "במילוי", "בציפוי", "ברוטב", "מילוי", "ציפוי", "מסוכר", "מסוכרים", "מטוגן", "מטוגנים", "מיובש", "מיובשים", "מעושן", "מלוח",
+  "חטיף", "חטיפי", "עוגיות", "עוגת", "עוגה", "עוגות", "טורט", "טראפל", "פרלינים", "ביסקוויט", "וופל", "ופלים", "וופלים", "קרקר", "פריכיות", "ציפס", "ציטוס", "לייז", "פרינגלס", "בייגלה", "פרצל",
+  "סוכריות", "סוכריה", "מסטיק", "שוקולד", "משקה", "מיץ", "נקטר", "תה", "חליטה", "חליטת", "קפה", "אלפרו", "מרק", "ממרח", "רוטב", "פסטו", "מחית", "ריבה", "ריבת", "מרמלדה", "ויניגרט", "וינגריט",
+  "מעדן", "פודינג", "גלידה", "דגני", "גרנולה", "מוזלי", "מיזלי", "קראנצי", "ציריוס", "קורנפלקס", "במבה", "ביסלי", "m ms", "m m", "מ מ",
+  "לחם", "לחמניה", "לחמניות", "פיתה", "פיתות", "טורטיה", "טוסט", "מאפה", "מאפים", "מאפין", "גליליות", "כעכים", "בצק", "איטריות", "אטריות", "שבבי", "דייסת", "דייסה",
+  "פסטרמה", "נקניק", "נקניקיות", "סלמי", "שניצל", "קציצות", "ממולא", "ממולאים", "סלט", "ירקות", "מיונז", "במיונז", "זיתים",
+  "גבינה", "גבינת", "גאודה", "נפוליאון", "בורסאן", "קרמאמא", "שמנת",
+  "תבלין", "תיבול", "תיבולית", "תיבוליות", "נמס", "קפוא מוכן", "תערובת", "ללא גלוטן", "אורגני", "שימורים", "שימורי", "חמוצים", "כבוש", "כבושים", "כבושות", "במי מלח",
+  "ממתק", "שוקו", "פנטזיה", "יופלה", "גמדים", "דנונה", "מולר", "מילקי",
   // babies and pets
-  "בצק", "ממתק", "שוקו", "פנטזיה", "יופלה", "גמדים", "דנונה", "מולר", "מילקי",
-  // babies and pets
-  "תינוקות", "לתינוק", "בייביז", "דייסה", "מטרנה", "סימילאק", "חתול", "חתולים", "כלב", "כלבים",
+  "תינוקות", "לתינוק", "בייביז", "מטרנה", "סימילאק", "חתול", "חתולים", "כלב", "כלבים",
   // not food
-  "בושם", "סבון", "ריחני", "שמפו", "מרכך", "רחצה", "אמבט", "עיסוי", "ארגן", "תחליב", "קרם", "דאודורנט", "ספריי", "מפיץ", "ריח", "שעווה", "ניקוי", "כביסה", "מדיח", "למדיח", "מגבונים", "שיער", "גוף", "פנים",
+  "בושם", "סבון", "ריחני", "שמפו", "מרכך", "רחצה", "אמבט", "עיסוי", "ארגן", "תחליב", "קרם", "דאודורנט", "ספריי", "מפיץ", "ריח", "שעווה", "ניקוי", "כביסה", "מדיח", "למדיח", "מגבונים", "שיער", "גוף", "פנים", "פורס", "פלסטיק",
 ];
 
 export function loadRules(file = path.join(ROOT, "tools", "price-rules.json")) {
@@ -316,8 +321,11 @@ export function loadRules(file = path.join(ROOT, "tools", "price-rules.json")) {
 /** A brand may come first ("לייף וולנס שמן זית", "קנור מרק עוף"): the ingredient's phrase may start up to two words in. */
 const MAX_LEAD = 2;
 
-/** What follows these words is a side component, not the product ("יוגורט עם אננס", "חמאה ללא מלח"). */
-const SIDE = new Set(["עם", "ללא", "בלי", "בתוספת", "במילוי", "בטעם", "ברוטב", "בציפוי"]);
+/** What follows these words is absent or reduced, not the product ("חמאה ללא מלח", "מנגו דל סוכר"); before them it still is ("חלב דל לקטוז"). */
+const SIDE = new Set(["ללא", "בלי", "דל", "דלת"]);
+
+const LEAD_BONUS = 0.5;
+const isStrong = (score) => score % 1 === LEAD_BONUS;
 
 const LATIN_ONLY = /^[\x00-\x7f]*$/;
 
@@ -327,6 +335,8 @@ const LATIN_ONLY = /^[\x00-\x7f]*$/;
  * "red onion" than for "onion" and each product can be given to its best ingredient only.
  * A phrase matches when its words appear in order, next to each other, starting at most MAX_LEAD words in,
  * each equal to a word of the name (after the plural stemmer): "סוכר" does not match "סוכריות".
+ * A match where the name starts with the phrase scores half a point more (LEAD_BONUS): it wins ties, and only such
+ * strong matches lend their barcode to other chains.
  */
 export function scorerFor(ing, rules = {}) {
   const r = rules[ing.id] || {};
@@ -334,9 +344,9 @@ export function scorerFor(ing, rules = {}) {
   const own = r.only || [ing.name, ...(ing.aliases || []).filter((a) => !LATIN_ONLY.test(a)), ...(r.include || [])];
   const phrases = own.map((p) => stemTokens(p)).filter((t) => t.length);
   const exclude = [...DEFAULT_EXCLUDE, ...(r.exclude || [])].map((e) => stemTokens(e)).filter((t) => t.length);
-  const has = (tokens, seq, from = 0, to = tokens.length - seq.length) => {
-    for (let i = from; i <= Math.min(to, tokens.length - seq.length); i++) if (seq.every((w, k) => tokens[i + k] === w)) return true;
-    return false;
+  const at = (tokens, seq, from = 0, to = tokens.length - seq.length) => {
+    for (let i = from; i <= Math.min(to, tokens.length - seq.length); i++) if (seq.every((w, k) => tokens[i + k] === w)) return i;
+    return -1;
   };
   return ({ tokens }) => {
     let best = 0;
@@ -344,11 +354,12 @@ export function scorerFor(ing, rules = {}) {
     const side = tokens.findIndex((t) => SIDE.has(t));
     const main = side === -1 ? tokens : tokens.slice(0, side);
     for (const ph of phrases) {
-      const len = ph.join("").length;
-      if (len > best && has(main, ph, 0, MAX_LEAD)) (best = len), (bestPhrase = ph);
+      const i = at(main, ph, 0, MAX_LEAD);
+      const sc = i === -1 ? 0 : ph.join("").length + (i === 0 ? LEAD_BONUS : 0);
+      if (sc > best) (best = sc), (bestPhrase = ph);
     }
     if (!best) return 0;
-    if (exclude.some((e) => has(tokens, e) && !has(bestPhrase, e))) return 0;
+    if (exclude.some((e) => at(tokens, e) !== -1 && at(bestPhrase, e) === -1)) return 0;
     return best;
   };
 }
@@ -417,7 +428,9 @@ export function buildPriceTable(ingredients, productsByStore, { rules = {}, minM
       }
       if (best) {
         (byIng.get(best.id) || byIng.set(best.id, []).get(best.id)).push({ p, via: "name" });
-        claim(p.code, best.id);
+        // Only a strong match of a packaged ingredient lends its barcode: produce and meat codes are chain-internal in
+        // practice, and a weak match passed on to every chain would multiply a mistake.
+        if (isStrong(bestScore) && best.pack.type !== "loose") claim(p.code, best.id);
       } else rest.push(p);
     }
     perStore.set(storeId, byIng);
