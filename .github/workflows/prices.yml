@@ -74,6 +74,7 @@ jobs:
         run: |
           node tools/ingest-prices.js ${{ steps.chains.outputs.args }} --report > match-report.txt
           tail -n 1 match-report.txt | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "::group::Match report (also in the run's artifact)"; cat match-report.txt; echo "::endgroup::"
 
       - name: Prices, history and branches
         run: node tools/ingest-prices.js ${{ steps.chains.outputs.args }} --keep-missing
