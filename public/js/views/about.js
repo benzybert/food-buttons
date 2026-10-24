@@ -22,7 +22,7 @@ export function aboutView() {
           h("a", { href: "https://github.com/OpenIsraeliSupermarkets", target: "_blank", rel: "noopener noreferrer" }, "OpenIsraeliSupermarkets"),
           " מאת ספי ארליך (Sefi Erlich), לשימוש לא מסחרי. אנחנו לא משתמשים בקוד שלהם כמו שהוא: הקבצים מותאמים למצרכים של האפליקציה, ומחושב מהם חציון לכל רשת. הפרויקט אינו קשור אליהם ואינו בחסותם.",
         ),
-        h("p", "מיקומי הסניפים לפי הכתובות, מ-", h("a", { href: "https://www.openstreetmap.org/copyright", target: "_blank", rel: "noopener noreferrer" }, "© OpenStreetMap contributors"), " (Nominatim)."),
+        h("p", "מיקומי הסניפים לפי הכתובות, מ-", h("a", { href: "https://www.openstreetmap.org/copyright", target: "_blank", rel: "noopener noreferrer" }, "© OpenStreetMap contributors"), " (Nominatim), ומרכזי היישובים מהחבילה israel-geolocation (רישיון MIT)."),
         meta.updated ? h("p.small.muted", `עדכון אחרון של נתוני המחירים: ${meta.updated}`) : null,
       ),
       h(

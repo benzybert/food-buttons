@@ -10,6 +10,7 @@
 | `public/data/prices.json` | **yes** (hand/ingest-managed) | Prices per ingredient per store; **empty**, there is no sample data (see Prices below) |
 | `public/data/price-history.json` | generated nightly | One price per ingredient, store and day (last 120 days), for "cheaper than usual" hints |
 | `public/data/branches.json` | generated nightly | Branches from the chains' Stores files: id, name, address, city, and a position when one was found |
+| `data-src/settlements.json` | yes (rebuilt by `tools/build-settlements.js`) | Settlement code -> [name, lat, lon], for the city codes in the chains' Stores files (MIT, `settlements.LICENSE`) |
 | `data-src/geocache.json` | generated nightly | Address -> position cache for the branches (OpenStreetMap Nominatim), so each address is looked up once |
 | `tools/price-rules.json` | yes | Per-ingredient matching rules for the price import (no prices) |
 | `public/data/stores.json` | yes | Stores: id and name only. Delivery fee / free-over / minimum may be added later, from a real source |
@@ -86,11 +87,11 @@ You can still run the import by hand on files you downloaded: `node tools/ingest
 
 ### Branches
 
-`branches.json`: `{ meta, branches: [{ store, id, name, address, city, zip, lat?, lon?, approx? }] }`. Positions come from OpenStreetMap's Nominatim (address first, then the city centre with `approx: "city"`), cached in `data-src/geocache.json`; misses are retried after 60 days. The "סניפים קרובים" screen (`#/branches`) shows the nearest three branches of each enabled chain, by city or by the device's location; the location stays in the browser. Prices are chain-wide medians, not per branch.
+`branches.json`: `{ meta, branches: [{ store, id, name, address, city, cityCode?, zip, lat?, lon?, approx? }] }`. The chains publish a branch's city as a Central Bureau of Statistics settlement code (`<City>5000</City>`); `data-src/settlements.json` (1,264 settlements: code -> name, lat, lon; from the MIT-licensed npm package `israel-geolocation`, rebuilt with `tools/build-settlements.js`) turns it into the city name and a city-centre position (`approx: "city"`) without any request. OpenStreetMap's Nominatim is then asked only for the street address, cached in `data-src/geocache.json`; misses are retried after 60 days. The "סניפים קרובים" screen (`#/branches`) shows the nearest three branches of each enabled chain, by city or by the device's location; the location stays in the browser. Prices are chain-wide medians, not per branch.
 
 ### Credits and license
 
-The scraper and the Kaggle dataset are by Sefi Erlich / [OpenIsraeliSupermarkets](https://github.com/OpenIsraeliSupermarkets), under a custom license that allows **non-commercial use only** and requires credit with a link and a note of changes. This project installs and calls them (nothing of theirs is copied into the repo), uses them non-commercially, and credits them on the About screen. Commercial use would need their written permission. Branch positions: © OpenStreetMap contributors (ODbL).
+The scraper and the Kaggle dataset are by Sefi Erlich / [OpenIsraeliSupermarkets](https://github.com/OpenIsraeliSupermarkets), under a custom license that allows **non-commercial use only** and requires credit with a link and a note of changes. This project installs and calls them (nothing of theirs is copied into the repo), uses them non-commercially, and credits them on the About screen. Commercial use would need their written permission. Branch positions: © OpenStreetMap contributors (ODbL); settlement codes and centres: `israel-geolocation` (MIT).
 
 ### Order prices
 

@@ -122,12 +122,13 @@ test("real Zol Ubegadol file: gzipped, plural unit names, weighted produce", () 
   assert.equal(p[0].store, "3"); // "003"
 });
 
-test("real Shufersal Stores file: branches with address and city, numeric or empty city dropped", () => {
+test("Stores files: branches with address and city, settlement codes named, empty values dropped", () => {
   const b = parseStores(readPriceFile(path.join(FIXTURES, "Stores7290027600007-000-202410020201")));
   assert.equal(b.length, 5);
   assert.deepEqual(b[0], { id: "1", name: 'שלי ת"א- בן יהודה', address: "בן יהודה 79", city: "תל אביב", zip: "6343504" });
-  const odd = parseStores("<Stores><Store><StoreId>007</StoreId><StoreName>x</StoreName><City>4000</City><ZipCode>0</ZipCode></Store><Branch><StoreID>8</StoreID><City>unknown</City></Branch></Stores>");
-  assert.deepEqual(odd.map((x) => [x.id, x.city, x.zip]), [["7", "", ""], ["8", "", ""]]);
+  // What the chains publish today (October 2026): the city as a settlement code, ZIPCode in capitals.
+  const live = parseStores("<Root><Store><StoreID>001</StoreID><StoreName>תלפיות</StoreName><Address>האומן,15</Address><City>3000</City><ZIPCode>9342110</ZIPCode></Store><Store><StoreID>007</StoreID><City>0</City><ZipCode>0000000</ZipCode></Store><Branch><StoreID>8</StoreID><City>unknown</City></Branch><Store><StoreID>9</StoreID><City>99999</City></Store></Root>");
+  assert.deepEqual(live.map((x) => [x.id, x.city, x.cityCode ?? null, x.zip]), [["1", "ירושלים", "3000", "9342110"], ["7", "", null, ""], ["8", "", null, ""], ["9", "", "99999", ""]]);
   const dir = tmp();
   fs.copyFileSync(path.join(FIXTURES, "Stores7290027600007-000-202410020201"), path.join(dir, "Stores7290027600007-000-202410020201"));
   fs.copyFileSync(path.join(FIXTURES, "PriceFull7290172900007-083-202409270311.xml"), path.join(dir, "PriceFull1.xml"));

@@ -8,7 +8,8 @@
 //
 //   --max   at most this many new lookups per run (default 300, about 5 minutes); the rest wait for the next night
 //
-// A branch gets the position of its street address, or, failing that, of its city (marked approx: "city").
+// A branch gets the position of its street address, or, failing that, of its city centre (marked approx: "city"):
+// from data-src/settlements.json when the chain gave a settlement code, else from Nominatim.
 // A miss is retried after 60 days. Branches without a city are left without a position.
 
 import fs from "node:fs";
@@ -22,13 +23,16 @@ const RETRY_MISS_DAYS = 60;
 
 const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
 
-/** The queries to try for a branch, best first. */
-export function queriesFor(b) {
+/**
+ * The Nominatim queries to try for a branch, best first. With a settlement code the city centre is known without
+ * asking (data-src/settlements.json), so only the street address is looked up.
+ */
+export function queriesFor(b, settlements = {}) {
   const city = clean(b.city);
   if (!city) return [];
   const address = clean(b.address);
-  // Addresses like "קניון הזהב" or "מרכז מסחרי" are places, not streets; Nominatim handles both, so just try it.
-  return address && address !== city ? [{ q: `${address}, ${city}`, approx: null }, { q: city, approx: "city" }] : [{ q: city, approx: "city" }];
+  const street = address && address !== city ? [{ q: `${address}, ${city}`, approx: null }] : [];
+  return settlements[b.cityCode] ? street : [...street, { q: city, approx: "city" }];
 }
 
 const fresh = (entry, today) => entry && (!entry.miss || (Date.parse(today) - Date.parse(entry.at)) / 864e5 < RETRY_MISS_DAYS);
@@ -37,14 +41,14 @@ const fresh = (entry, today) => entry && (!entry.miss || (Date.parse(today) - Da
  * Fill lat/lon on every branch it can. `lookup(q)` -> { lat, lon } | null does one network request.
  * Returns { branches, cache, looked } and never throws on a failed lookup (that branch just stays without a position).
  */
-export async function geocode(branches, cache, lookup, { max = 300, today = new Date().toISOString().slice(0, 10), sleep = () => {} } = {}) {
+export async function geocode(branches, cache, lookup, { max = 300, today = new Date().toISOString().slice(0, 10), sleep = () => {}, settlements = {} } = {}) {
   const c = { ...cache };
   let looked = 0;
   const out = [];
   for (const b of branches) {
     const { lat, lon, approx, ...rest } = b;
     let pos = null;
-    for (const { q, approx: kind } of queriesFor(b)) {
+    for (const { q, approx: kind } of queriesFor(b, settlements)) {
       if (!fresh(c[q], today)) {
         if (looked >= max) break;
         looked++;
@@ -63,6 +67,8 @@ export async function geocode(branches, cache, lookup, { max = 300, today = new 
         break;
       }
     }
+    const centre = settlements[b.cityCode];
+    if (!pos && Array.isArray(centre)) pos = { lat: centre[1], lon: centre[2], approx: "city" };
     out.push(pos ? { ...rest, ...pos } : rest);
   }
   return { branches: out, cache: Object.fromEntries(Object.keys(c).sort().map((k) => [k, c[k]])), looked };
@@ -92,7 +98,8 @@ async function main(argv) {
   }
   const data = JSON.parse(fs.readFileSync(file, "utf8"));
   const cache = fs.existsSync(cacheFile) ? JSON.parse(fs.readFileSync(cacheFile, "utf8")) : {};
-  const { branches, cache: next, looked } = await geocode(data.branches || [], cache, nominatim, { max, sleep: () => new Promise((r) => setTimeout(r, 1100)) });
+  const settlements = JSON.parse(fs.readFileSync(path.join(ROOT, "data-src", "settlements.json"), "utf8"));
+  const { branches, cache: next, looked } = await geocode(data.branches || [], cache, nominatim, { max, settlements, sleep: () => new Promise((r) => setTimeout(r, 1100)) });
   fs.writeFileSync(file, JSON.stringify({ ...data, branches }) + "\n");
   // One address per line, so the nightly commit's diff shows what was added.
   fs.writeFileSync(cacheFile, `{\n${Object.entries(next).map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(",\n")}\n}\n`);

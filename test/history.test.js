@@ -96,4 +96,11 @@ test("geocode: street first, then city; cached hits and misses; a failed request
   const limited = await geocode(branches, {}, lookup, { max: 1, today: "2026-10-24" });
   assert.equal(limited.looked, 1);
   assert.equal(limited.branches[1].lat, undefined);
+  // with a settlement code the city centre needs no request: only the street is asked, and a miss falls back to it
+  const settlements = { 2600: ["אילת", 29.5577, 34.9519] };
+  asked.length = 0;
+  const coded = await geocode([{ store: "a", id: "5", address: "x", city: "אילת", cityCode: "2600" }], {}, lookup, { today: "2026-10-24", settlements });
+  assert.deepEqual(asked, ["x, אילת"]);
+  assert.deepEqual([coded.branches[0].lat, coded.branches[0].approx], [29.5577, "city"]);
+  assert.deepEqual(queriesFor({ address: "", city: "אילת", cityCode: "2600" }, settlements), []);
 });
