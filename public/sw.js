@@ -3,7 +3,7 @@
 // and refresh it in the background (stale-while-revalidate). Navigations fall back to the cached shell offline.
 // The shop (shared cart, real prices) and /api are live data: the worker never touches them, so the cart
 // can never be served stale or stored in a cache.
-const VERSION = "d08f4ec8bf";
+const VERSION = "83f77a59c9";
 const CACHE = `food-buttons-${VERSION}`;
 const PRECACHE = [
   "./",
